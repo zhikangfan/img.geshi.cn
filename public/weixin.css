@@ -1,0 +1,55 @@
+.impowerBox .title {
+  position: absolute;
+  width: 47px;
+  height: 47px;
+  /*background: url('../wx/weixin_icon.png') no-repeat;*/
+  left: 50%;
+  top: 82px;
+  margin-left: -23px;
+  font-size: 0;
+  text-indent: 100px;
+  overflow: hidden;
+  line-height: 1000px;
+  z-index: 1000;
+}
+.impowerBox .wrp_code {
+  width: 160px;
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.impowerBox .qrcode {
+  width: 148px;
+  height: 148px;
+  margin-top: 0;
+  border: none;
+  background-size: 100% 100%;
+}
+.impowerBox .info {
+  display: none;
+}
+.impowerBox .status p:first-child {
+  font-size: 15px;
+}
+.impowerBox .status_icon {
+  display: none;
+}
+.impowerBox .status {
+  text-align: center;
+}
+.impowerBox .status p,
+.status_txt h4 {
+  font-size: 14px;
+  color: #999;
+}
+.impowerBox .status h4 {
+  display: inline-block;
+  padding-left: 22px;
+}
+.impowerBox .status_succ h4 {
+  background: url(./wx/success.png) no-repeat 0px 1px;
+}
+.impowerBox .status_fail h4 {
+  background: url(./wx/cancel.png) no-repeat 0px 1px;
+}
