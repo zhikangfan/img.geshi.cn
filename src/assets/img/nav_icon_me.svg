@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>nav_icon_me</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0" transform="translate(-270.000000, -743.000000)">
+            <g id="nav_icon_me" transform="translate(270.000000, 743.000000)">
+                <rect id="矩形" x="0" y="0" width="24" height="24"></rect>
+                <g id="wode" transform="translate(2.000000, 1.000000)" fill="#C8C9CF" fill-rule="nonzero">
+                    <path d="M10,0 L16.2447257,0 L16.2447257,6.105 C16.2447257,9.4875 13.4458509,12.21 10,12.21 C6.55414909,12.21 3.75527426,9.4875 3.75527426,6.105 C3.75527426,2.7225 6.54008439,0 10,0 Z M4.37412096,13.4475 L15.625879,13.4475 C18.045007,13.4475 20,15.35875 20,17.72375 L20,18.32875 C20,20.35 18.326301,22 16.2447257,22 L3.75527426,22 C1.68776371,22 0,20.36375 0,18.32875 L0,17.72375 C0,15.35875 1.95499297,13.4475 4.37412096,13.4475 Z" id="形状"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

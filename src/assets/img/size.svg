@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="34px" viewBox="0 0 33 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>home_function_icon_modifying_dimensions</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FF8C70" offset="0%"></stop>
+            <stop stop-color="#FF4418" offset="100%"></stop>
+        </linearGradient>
+        <path d="M15.2,4.8 L3.2,4.8 C1.4326888,4.8 -1.10461162e-15,6.2326888 0,8 L0,20 C1.00127703e-15,21.7673112 1.4326888,23.2 3.2,23.2 L15.2,23.2 C16.9673112,23.2 18.4,21.7673112 18.4,20 L18.4,8 C18.4,6.2326888 16.9673112,4.8 15.2,4.8 Z" id="path-2"></path>
+        <filter x="-43.5%" y="-38.0%" width="187.0%" height="187.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.91427745   0 0 0 0 0.39783177   0 0 0 0 0.39783177  0 0 0 0.413512117 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-4" x="11.2" y="15.2" width="4.8" height="4.8" rx="1.6"></rect>
+        <filter x="-83.3%" y="-41.7%" width="266.7%" height="266.7%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.859363501   0 0 0 0 0.269935482   0 0 0 0 0.142564401  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0" transform="translate(-216.000000, -110.000000)">
+            <g id="home_function_icon_modifying_dimensions" transform="translate(217.000000, 110.000000)">
+                <g id="编组-3备份">
+                    <rect id="矩形备份-6" x="0" y="0" width="32" height="32"></rect>
+                </g>
+                <g id="编组-5" transform="translate(4.800000, 4.000000)">
+                    <g id="路径备份" fill-rule="nonzero">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                        <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                    </g>
+                    <path d="M1.6,2.399 L1.6,2.4 C1.6,2.8418278 1.2418278,3.2 0.8,3.2 C0.3581722,3.2 5.41083001e-17,2.8418278 0,2.4 L0,0.8 C-5.41083001e-17,0.3581722 0.3581722,8.11624501e-17 0.8,0 C1.2414913,-8.11006356e-17 1.59945437,0.35762683 1.59999938,0.798990638 L16.8,0.799 L16.8062331,0.6996497 C16.8555984,0.305188147 17.192159,7.49191847e-17 17.6,0 C18.0418278,-8.11624501e-17 18.4,0.3581722 18.4,0.8 L18.4,2.4 C18.4,2.8418278 18.0418278,3.2 17.6,3.2 C17.1581722,3.2 16.8,2.8418278 16.8,2.4 L16.8010094,2.39999938 L1.6,2.399 Z" id="形状结合" fill="#FFC093"></path>
+                    <path d="M14,14.799 L14,14.8 C14,15.2418278 13.6418278,15.6 13.2,15.6 C12.7581722,15.6 12.4,15.2418278 12.4,14.8 L12.4,13.2 C12.4,12.7581722 12.7581722,12.4 13.2,12.4 C13.6414913,12.4 13.9994544,12.7576268 13.9999994,13.1989906 L29.2,13.199 L29.2062331,13.0996497 C29.2555984,12.7051881 29.592159,12.4 30,12.4 C30.4418278,12.4 30.8,12.7581722 30.8,13.2 L30.8,14.8 C30.8,15.2418278 30.4418278,15.6 30,15.6 C29.5581722,15.6 29.2,15.2418278 29.2,14.8 L29.2010094,14.7999994 L14,14.799 Z" id="形状结合" fill="#FFC093" transform="translate(21.600000, 14.000000) rotate(-270.000000) translate(-21.600000, -14.000000) "></path>
+                    <g id="矩形">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                        <use fill="#FDFFDF" fill-rule="evenodd" xlink:href="#path-4"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>home_function_icon_modifying_dpi</title>
+    <defs>
+        <path d="M22.4,19.1536861 C22.3988826,18.2464899 21.6807125,17.5113473 20.7944611,17.5102035 L13.7855236,17.5102035 C12.8992722,17.5113473 12.1811021,18.2464899 12.1799847,19.1536861 C12.1807302,20.0610401 12.899118,20.7964054 13.7855236,20.7971686 L20.7944611,20.7971686 C21.6807125,20.7960248 22.3988826,20.0608822 22.4,19.1536861 L22.4,19.1536861 Z" id="path-1"></path>
+        <filter x="-39.1%" y="-60.8%" width="178.3%" height="343.4%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.807351629   0 0 0 0 0.31372549   0 0 0 0 0.988235294  0 0 0 0.404912348 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#9E5CFD" offset="0%"></stop>
+            <stop stop-color="#702CF8" offset="100%"></stop>
+        </linearGradient>
+        <path d="M19.3399466,3.19495175 L17.1854825,0.980575283 C16.5736502,0.350824804 15.7411578,-0.00225128841 14.8735065,1.0802934e-05 C14.0019111,-0.00107280698 13.1654297,0.35152998 12.5473343,0.980575283 L10.8160564,2.75276844 C10.550578,3.02479422 10.5454783,3.46390869 10.8045641,3.74231792 L16.506086,9.85399694 C16.6343811,9.99185684 16.8115608,10.0709398 16.9975499,10.0734111 C17.183765,10.0756815 17.3629801,10.0008037 17.494422,9.86576081 L19.3473828,7.9752369 C19.9674155,7.34041781 20.3143985,6.47861269 20.3114016,5.58094238 C20.3133589,4.68442122 19.963326,3.82468803 19.3399466,3.19495175 L19.3399466,3.19495175 Z M0.803578147,13.0108674 C0.293196736,13.5291516 0.00729281354,14.2353762 0.00993492007,14.9712825 L0.00993492007,18.3039191 C-0.0522043836,18.9602858 0.179462702,19.6101365 0.639982171,20.0712683 C1.10980717,20.5662301 1.76478204,20.8306309 2.43818569,20.7971686 L5.69455647,20.7971686 C6.41344277,20.7997179 7.10330628,20.507081 7.60971082,19.9847692 L14.7612878,12.671099 C15.0271229,12.399227 15.0322261,11.9598137 14.7727801,11.6815495 L9.07261018,5.56433454 C8.94388448,5.42669594 8.76659678,5.34767345 8.58047027,5.34492595 C8.39408023,5.3427783 8.21470223,5.41762228 8.08292225,5.55257067 L0.803578147,13.0108674 Z" id="path-4"></path>
+        <filter x="-19.7%" y="-9.6%" width="139.4%" height="138.5%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.674028943   0 0 0 0 0.455628335   0 0 0 0 1  0 0 0 0.404185048 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0" transform="translate(-308.000000, -110.000000)">
+            <g id="home_function_icon_modifying_dpi" transform="translate(308.000000, 110.000000)">
+                <g id="编组-3备份">
+                    <rect id="矩形备份-6" x="0" y="0" width="32" height="32"></rect>
+                </g>
+                <g id="xiugai" transform="translate(4.800000, 5.600000)" fill-rule="nonzero">
+                    <g id="路径">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <use fill="#E7B4FE" xlink:href="#path-1"></use>
+                    </g>
+                    <g id="形状">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+                        <use fill="url(#linearGradient-3)" xlink:href="#path-4"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

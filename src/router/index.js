@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Home from '@/views/home'
 
 Vue.use(VueRouter)
 const BASE_KD = {
@@ -17,7 +18,7 @@ const routes = [
         ...BASE_KD
       }
     },
-    redirect: () => '/compress'
+    component: Home
   },
   {
     path: '/compress',
