@@ -64,6 +64,17 @@ const routes = [
     component: () => import('@/views/dpi/index.vue'),
   },
   {
+    path: '/purchase',
+    name: 'purchase',
+    meta: {
+      tdk: {
+        title: '轻秒格式工厂_图片压缩_在线压缩图片大小_轻秒图片转换器在线',
+        ...BASE_KD
+      }
+    },
+    component: () => import('@/views/purchase/index.vue'),
+  },
+  {
     path: '*',
     name: 'NotFound',
     redirect: () => '/'
