@@ -2,7 +2,14 @@
   <div class="personalCenterPage">
     <div class="loginBox">
       <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
-      <div class="loginBtn">登录/注册</div>
+      <div class="loginBtn" @click="handleLogin" v-if="true">登录/注册</div>
+      <div class="userInfo" v-else>
+        <div class="nickname">轻秒10001</div>
+        <div class="info">
+          <div class="tag">免费用户</div>
+          <div class="userIdBox">ID:<span class="userId">10002</span><span class="copyBtn"></span></div>
+        </div>
+      </div>
     </div>
     <div class="section">
       <div class="card">
@@ -48,25 +55,13 @@
         </div>
       </div>
     </div>
-    <div class="tabBar">
-      <div class="tabItem homeTab">
-        <span class="icon"></span>
-        <span class="txt">轻秒</span>
-      </div>
-      <div class="tabItem personTab active">
-        <span class="icon"></span>
-        <span class="txt">我的</span>
-      </div>
-    </div>
-    <van-popup v-model="isShowExchange" :round="true">
+    <MyTabBar/>
+    <van-popup v-model="isShowExchange" :round="true" :close-on-popstate="true" :safe-area-inset-bottom="true">
       <div class="exchangeBox">
         <span class="close" @click="onCloseExchangeModal"></span>
-        <div class="titleBox">
-          兑换码激活
-
-        </div>
+        <div class="titleBox">兑换码激活</div>
         <div class="exchangeContent">
-          <input type="text" class="input">
+          <input type="text" class="input" placeholder="请输入PC端兑换码"/>
           <button class="activeBtn">立即激活</button>
         </div>
         <dl class="tipsList">
@@ -82,9 +77,11 @@
   </div>
 </template>
 <script>
+import MyTabBar from "@/components/TabBar/index.vue";
+
 export default {
   name: 'PersonalCenter',
-  components: {},
+  components: {MyTabBar},
   props: {},
   data() {
     return {
@@ -103,6 +100,13 @@ export default {
     //打开跳转到兑换码
     jumpTo(path) {
       this.$router.push(path)
+    },
+    handleLogin() {
+      this.$loginModal({
+        onHandleClose: () => {
+          console.log('close')
+        }
+      })
     }
   },
   created() {}

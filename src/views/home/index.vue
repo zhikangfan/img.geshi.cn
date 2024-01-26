@@ -67,22 +67,15 @@
         </div>
       </div>
     </div>
-    <div class="tabBar">
-      <div class="tabItem homeTab active">
-        <span class="icon"></span>
-        <span class="txt">轻秒</span>
-      </div>
-      <div class="tabItem personTab">
-        <span class="icon"></span>
-        <span class="txt">我的</span>
-      </div>
-    </div>
+    <MyTabBar/>
   </div>
 </template>
 <script>
+import MyTabBar from '@/components/TabBar/index.vue'
+
 export default {
   name: 'Home',
-  components: {},
+  components: { MyTabBar },
   props: {},
   data() {
     return {}

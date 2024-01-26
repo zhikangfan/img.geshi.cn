@@ -2,6 +2,7 @@ import Vue from 'vue'
 import '@/assets/less/init.less'
 import MetaInfo from 'vue-meta-info'
 import * as buffer from 'buffer'
+import LoginModal from '@/components/LoginModal'
 
 if (typeof window.global === 'undefined') {
   window.global = window
@@ -14,12 +15,16 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-
-import { Button, Popup } from 'vant';
+import { Button, Popup, CountDown } from 'vant'
 
 Vue.use(MetaInfo)
 Vue.use(Button)
 Vue.use(Popup)
+Vue.use(CountDown)
+Vue.use(LoginModal, {
+  store,
+  router
+})
 new Vue({
   router,
   store,

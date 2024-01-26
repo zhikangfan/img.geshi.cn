@@ -18,6 +18,54 @@
       font-weight: 500;
       color: #030B1A;
     }
+
+    .userInfo {
+      .nickname {
+        width: 180px;
+        margin-bottom: 4px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 24px;
+        color: #000;
+      }
+
+      .info {
+        display: flex;
+        align-items: center;
+
+        .tag {
+          margin-right: 20px;
+          padding: 2px 4px;
+          color: #a0acbb;
+          font-size: 12px;
+          border-radius: 4px;
+          background-color: #f2f4fa;
+        }
+
+        .userIdBox {
+          display: flex;
+          align-items: center;
+          font-size: 12px;
+          color: #a0acbb;
+
+        }
+
+        .copyBtn {
+          display: inline-block;
+          width: 12px;
+          height: 12px;
+          margin-left: 4px;
+          cursor: pointer;
+          background-image: url('../../assets/img/copyId.svg');
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: 50%;
+        }
+      }
+    }
   }
 
   .section {
@@ -116,58 +164,6 @@
     }
   }
 
-  .tabBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 56px;
-    background: #fff;
-
-    .tabItem {
-      font-size: 12px;
-      color: #C8C9CF;
-
-      .icon {
-        display: block;
-        width: 24px;
-        height: 24px;
-
-      }
-
-      &.homeTab {
-        .icon {
-          background: url('../../assets/img/nav_icon_qingmiao.svg') no-repeat center/cover;
-        }
-      }
-
-      &.personTab {
-        .icon {
-          background: url('../../assets/img/nav_icon_me.svg') no-repeat center/cover;
-        }
-      }
-
-      &.active {
-        color: #165DFF;
-
-        &.homeTab {
-          .icon {
-            background: url('../../assets/img/nav_icon_qingmiao_active.svg') no-repeat center/cover;
-          }
-        }
-
-        &.personTab {
-          .icon {
-            background: url('../../assets/img/nav_icon_me_active.svg') no-repeat center/cover;
-          }
-        }
-      }
-    }
-  }
-
 
   .exchangeBox {
     position: relative;
@@ -200,10 +196,30 @@
         padding: 0 12px;
         font-size: 15px;
         color: #030B1A;
-        background: rgba(22, 93, 255, 0.05);
+
+
+        background: #F4F4F4;
         border-radius: 8px;
-        border: 1px solid #165DFF;
+
+        border: 1px solid transparent;
         box-sizing: border-box;
+      }
+
+      .input::-webkit-input-placeholder {
+        color: #B4B7BC;
+      }
+
+      .input::-moz-placeholder {
+        color: #B4B7BC;
+      }
+
+      .input:-ms-input-placeholder {
+        color: #B4B7BC;
+      }
+
+      .input:focus {
+        background: rgba(22, 93, 255, 0.05);
+        border-color: #165DFF;
       }
 
       .activeBtn {
