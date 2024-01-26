@@ -1,0 +1,326 @@
+.editPage {
+
+  .imgBox {
+    width: 100%;
+    height: 375px;
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  .panelContainer {
+    padding: 16px 12px;
+
+    .imgInfo {
+      display: flex;
+      align-items: center;
+
+      .infoItem {
+        font-size: 14px;
+        margin-right: 16px;
+
+        &:nth-last-of-type(1) {
+          margin-right: 0;
+        }
+
+        .key {
+
+          font-weight: 500;
+          color: #030B1A;
+        }
+
+        .value {
+          color: rgba(3, 11, 26, 0.64);
+        }
+      }
+    }
+
+    .panelItem {
+      margin: 10px 0;
+
+      .panelTitleBox {
+        padding: 12px 0;
+        font-size: 14px;
+        font-weight: 500;
+        color: #030B1A;
+
+        .red {
+          color: #FF0000;
+        }
+
+        .tips {
+          font-size: 12px;
+          color: #858891
+        }
+      }
+
+      .panelItemContent {
+        .changeSizeBox {
+          display: flex;
+          align-items: center;
+
+          .changeSizeBoxLeft {
+            flex: 1;
+            display: flex;
+            align-items: center;
+
+            .inputBox {
+              display: flex;
+              align-items: center;
+              margin-right: 16px;
+
+              span {
+                padding: 0 10px;
+                flex-shrink: 0;
+              }
+
+              input {
+                flex: 1;
+                height: 100%;
+                width: 100%;
+                border: none;
+                color: #165DFF;
+              }
+            }
+          }
+
+          .btn {
+            flex-shrink: 0;
+            width: 72px;
+            height: 40px;
+            margin-left: 5px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #FFFFFF;
+            background: #165DFF;
+            border-radius: 4px;
+            outline: none;
+            border: none;
+          }
+
+          .inputBox {
+            height: 40px;
+            background: #FFFFFF;
+            border-radius: 4px;
+            border: 1px solid rgba(133, 136, 145, 0.3);
+          }
+        }
+
+        .radioLine {
+          display: flex;
+          padding: 11px 0;
+
+          .radioItem {
+            flex: 1;
+            display: flex;
+            align-items: center;
+
+            .radio {
+              display: block;
+              border-radius: 50%;
+              width: 14px;
+              height: 14px;
+              margin-right: 8px;
+              background: #FFFFFF;
+              border: 1px solid rgba(133, 136, 145, 0.3);
+
+              &.checked {
+                position: relative;
+                background: #165DFF;
+
+                &::after {
+                  content: '';
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  width: 4px;
+                  height: 4px;
+                  border-radius: 50%;
+                  background: #ffff;
+                }
+              }
+            }
+          }
+        }
+
+        .sizeLine {
+          display: flex;
+          align-items: center;
+          margin-bottom: 12px;
+
+          &:nth-last-of-type(1) {
+            margin-bottom: 0;
+          }
+
+          .sizeItem {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            height: 62px;
+            font-size: 14px;
+            background: #FFFFFF;
+            border-radius: 4px;
+            border: 1px solid rgba(133, 136, 145, 0.3);
+
+            &.checked {
+              border-color: #165DFF;
+
+              .txt, .value {
+                color: #165DFF;
+              }
+
+            }
+
+            &:nth-child(3n) {
+              margin-right: 0;
+            }
+
+            .txt {
+              display: flex;
+              align-items: center;
+              margin-bottom: 2px;
+              font-weight: 500;
+              color: #030B1A;
+            }
+
+            .value {
+              font-size: 12px;
+              color: #858891;
+            }
+
+            .moreIcon {
+              display: block;
+              width: 6px;
+              height: 9px;
+              margin-left: 4px;
+              background: #030B1A;
+            }
+          }
+
+        }
+      }
+    }
+  }
+
+  .btnGroup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    background: #F2F2F7;
+    padding: 8px 0;
+
+    .btn {
+      width: 160px;
+      height: 48px;
+      margin: 0 12px;
+      border-radius: 24px;
+      border: 1px solid #979797;
+      background: #FFFFFF;
+      font-size: 17px;
+      font-weight: 500;
+      color: #030B1A;
+      outline: none;
+
+      &.primary {
+        background: #165DFF;
+        border-color: #165DFF;
+        color: #fff;
+      }
+    }
+  }
+
+  .checkSizeModal {
+    width: 315px;
+    box-sizing: border-box;
+
+    .checkSizeModalContainer {
+      padding: 16px;
+    }
+
+    .checkSizeBox {
+      margin-bottom: 5px;
+
+      .title {
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #030B1A;
+        line-height: 18px;
+      }
+
+      .checkSizeContent {
+        .checkSizeLine {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .checkSizeItem {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          margin-right: 8px;
+          margin-bottom: 8px;
+          height: 40px;
+          background: #FFFFFF;
+          border-radius: 4px;
+          border: 1px solid rgba(133, 136, 145, 0.3);
+
+          &.checked {
+
+            border-color: #165DFF;
+
+            .txt {
+              color: #165DFF;
+            }
+
+            .size {
+              color: #165DFF;
+            }
+          }
+
+          &:nth-child(3n) {
+            margin-right: 0;
+          }
+
+          .txt {
+            font-size: 12px;
+            color: rgba(3, 11, 26, 0.8);
+            line-height: 17px;
+          }
+
+          .size {
+            font-size: 10px;
+            color: #858891;
+          }
+        }
+      }
+    }
+
+    .checkSizeModalBtnGroup {
+      display: flex;
+
+      border-top: 1px solid #D8D8D8;
+
+      .btn {
+        flex: 1;
+        height: 44px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #030B1A;
+        outline: none;
+        border: none;
+
+        &.primary {
+          background: #165DFF;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
