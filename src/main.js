@@ -15,10 +15,11 @@ import router from './router'
 import store from './store'
 
 
-import { Button } from 'vant';
+import { Button, Popup } from 'vant';
 
 Vue.use(MetaInfo)
 Vue.use(Button)
+Vue.use(Popup)
 new Vue({
   router,
   store,

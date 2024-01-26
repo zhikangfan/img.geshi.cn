@@ -76,6 +76,17 @@ const routes = [
     component: () => import('@/views/purchase/index.vue'),
   },
   {
+    path: '/personal-center',
+    name: 'personal-center',
+    meta: {
+      tdk: {
+        title: '轻秒格式工厂_图片压缩_在线压缩图片大小_轻秒图片转换器在线',
+        ...BASE_KD
+      }
+    },
+    component: () => import('@/views/personalCenter/index.vue'),
+  },
+  {
     path: '*',
     name: 'NotFound',
     redirect: () => '/'
