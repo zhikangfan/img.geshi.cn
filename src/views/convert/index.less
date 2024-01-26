@@ -1,0 +1,182 @@
+.convertPage {
+  background: #F2F2F7;
+  height: 100vh;
+
+  .convertPageContainer {
+    height: calc(100% - 250px);
+    overflow-y: auto;
+  }
+
+  .cardList {
+    padding: 12px;
+
+    .cardItem {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      padding: 14px;
+      border-radius: 8px;
+      box-sizing: border-box;
+      margin-bottom: 8px;
+
+      .previewImg {
+        position: relative;
+        width: 76px;
+        height: 76px;
+        margin-right: 16px;
+        border-radius: 8px;
+        overflow: hidden;
+
+        .img {
+          width: 100%;
+          height: 100%;
+          background: pink;
+        }
+
+        .preview {
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          bottom: 0;
+          right: 0;
+          background: rgba(0, 0, 0, 0.55);
+          border-radius: 13px 0px 8px 0px;
+        }
+      }
+
+      .checkBox {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 24px;
+        height: 24px;
+        background: #DADBDE;
+        border-radius: 0px 8px 0px 39px;
+      }
+
+      .infoBox {
+        .infoItem {
+          display: flex;
+          align-items: center;
+          font-size: 13px;
+          margin: 5px 0;
+
+          .title {
+            color: #030B1A;
+            line-height: 18px;
+          }
+
+          .infoValue {
+            .value {
+              color: #858891;
+
+              &.strong {
+                color: #165DFF;
+              }
+            }
+          }
+        }
+
+
+      }
+
+      &.checked {
+        border: 2px solid #165DFF;
+
+        .checkBox {
+          background: #165DFF;
+        }
+
+      }
+    }
+  }
+
+  .panelContainer {
+    position: fixed;
+    bottom: 0;
+    padding: 0 12px 24px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    background: #F2F2F7;
+
+    .panel {
+      background: #FFFFFF;
+      border-radius: 8px;
+      padding: 14px;
+
+      .panelTitle {
+        margin-bottom: 18px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #030B1A;
+      }
+
+      .radioList {
+        .radioLine {
+          display: flex;
+          padding: 11px 0;
+
+          .radioItem {
+            flex: 1;
+            display: flex;
+            align-items: center;
+
+            .radio {
+              display: block;
+              border-radius: 50%;
+              width: 14px;
+              height: 14px;
+              margin-right: 8px;
+              background: #FFFFFF;
+              border: 1px solid rgba(133, 136, 145, 0.3);
+
+              &.checked {
+                position: relative;
+                background: #165DFF;
+
+                &::after {
+                  content: '';
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  width: 4px;
+                  height: 4px;
+                  border-radius: 50%;
+                  background: #ffff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .btnGroup {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+
+      .btn {
+        width: 160px;
+        height: 48px;
+        margin: 0 12px;
+        border-radius: 24px;
+        border: 1px solid #979797;
+        background: #FFFFFF;
+        font-size: 17px;
+        font-weight: 500;
+        color: #030B1A;
+        outline: none;
+
+        &.primary {
+          background: #165DFF;
+          border-color: #165DFF;
+          color: #fff;
+        }
+      }
+    }
+  }
+}
