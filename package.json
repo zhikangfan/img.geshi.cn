@@ -55,6 +55,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
+    "postcss-px-to-viewport": "^1.1.1",
     "prettier": "2.6.2",
     "shelljs": "^0.8.5",
     "style-resources-loader": "^1.4.1",

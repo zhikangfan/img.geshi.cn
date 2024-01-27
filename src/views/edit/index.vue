@@ -112,7 +112,7 @@
     </div>
     <div class="btnGroup">
       <button class="default btn">重新上传</button>
-      <button class="btn primary">开始压缩</button>
+      <button class="btn primary">导出</button>
     </div>
     <van-popup
       v-model="isShowCheckSizeModal"
