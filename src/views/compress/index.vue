@@ -4,7 +4,10 @@
       <van-swipe-cell v-for="(file, idx) in fileList" :key="file.id">
         <div :class="{ cardItem: true, checked: file.checked }" @click="onSelectCard(idx)">
           <div class="previewImg" @click.stop="handlePreview(file)">
-            <img :src="(isExecuted && !isLoading && file.status) ? file.result.src : file.init.content" alt="" class="img" />
+            <van-image
+              fit="contain"
+              :src="isExecuted && !isLoading && file.status ? file.result.src : file.init.content"
+            />
             <div class="preview" v-if="isExecuted && !isLoading && file.status"></div>
           </div>
           <div class="errorBox" v-if="isExecuted && !isLoading && !file.status">处理失败</div>
@@ -95,10 +98,11 @@
   </div>
 </template>
 <script>
-import {Dialog, ImagePreview, Toast} from 'vant'
+import { Dialog, ImagePreview, Toast } from 'vant'
 import { compressImage, compressPng } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
-import Uploader from "@/components/Uploader/index.vue";
+import Uploader from '@/components/Uploader/index.vue'
+
 export default {
   name: 'Compress',
   components: {
@@ -206,16 +210,16 @@ export default {
       })
       this.fileList.forEach((item, idx) => {
         let taskFn = new Promise(resolve => {
-          ;(async (resolve, item, idx) => {
+          (async (resolve, item, idx) => {
             try {
               let options = size ? { quality: quality / 100, size: size * 1024 } : { quality: quality / 100 }
               let resultBlob = await compressImage(item.raw, options)
-              let compressInfo = await getImageFileInfo(resultBlob)
-              let result = { ...item, result: compressInfo, status: true, selected: false }
+              let resultInfo = await getImageFileInfo(resultBlob)
+              let result = { ...item, result: resultInfo, status: true, checked: false }
               this.fileList.splice(idx, 1, result)
               resolve(result)
             } catch (e) {
-              let result = { ...item, status: false, selected: false }
+              let result = { ...item, status: false, checked: false }
               this.fileList.splice(idx, 1, result)
               resolve(result)
             }
@@ -254,7 +258,6 @@ export default {
   },
   created() {
     this.fileList = this.$route.params.fileList
-    console.log(this.fileList)
   },
   mounted() {
     window.addEventListener('beforeunload', e => this.onLeave(e))

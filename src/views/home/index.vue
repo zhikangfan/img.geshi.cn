@@ -7,17 +7,17 @@
           <span class="title">压缩</span>
         </div>
         <div
-          :class="{ funcItem: true, checked: selectFunc === 'formatConvert' }"
-          @click="onSelectFunc('formatConvert')"
+          :class="{ funcItem: true, checked: selectFunc === 'convert' }"
+          @click="onSelectFunc('convert')"
         >
           <span class="icon format_icon"></span>
           <span class="title">格式转换</span>
         </div>
-        <div :class="{ funcItem: true, checked: selectFunc === 'editSize' }" @click="onSelectFunc('editSize')">
+        <div :class="{ funcItem: true, checked: selectFunc === 'edit' }" @click="onSelectFunc('edit')">
           <span class="icon size_icon"></span>
           <span class="title">修改尺寸</span>
         </div>
-        <div :class="{ funcItem: true, checked: selectFunc === 'editDpi' }" @click="onSelectFunc('editDpi')">
+        <div :class="{ funcItem: true, checked: selectFunc === 'edit-dpi' }" @click="onSelectFunc('edit-dpi')">
           <span class="icon dpi_icon"></span>
           <span class="title">修改DPI</span>
         </div>
@@ -77,8 +77,6 @@
 </template>
 <script>
 import MyTabBar from '@/components/TabBar/index.vue'
-import { compressConfig } from '@/config'
-import getImageFileInfo, { getBaseFileInfo } from '@/utils/getImageFileInfo'
 import Uploader from '@/components/Uploader/index.vue'
 
 export default {
@@ -95,19 +93,19 @@ export default {
           }
         },
         {
-          function: 'formatConvert',
+          function: 'convert',
           uploadConfig: {
             tips: '证件照压缩、保持清晰度、压缩指定大小'
           }
         },
         {
-          function: 'editSize',
+          function: 'edit',
           uploadConfig: {
             tips: '证件照压缩、保持清晰度、压缩指定大小'
           }
         },
         {
-          function: 'editDpi',
+          function: 'edit-dpi',
           uploadConfig: {
             tips: '证件照压缩、保持清晰度、压缩指定大小'
           }
@@ -118,9 +116,9 @@ export default {
     }
   },
   methods: {
-    onUploadSuccess(params,) {
+    onUploadSuccess(params) {
       this.$router.push({
-        name: 'compress',
+        name: this.selectFunc,
         params: {
           fileList: [...params]
         }
@@ -128,6 +126,7 @@ export default {
     },
     onSelectFunc(func) {
       this.selectFunc = func
+      console.log(func,this.config.find(item => item.function === func))
       let {
         uploadConfig: { tips }
       } = this.config.find(item => item.function === func)

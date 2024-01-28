@@ -67,7 +67,16 @@
 
           .infoValue {
             .value {
+              display: flex;
+              align-items: center;
               color: #858891;
+
+              .filename {
+                display: block;
+                width: 120px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
 
               &.strong {
                 color: #165DFF;
@@ -77,6 +86,11 @@
         }
 
 
+      }
+
+      .errorBox {
+        font-size: 14px;
+        color: red;
       }
 
       &.checked {
@@ -116,20 +130,12 @@
           padding: 11px 0;
 
           .radioItem {
-            flex: 1;
+            width: 33%;
             display: flex;
             align-items: center;
 
-            .radio {
-              display: block;
-              border-radius: 50%;
-              width: 14px;
-              height: 14px;
-              margin-right: 8px;
-              background: #FFFFFF;
-              border: 1px solid rgba(133, 136, 145, 0.3);
-
-              &.checked {
+            &.checked {
+              .radio {
                 position: relative;
                 background: #165DFF;
 
@@ -145,6 +151,17 @@
                   background: #ffff;
                 }
               }
+            }
+
+            .radio {
+              display: block;
+              border-radius: 50%;
+              width: 14px;
+              height: 14px;
+              margin-right: 8px;
+              background: #FFFFFF;
+              border: 1px solid rgba(133, 136, 145, 0.3);
+
             }
           }
         }
@@ -163,7 +180,7 @@
         margin: 0 12px;
         border-radius: 24px;
         border: 1px solid #979797;
-        background: #FFFFFF;
+        background: #F2F2F7;
         font-size: 17px;
         font-weight: 500;
         color: #030B1A;

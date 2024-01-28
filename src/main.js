@@ -15,7 +15,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import { Popup, CountDown, Uploader, Slider, Toast, SwipeCell, Button } from 'vant'
+import { Popup, CountDown, Uploader, Slider, Toast, SwipeCell, Button, Image as VanImage } from 'vant'
 
 Vue.use(MetaInfo)
 Vue.use(Uploader)
@@ -25,6 +25,7 @@ Vue.use(Slider)
 Vue.use(Toast)
 Vue.use(SwipeCell)
 Vue.use(Button)
+Vue.use(VanImage)
 Vue.use(LoginModal, {
   store,
   router
