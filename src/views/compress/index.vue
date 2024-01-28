@@ -210,7 +210,7 @@ export default {
       })
       this.fileList.forEach((item, idx) => {
         let taskFn = new Promise(resolve => {
-          (async (resolve, item, idx) => {
+          ;(async (resolve, item, idx) => {
             try {
               let options = size ? { quality: quality / 100, size: size * 1024 } : { quality: quality / 100 }
               let resultBlob = await compressImage(item.raw, options)
@@ -251,9 +251,7 @@ export default {
 
     // 下载选中的图片
     onClickDownload() {
-      let downloadList = this.fileList.filter(item => {
-        item.checked = true
-      })
+      let downloadList = this.fileList.filter(item => item.checked)
     }
   },
   created() {

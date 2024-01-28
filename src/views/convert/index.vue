@@ -79,7 +79,7 @@
 <script>
 import { ImagePreview, Toast } from 'vant'
 import Uploader from '@/components/Uploader/index.vue'
-import { compressImage, imageFormatConvert } from '@/core'
+import { imageFormatConvert } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
 
 export default {
@@ -179,9 +179,7 @@ export default {
     },
     // 下载选中的图片
     onClickDownload() {
-      let downloadList = this.fileList.filter(item => {
-        item.checked = true
-      })
+      let downloadList = this.fileList.filter(item => item.checked)
     },
     onStart() {
       this.isLoading = true // 开启loading
