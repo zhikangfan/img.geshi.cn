@@ -1,5 +1,6 @@
 import FileType from 'file-type/browser'
 import { v4 as uuidV4 } from 'uuid'
+import {formatFileSize} from "@/utils/formatFileSize";
 /**
  * @description 获取文件名称与后缀
  * @param fullFilename -文件名
@@ -90,7 +91,8 @@ export async function getBaseFileInfo(file) {
     size: (file.size / 1024).toFixed(1),
     raw: file,
     fileExt: fileExt,
-    filename: filename
+    filename: filename,
+    formatSize: formatFileSize(file.size)
   }
 }
 

@@ -15,12 +15,16 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import { Button, Popup, CountDown } from 'vant'
+import { Popup, CountDown, Uploader, Slider, Toast, SwipeCell, Button } from 'vant'
 
 Vue.use(MetaInfo)
-Vue.use(Button)
+Vue.use(Uploader)
 Vue.use(Popup)
 Vue.use(CountDown)
+Vue.use(Slider)
+Vue.use(Toast)
+Vue.use(SwipeCell)
+Vue.use(Button)
 Vue.use(LoginModal, {
   store,
   router

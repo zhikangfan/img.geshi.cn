@@ -17,7 +17,19 @@ export function getTypeByExt(ext) {
     avif: 'avif.avif',
     orf: 'image/ORF',
     svg: 'image/svg+xml',
-    ico: 'image/x-icon'
+    ico: 'image/x-icon',
+    //
+    'image/png': 'image/png',
+    'image/jpeg': 'image/jpeg',
+    'image/jpg': 'image/jpg',
+    'image/gif': 'image/gif',
+    'image/bmp': 'image/bmp',
+    'image/webp': 'image/webp',
+    'image/tiff': 'image/tiff',
+    'avif.avif': 'avif.avif',
+    'image/ORF': 'image/ORF',
+    'image/svg+xml' : 'image/svg+xml',
+    'image/x-icon': 'image/x-icon'
   }
   return type[ext] || 'image/png'
 }

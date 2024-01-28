@@ -31,7 +31,9 @@ export default {
   },
   methods: {
     jumpTo(path) {
-      this.$router.replace(path)
+      if (this.$route.path !== path) {
+        this.$router.replace(path)
+      }
     }
   },
   created() {}

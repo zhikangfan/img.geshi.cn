@@ -2,27 +2,32 @@
   <div class="homePage">
     <div class="funcArea">
       <div class="funcList">
-        <div class="funcItem checked">
+        <div :class="{ funcItem: true, checked: selectFunc === 'compress' }" @click="onSelectFunc('compress')">
           <span class="icon compress_icon"></span>
           <span class="title">压缩</span>
         </div>
-        <div class="funcItem">
+        <div
+          :class="{ funcItem: true, checked: selectFunc === 'formatConvert' }"
+          @click="onSelectFunc('formatConvert')"
+        >
           <span class="icon format_icon"></span>
           <span class="title">格式转换</span>
         </div>
-        <div class="funcItem">
+        <div :class="{ funcItem: true, checked: selectFunc === 'editSize' }" @click="onSelectFunc('editSize')">
           <span class="icon size_icon"></span>
           <span class="title">修改尺寸</span>
         </div>
-        <div class="funcItem">
+        <div :class="{ funcItem: true, checked: selectFunc === 'editDpi' }" @click="onSelectFunc('editDpi')">
           <span class="icon dpi_icon"></span>
           <span class="title">修改DPI</span>
         </div>
       </div>
-      <div class="uploadContainer">
-        <span class="icon"></span>
-        <div class="tips">证件照压缩、保持清晰度、压缩指定大小</div>
-      </div>
+      <Uploader :on-success="onUploadSuccess" class="uploader">
+        <div class="uploadContainer">
+          <span class="icon"></span>
+          <div class="tips">{{ uploadTips }}}</div>
+        </div>
+      </Uploader>
     </div>
     <div class="featureArea">
       <div class="areaTitle">我们的优势</div>
@@ -67,21 +72,71 @@
         </div>
       </div>
     </div>
-    <MyTabBar/>
+    <MyTabBar />
   </div>
 </template>
 <script>
 import MyTabBar from '@/components/TabBar/index.vue'
+import { compressConfig } from '@/config'
+import getImageFileInfo, { getBaseFileInfo } from '@/utils/getImageFileInfo'
+import Uploader from '@/components/Uploader/index.vue'
 
 export default {
   name: 'Home',
-  components: { MyTabBar },
+  components: { Uploader, MyTabBar },
   props: {},
   data() {
-    return {}
+    return {
+      config: [
+        {
+          function: 'compress',
+          uploadConfig: {
+            tips: '证件照压缩、保持清晰度、压缩指定大小'
+          }
+        },
+        {
+          function: 'formatConvert',
+          uploadConfig: {
+            tips: '证件照压缩、保持清晰度、压缩指定大小'
+          }
+        },
+        {
+          function: 'editSize',
+          uploadConfig: {
+            tips: '证件照压缩、保持清晰度、压缩指定大小'
+          }
+        },
+        {
+          function: 'editDpi',
+          uploadConfig: {
+            tips: '证件照压缩、保持清晰度、压缩指定大小'
+          }
+        }
+      ],
+      selectFunc: '', // 当前选中的方法
+      uploadTips: ''
+    }
   },
-  methods: {},
-  created() {}
+  methods: {
+    onUploadSuccess(params,) {
+      this.$router.push({
+        name: 'compress',
+        params: {
+          fileList: [...params]
+        }
+      })
+    },
+    onSelectFunc(func) {
+      this.selectFunc = func
+      let {
+        uploadConfig: { tips }
+      } = this.config.find(item => item.function === func)
+      this.uploadTips = tips
+    }
+  },
+  created() {
+    this.onSelectFunc('compress')
+  }
 }
 </script>
 <style scoped lang="less">

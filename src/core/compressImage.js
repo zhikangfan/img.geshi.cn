@@ -1,15 +1,61 @@
 import { compressAccurately } from 'image-conversion'
 import FileType from 'file-type/browser'
+import { Density, DensityUnit, ImageMagick, initializeImageMagick } from '@imagemagick/magick-wasm'
+import { imageFormatConvert } from '@/core/imageFormatConvert'
 // import * as Magick from './magickApi'
 // import {call} from 'wasm-imagemagick'
 
 /**
  * @description 根据
  * @param blob
- * @param quality
+ * @param quality 0 - 10
  * @returns {Promise<*|Blob>}
  */
-export async function compressImage(blob, { quality }) {
+export async function compressImage(blob, { quality, size }) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const arrayBuffer = reader.result // reader.result 是文件内容
+      const uint8Array = new Uint8Array(arrayBuffer)
+      const wasmLocation = 'https://res.yunkun.cn/magick.wasm'
+      initializeImageMagick(wasmLocation).then(() => {
+        ImageMagick.read(uint8Array, function (image) {
+          image.quality = quality
+          image.write(image.format, data => {
+            let blob = new Blob([data], {
+              type: image.format
+            })
+            if (size && size > 0) {
+              // 判断用户是想增大内存 还是压缩内存
+              if (size > blob.size) {
+                increasePictureMemory(blob, size).then(resBlob => {
+                  resolve(resBlob)
+                })
+              } else {
+                compressAccurately(blob, {
+                  accuracy: 0.95,
+                  type: blob.type,
+                  size: size
+                }).then(resBlob => {
+                  // 格式不对，再转回去
+                  if (resBlob.type !== blob.type) {
+                    imageFormatConvert(resBlob, {to: blob.type}).then(d => {
+                      resolve(d)
+                    })
+                  } else {
+                    resolve(resBlob)
+                  }
+                })
+              }
+            } else {
+              resolve(blob)
+            }
+          })
+        })
+      })
+    }
+    reader.readAsArrayBuffer(blob)
+  })
   /**
    * 当传递的清晰度小于 0.01 或者
    */
@@ -19,11 +65,15 @@ export async function compressImage(blob, { quality }) {
   if (quality < 0.01) {
     quality = 0.01
   }
+  let outputBlob
+  if (size && size > 0) {
+    outputBlob = await compressAccurately(blob, {
+      accuracy: 0.95,
+      type: blob.type,
+      size: size
+    })
+  }
 
-  let outputBlob = await compressAccurately(blob, {
-    accuracy: 0.95,
-    size: (blob.size / 1024) * quality
-  })
   /**
    * 如果转换后的格式发生了变化，则重新创建一个blob将原type传入
    */
@@ -45,16 +95,27 @@ export async function compressPng(params) {
   let src = params
 
   if (params instanceof Blob) {
-    src =  URL.createObjectURL(params)
+    src = URL.createObjectURL(params)
   }
 
-  let fetchedSourceImage = await fetch(src);
-  let arrayBuffer = await fetchedSourceImage.arrayBuffer();
-  let sourceBytes = new Uint8Array(arrayBuffer);
-  const files = [{ 'name': 'srcFile.png', 'content': sourceBytes }];
-  const command = ["convert", "srcFile.png", "-define", "png:compression-level=9", "-strip", "-depth", "8", "-colors", "255", "out.png"];
-  let result = await call(files, command);
-  if(result.exitCode !== 0) {
+  let fetchedSourceImage = await fetch(src)
+  let arrayBuffer = await fetchedSourceImage.arrayBuffer()
+  let sourceBytes = new Uint8Array(arrayBuffer)
+  const files = [{ name: 'srcFile.png', content: sourceBytes }]
+  const command = [
+    'convert',
+    'srcFile.png',
+    '-define',
+    'png:compression-level=9',
+    '-strip',
+    '-depth',
+    '8',
+    '-colors',
+    '255',
+    'out.png'
+  ]
+  let result = await call(files, command)
+  if (result.exitCode !== 0) {
     console.log('error', result)
     return
   }
@@ -62,6 +123,7 @@ export async function compressPng(params) {
 
   return outputImage.blob
 }
+
 /**
  * @description 自定义压缩大小，github地址：https://github.com/WangYuLue/image-conversion
  * @param {Blob} blob - blob文件
@@ -85,6 +147,7 @@ export async function outputTheSpecifiedSize(blob, { maxSize }) {
   }
   return outputBlob
 }
+
 function changeBufferSize(buffer, size) {
   const dataArray = new Uint8Array(buffer)
   let newDataArray = new Uint8Array(dataArray.length + size)
@@ -95,6 +158,13 @@ function changeBufferSize(buffer, size) {
 
   return newDataArray
 }
+
+/**
+ * 增大图片内存
+ * @param file
+ * @param size 指定大小，单位b
+ * @returns {Promise<unknown>}
+ */
 export async function increasePictureMemory(file, size) {
   if (!(file instanceof Blob)) {
     throw Error('参数不是Blob类型')
