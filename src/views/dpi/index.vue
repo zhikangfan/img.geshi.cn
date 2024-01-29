@@ -9,7 +9,7 @@
                 fit="contain"
                 :src="isExecuted && !isLoading && file.status ? file.result.src : file.init.content"
               />
-              <div class="preview" @click.stop="handlePreview(file)"></div>
+              <div class="preview" v-if="isExecuted && !isLoading && file.status" @click.stop="handlePreview(file)"></div>
             </div>
             <div class="errorBox" v-if="isExecuted && !isLoading && !file.status">处理失败</div>
             <div v-else class="infoBox">
@@ -41,7 +41,7 @@
       </div>
     </div>
     <div class="panelContainer">
-      <div class="panel">
+      <div class="panel" v-if="!isExecuted">
         <div class="panelTitle">设置分辨率参数（单位dpi）</div>
         <div class="radioList">
           <div class="radioLine" v-for="(group, idx) in radioGroup" :key="idx">
@@ -73,9 +73,9 @@
 <script>
 import { ImagePreview, Toast } from 'vant'
 import Uploader from '@/components/Uploader/index.vue'
-import { changeImgDpi, imageFormatConvert } from '@/core'
+import { changeImgDpi } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
-
+import {saveAs} from 'file-saver'
 export default {
   name: 'Dpi',
   components: { Uploader },
@@ -140,23 +140,37 @@ export default {
     jumpTo(path) {
       this.$router.replace(path)
     },
+    // 返回上一步
     goBack() {
-      // Dialog.confirm({
-      //   message: '确定返回',
-      //   confirmButtonText: '返回',
-      //   overlay: false
-      // })
-      this.jumpTo('/')
+      this.isLoading = false
+      this.isExecuted = false
+      const fields = ['checked', 'download', 'status', 'result']
+      this.fileList.map(item => {
+        let keys = Object.keys(item)
+        fields.forEach(field => {
+          if (keys.includes(field)) {
+            delete item[field]
+          }
+        })
+      })
     },
 
     // 下载选中的图片
     onClickDownload() {
-      let downloadList = this.fileList.filter(item => item.checked)
+      let downloadList = this.fileList.filter((item,idx) => {
+        // 标记一下是否被下载过
+        if (item.checked) {
+          this.fileList.splice(idx, 1, {...item, download: true})
+        }
+        return item.checked
+      })
+      downloadList.forEach(item => {
+        saveAs(item.result.raw, item.name)
+      })
     },
     onStart() {
       this.isLoading = true // 开启loading
       this.isExecuted = true
-      let { dpi } = this.options
       let taskList = []
       const toast = Toast({
         type: 'loading',

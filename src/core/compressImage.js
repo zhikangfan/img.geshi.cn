@@ -20,7 +20,7 @@ export async function compressImage(blob, { quality, size }) {
       const wasmLocation = 'https://res.yunkun.cn/magick.wasm'
       initializeImageMagick(wasmLocation).then(() => {
         ImageMagick.read(uint8Array, function (image) {
-          image.quality = quality
+          image.quality = quality * 10
           image.write(image.format, data => {
             let blob = new Blob([data], {
               type: image.format

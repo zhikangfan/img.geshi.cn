@@ -9,7 +9,7 @@
                 fit="contain"
                 :src="isExecuted && !isLoading && file.status ? file.result.src : file.init.content"
               />
-              <div class="preview" @click.stop="handlePreview(file)"></div>
+              <div class="preview" v-if="isExecuted && !isLoading && file.status" @click.stop="handlePreview(file)"></div>
             </div>
             <div class="errorBox" v-if="isExecuted && !isLoading && !file.status">处理失败</div>
             <div v-else class="infoBox">
@@ -27,7 +27,7 @@
                 <div class="infoValue">
                   <span class="value"
                     ><span class="filename">{{ file.filename }}</span
-                    >.{{ file.result?.suffix }}</span
+                    >.{{ options.to }}</span
                   >
                 </div>
               </div>
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="panelContainer">
-      <div class="panel">
+      <div class="panel" v-if="!isExecuted || isLoading">
         <div class="panelTitle">设置图片导出格式</div>
         <div class="radioList">
           <div class="radioLine" v-for="(group, idx) in radioGroup" :key="idx">
@@ -81,7 +81,7 @@ import { ImagePreview, Toast } from 'vant'
 import Uploader from '@/components/Uploader/index.vue'
 import { imageFormatConvert } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
-
+import {saveAs} from 'file-saver'
 export default {
   name: 'Convert',
   components: { Uploader },
@@ -170,16 +170,31 @@ export default {
       this.$router.replace(path)
     },
     goBack() {
-      // Dialog.confirm({
-      //   message: '确定返回',
-      //   confirmButtonText: '返回',
-      //   overlay: false
-      // })
-      this.jumpTo('/')
+      this.isLoading = false
+      this.isExecuted = false
+      const fields = ['checked', 'download', 'status', 'result']
+      this.fileList.map(item => {
+        let keys = Object.keys(item)
+        fields.forEach(field => {
+          if (keys.includes(field)) {
+            delete item[field]
+          }
+        })
+      })
     },
     // 下载选中的图片
     onClickDownload() {
-      let downloadList = this.fileList.filter(item => item.checked)
+      let downloadList = this.fileList.filter((item,idx) => {
+        // 标记一下是否被下载过
+        if (item.checked) {
+          this.fileList.splice(idx, 1, {...item, download: true})
+        }
+        return item.checked
+      })
+      downloadList.forEach(item => {
+        // FIXME: 怎么区别JPG、 JPEG ？？
+        saveAs(item.result.raw, `${item.filename}.${this.options.to}`)
+      })
     },
     onStart() {
       this.isLoading = true // 开启loading
@@ -216,7 +231,6 @@ export default {
         )
       })
       Promise.all(taskList).then(d => {
-        console.log(this.fileList, '---')
         this.isLoading = false
         toast.clear()
       })

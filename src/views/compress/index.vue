@@ -48,7 +48,7 @@
       </van-swipe-cell>
     </div>
     <div class="panelContainer">
-      <div class="panel">
+      <div class="panel" v-if="!isExecuted || isLoading">
         <div class="panelItem">
           <span class="title">压缩比例：</span>
           <div class="panelItemRight">
@@ -98,11 +98,11 @@
   </div>
 </template>
 <script>
-import { Dialog, ImagePreview, Toast } from 'vant'
-import { compressImage, compressPng } from '@/core'
+import { ImagePreview, Toast } from 'vant'
+import { compressImage } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
 import Uploader from '@/components/Uploader/index.vue'
-
+import {saveAs} from 'file-saver'
 export default {
   name: 'Compress',
   components: {
@@ -241,18 +241,32 @@ export default {
       this.$router.replace(path)
     },
     goBack() {
-      // Dialog.confirm({
-      //   message: '确定返回',
-      //   confirmButtonText: '返回',
-      //   overlay: false
-      // })
-      this.jumpTo('/')
+      this.isLoading = false
+      this.isExecuted = false
+      const fields = ['checked', 'download', 'status', 'result']
+      this.fileList.map(item => {
+        let keys = Object.keys(item)
+        fields.forEach(field => {
+          if (keys.includes(field)) {
+            delete item[field]
+          }
+        })
+      })
     },
 
     // 下载选中的图片
     onClickDownload() {
-      let downloadList = this.fileList.filter(item => item.checked)
-    }
+      let downloadList = this.fileList.filter((item,idx) => {
+        // 标记一下是否被下载过
+        if (item.checked) {
+          this.fileList.splice(idx, 1, {...item, download: true})
+        }
+        return item.checked
+      })
+      downloadList.forEach(item => {
+        saveAs(item.result.raw, item.name)
+      })
+    },
   },
   created() {
     this.fileList = this.$route.params.fileList
