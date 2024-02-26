@@ -13,10 +13,10 @@
         <div class="titleBox">验证码登录</div>
         <form class="formBox" @submit.prevent="onSubmit">
           <div class="inputBox">
-            <input type="text" class="input" placeholder="请输入你的手机号" />
+            <input type="text" class="input" name="mobile_phone" v-model="params.mobile_phone" placeholder="请输入你的手机号" />
           </div>
           <div class="inputBox codeInputBox">
-            <input type="text" class="inputCode" placeholder="请输入验证码" />
+            <input type="text" class="inputCode" name="code" v-model="params.code" placeholder="请输入验证码" />
             <div class="getCodeBtn" @click="getCode">
               <span v-if="isCountDownFinish">获取验证码</span>
               <van-count-down v-else :time="time" @finish="onCountDownFinish" ref="countDown">
@@ -36,6 +36,11 @@
   </div>
 </template>
 <script>
+import {Toast} from "vant";
+import {getMobileCode, userMobileLogin} from "@/api";
+import {setToken} from "@/utils/token";
+import {mapActions} from "vuex";
+
 export default {
   name: 'LoginModal',
   components: {},
@@ -46,10 +51,17 @@ export default {
       visible: false,
       onClose: () => {},
       onHandleClose: () => {},
-      isCountDownFinish: true
+      isCountDownFinish: true,
+      params: {
+        mobile_phone: '',
+        code: ''
+      }
     }
   },
   methods: {
+    ...mapActions({
+      setUserInfo: 'userStore/setUserInfo'
+    }),
     handleClickClose() {
       if (typeof this.onHandleClose === 'function') {
         this.onHandleClose()
@@ -82,15 +94,60 @@ export default {
       this.isCountDownFinish = true
     },
     // 获取验证码
-    getCode() {
+    async getCode() {
       // 预防多次点击
       if (!this.isCountDownFinish) {
         return
       }
-      this.isCountDownFinish = false
+
+      const {mobile_phone} = this.params
+      const flag = this.validatePhoneNumber();
+      if (flag) {
+        this.isCountDownFinish = false
+        let res = await getMobileCode(mobile_phone)
+        if (res.data.status !== 0) {
+          Toast('验证发送失败！')
+          this.isCountDownFinish = true
+        }
+      }
+
     },
-    onSubmit(e) {
-      console.log(e)
+    validatePhoneNumber() {
+      const {mobile_phone} = this.params
+      let isPhoneNumberReg = /^[1][3,4,5,7,8][0-9]{9}$/;
+      if (!mobile_phone || !isPhoneNumberReg.test(mobile_phone)) {
+        const msg = !mobile_phone ? '请输入手机号码！' : '手机号码格式不正确！'
+        Toast(msg)
+        return false
+      }
+      return true
+    },
+    validateCode() {
+      const {code} = this.params
+      if (!code || code.trim().length === 0) {
+        Toast('请输入验证码！')
+        return false
+      }
+      return true
+    },
+    validateForm() {
+      return this.validatePhoneNumber() && this.validateCode()
+    },
+    async onSubmit(e) {
+      let flag = this.validateForm()
+      if (!flag) {
+        return
+      }
+      const {mobile_phone, code} = this.params;
+      let res  = await userMobileLogin({mobile_phone, code})
+      if (res.data.status === 0) {
+        setToken(res.data.data)
+        await this.setUserInfo(res.data.data)
+        Toast('登录成功！')
+      } else {
+        Toast('登录失败！')
+      }
+      this.handleClose()
     }
   },
   created() {}

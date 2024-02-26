@@ -1,9 +1,20 @@
 .editPage {
+  height: 100%;
+  padding-bottom: 70px;
+  overflow: auto;
 
   .imgBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 375px;
     background: rgba(0, 0, 0, 0.8);
+
+    .img {
+      max-width: 100%;
+      max-height: 100%;
+    }
   }
 
   .panelContainer {
@@ -14,8 +25,10 @@
       align-items: center;
 
       .infoItem {
+        display: flex;
+        flex-direction: column;
         font-size: 14px;
-        margin-right: 8px;
+        margin-right: 35px;
 
         &:nth-last-of-type(1) {
           margin-right: 0;
@@ -25,6 +38,7 @@
 
           font-weight: 500;
           color: #030B1A;
+          margin-bottom: 5px;
         }
 
         .value {
@@ -53,6 +67,50 @@
       }
 
       .panelItemContent {
+        .panelItemContentRight {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          color: #858891;
+          font-size: 14px;
+
+          .title {
+            flex-shrink: 0;
+
+            margin-right: 12px;
+          }
+
+          .txt {
+            flex-shrink: 0;
+            margin-left: 12px;
+          }
+
+          .custom-button {
+            width: 12px;
+            height: 12px;
+            background: #FFFFFF;
+            box-shadow: 0px 2px 4px 0px rgba(23, 31, 149, 0.5);
+            border: 2px solid #165DFF;
+            box-sizing: border-box;
+            border-radius: 50%;
+          }
+
+          .sliderBox {
+            flex: 1;
+            position: relative;
+
+            .value {
+              position: absolute;
+              left: 50%;
+              bottom: -25px;
+              transform: translateX(-50%);
+              font-size: 12px;
+              font-weight: 500;
+              color: #165DFF;
+            }
+          }
+        }
+
         .changeSizeBox {
           display: flex;
           align-items: center;
@@ -67,6 +125,13 @@
               align-items: center;
               margin-right: 16px;
 
+              &.disabled {
+                background: #F2F2F7;
+                &:nth-last-of-type(1) {
+                  margin-right: 0;
+                }
+              }
+
               span {
                 padding: 0 10px;
                 flex-shrink: 0;
@@ -78,6 +143,10 @@
                 width: 100%;
                 border: none;
                 color: #165DFF;
+
+                &:disabled {
+                  background: none;
+                }
               }
             }
           }
@@ -152,12 +221,13 @@
           }
 
           .sizeItem {
-            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-right: 10px;
+            margin-left: 8px;
+            margin-right: 8px;
+            width: 30%;
             height: 62px;
             font-size: 14px;
             background: #FFFFFF;
@@ -171,6 +241,10 @@
                 color: #165DFF;
               }
 
+            }
+
+            &:nth-of-type(1) {
+              margin-left: 0;
             }
 
             &:nth-child(3n) {
@@ -205,6 +279,11 @@
   }
 
   .btnGroup {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -218,7 +297,7 @@
       margin: 0 12px;
       border-radius: 24px;
       border: 1px solid #979797;
-      background: #FFFFFF;
+      background: #F2F2F7;
       font-size: 17px;
       font-weight: 500;
       color: #030B1A;
@@ -255,18 +334,19 @@
         .checkSizeLine {
           display: flex;
           align-items: center;
-          justify-content: space-between;
         }
 
         .checkSizeItem {
-          flex: 1;
+
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          margin-right: 8px;
+          margin-left: 5px;
+          margin-right: 5px;
           margin-bottom: 8px;
           height: 40px;
+          width: 31%;
           background: #FFFFFF;
           border-radius: 4px;
           border: 1px solid rgba(133, 136, 145, 0.3);
@@ -284,6 +364,9 @@
             }
           }
 
+          &:nth-of-type(1) {
+            margin-left: 0;
+          }
           &:nth-child(3n) {
             margin-right: 0;
           }

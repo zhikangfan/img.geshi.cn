@@ -25,7 +25,7 @@
       <Uploader :on-success="onUploadSuccess" class="uploader">
         <div class="uploadContainer">
           <span class="icon"></span>
-          <div class="tips">{{ uploadTips }}}</div>
+          <div class="tips">{{ uploadTips }}</div>
         </div>
       </Uploader>
     </div>
@@ -67,7 +67,7 @@
           </div>
           <div class="featureItemBottom">
             <p>网址：img.geshi.cn &nbsp;&nbsp;&nbsp; 软著登记号：2023SR1075944</p>
-            <p><a href="/" target="_blank" class="link">查看营业执照</a></p>
+            <p><a href="https://res.yunkun.cn/pdf_geshicn/ykyyzz.png" target="_blank" class="link">查看营业执照</a></p>
           </div>
         </div>
       </div>

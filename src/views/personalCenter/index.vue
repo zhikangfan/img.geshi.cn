@@ -2,12 +2,12 @@
   <div class="personalCenterPage">
     <div class="loginBox">
       <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
-      <div class="loginBtn" @click="handleLogin" v-if="true">登录/注册</div>
+      <div class="loginBtn" @click="handleLogin" v-if="!isLogin">登录/注册</div>
       <div class="userInfo" v-else>
-        <div class="nickname">轻秒10001</div>
+        <div class="nickname">{{this.$store.state.userStore.userInfo?.username}}</div>
         <div class="info">
-          <div class="tag">免费用户</div>
-          <div class="userIdBox">ID:<span class="userId">10002</span><span class="copyBtn"></span></div>
+          <div class="tag" v-if="this.$store.state.userStore.allCert?.vip === VIP_LEVEL.NON_VIP">免费用户</div>
+          <div class="userIdBox">ID:<span class="userId">{{this.$store.state.userStore.userInfo?.uid}}</span><span class="copyBtn"></span></div>
         </div>
       </div>
     </div>
@@ -20,7 +20,7 @@
           </div>
           <div class="desc">解锁更多功能，尊享所有权益</div>
         </div>
-        <button class="buyBtn" @click="jumpTo('/purchase')">立即开通</button>
+        <button class="buyBtn" @click="jumpTo('/m/purchase')">立即开通</button>
       </div>
     </div>
     <div class="section">
@@ -78,6 +78,8 @@
 </template>
 <script>
 import MyTabBar from "@/components/TabBar/index.vue";
+import {mapGetters, mapState} from "vuex";
+import {VIP_LEVEL} from "@/store/user.store";
 
 export default {
   name: 'PersonalCenter',
@@ -85,8 +87,14 @@ export default {
   props: {},
   data() {
     return {
+      VIP_LEVEL,
       isShowExchange: false
     }
+  },
+  computed: {
+    ...mapGetters({
+      isLogin: 'userStore/isLogin'
+    })
   },
   methods: {
     // 打开兑换窗口
@@ -109,7 +117,9 @@ export default {
       })
     }
   },
-  created() {}
+  created() {
+    console.log(this.isLogin, this.$store.state.userStore.userInfo, '---login')
+  }
 }
 </script>
 <style scoped lang="less">

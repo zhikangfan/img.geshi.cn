@@ -53,12 +53,12 @@
           <span class="title">压缩比例：</span>
           <div class="panelItemRight">
             <van-slider
-              v-model="options.quality"
-              @change="onQualityChange"
-              :min="1"
-              :max="100"
-              bar-height="4px"
-              active-color="#165DFF"
+                    v-model="options.quality"
+                    @change="onQualityChange"
+                    :min="1"
+                    :max="100"
+                    bar-height="4px"
+                    active-color="#165DFF"
             >
               <template #button>
                 <div class="custom-button"></div>
@@ -102,7 +102,7 @@ import { ImagePreview, Toast } from 'vant'
 import { compressImage } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
 import Uploader from '@/components/Uploader/index.vue'
-import {saveAs} from 'file-saver'
+import { saveAs } from 'file-saver'
 export default {
   name: 'Compress',
   components: {
@@ -256,17 +256,17 @@ export default {
 
     // 下载选中的图片
     onClickDownload() {
-      let downloadList = this.fileList.filter((item,idx) => {
+      let downloadList = this.fileList.filter((item, idx) => {
         // 标记一下是否被下载过
         if (item.checked) {
-          this.fileList.splice(idx, 1, {...item, download: true})
+          this.fileList.splice(idx, 1, { ...item, download: true })
         }
         return item.checked
       })
       downloadList.forEach(item => {
         saveAs(item.result.raw, item.name)
       })
-    },
+    }
   },
   created() {
     this.fileList = this.$route.params.fileList

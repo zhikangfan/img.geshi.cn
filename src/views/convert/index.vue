@@ -199,7 +199,6 @@ export default {
     onStart() {
       this.isLoading = true // 开启loading
       this.isExecuted = true
-      let { to } = this.options
       let taskList = []
       const toast = Toast({
         type: 'loading',

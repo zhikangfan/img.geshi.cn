@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import '@/assets/less/init.less'
+// import '/node_modules/croppr/dist/croppr.min.css'
+import '/node_modules/cropperjs/dist/cropper.min.css'
 import MetaInfo from 'vue-meta-info'
 import * as buffer from 'buffer'
 import LoginModal from '@/components/LoginModal'

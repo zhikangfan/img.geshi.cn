@@ -1,3 +1,5 @@
+import {v4 as uuid} from "uuid";
+
 /**
  * 购买页套餐配置
  * */
@@ -62,3 +64,151 @@ export const compressConfig = {
   maxHeight: -1, // 支持最大高度 -1: 不限制高度
   multiple: 12, // 一次最多处理多少张
 }
+/**
+ * 修改的尺寸列表
+ * */
+export const editSizeList = [
+  {
+    category: '常用',
+    sizes: [
+      [
+        {
+          id: uuid(),
+          title: '一寸照',
+          width: 295,
+          height: 413,
+          recommend: true
+        },
+        {
+          id: uuid(),
+          title: '大一寸照',
+          width: 390,
+          height: 567,
+          recommend: true
+        },
+        {
+          id: uuid(),
+          title: '二寸照',
+          width: 413,
+          height: 579,
+          recommend: true
+        }
+      ],
+      [
+        {
+          id: uuid(),
+          title: '大二寸照',
+          width: 413,
+          height: 626
+        },
+        {
+          id: uuid(),
+          title: '五寸照',
+          width: 1050,
+          height: 1499
+        },
+        {
+          id: uuid(),
+          title: '头像',
+          width: 500,
+          height: 500
+        }
+      ]
+    ]
+  },
+  {
+    category: '考试报名',
+    sizes: [
+      [
+        {
+          id: uuid(),
+          title: '公务员考试',
+          width: 413,
+          height: 531,
+          recommend: true
+        },
+        {
+          id: uuid(),
+          title: '司法考试',
+          width: 413,
+          height: 626
+        },
+        {
+          id: uuid(),
+          title: '四六级考试',
+          width: 240,
+          height: 320,
+          recommend: true
+        }
+      ],
+      [
+        {
+          id: uuid(),
+          title: '教师资格证',
+          width: 360,
+          height: 480,
+          recommend: true
+        },
+        {
+          id: uuid(),
+          title: '注册会计师',
+          width: 178,
+          height: 220
+        },
+        {
+          id: uuid(),
+          title: '护士资格证',
+          width: 295,
+          height: 413
+        }
+      ],
+      [
+        {
+          id: uuid(),
+          title: '普通话等级',
+          width: 390,
+          height: 567
+        }
+      ]
+    ]
+  },
+  {
+    category: '证件',
+    sizes: [
+      [
+        {
+          id: uuid(),
+          title: '身份证',
+          width: 358,
+          height: 441
+        },
+        {
+          id: uuid(),
+          title: '社保证',
+          width: 358,
+          height: 441
+        },
+        {
+          id: uuid(),
+          title: '毕业证',
+          width: 480,
+          height: 640
+        }
+      ],
+      [
+        {
+          id: uuid(),
+          title: '护照',
+          width: 354,
+          height: 472
+        },
+        {
+          id: uuid(),
+          title: '交管驾驶证',
+          width: 520,
+          height: 756
+        }
+      ]
+    ]
+  }
+]

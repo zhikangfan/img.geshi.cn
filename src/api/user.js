@@ -59,3 +59,26 @@ export function getLoginStatus(union_str) {
     union_str: union_str
   })
 }
+
+/**
+ * 手机验证码登录
+ * @param mobile_phone 手机号码
+ * @param code 验证码
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export const userMobileLogin = ({mobile_phone, code}) => {
+  return axios.post('/api/smslogin', {
+    mobile_phone,
+    smscode: code,
+    code: 'qingmiao'
+  })
+}
+/**
+ * 获取手机验证码
+ * @param mobile_phone 手机号
+ */
+export const getMobileCode = (mobile_phone) => {
+  return axios.post('/api/code', {
+    mobile_phone
+  })
+}

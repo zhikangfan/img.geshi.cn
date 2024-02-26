@@ -2,7 +2,7 @@
 node_modules
 /dist
 
-
+.yarnrc
 # local env files
 .env.local
 .env.*.local

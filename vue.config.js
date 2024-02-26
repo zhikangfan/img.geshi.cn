@@ -4,6 +4,7 @@ const { resolve } = require('path')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')['BundleAnalyzerPlugin']
 
 const config = {
+  publicPath: '/m',
   transpileDependencies: true,
   lintOnSave: true,
   devServer: {
