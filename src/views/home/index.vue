@@ -95,19 +95,19 @@ export default {
         {
           function: 'convert',
           uploadConfig: {
-            tips: '证件照压缩、保持清晰度、压缩指定大小'
+            tips: '批量转换图片格式为JPG、PNG、WEBP等'
           }
         },
         {
           function: 'edit',
           uploadConfig: {
-            tips: '证件照压缩、保持清晰度、压缩指定大小'
+            tips: '修改为多种证件照尺寸及压缩指定大小'
           }
         },
         {
           function: 'edit-dpi',
           uploadConfig: {
-            tips: '证件照压缩、保持清晰度、压缩指定大小'
+            tips: '批量处理图片分辨率DPI'
           }
         }
       ],

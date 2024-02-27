@@ -32,6 +32,18 @@ Vue.use(LoginModal, {
   store,
   router
 })
+router.beforeEach((to, from ,next) => {
+  const isLogin= store.getters["userStore/isLogin"]
+  // 未登录不能跳转到购买页
+  if (to.name === 'purchase' && !isLogin) {
+      next({
+        path: '/m/'
+      })
+    return
+  }
+  next()
+
+})
 new Vue({
   router,
   store,

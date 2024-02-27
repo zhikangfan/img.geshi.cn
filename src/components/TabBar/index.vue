@@ -16,7 +16,7 @@ export default {
       tabBar: [
         {
           title: '轻秒',
-          path: '/m',
+          path: '/m/',
           icon: require('@/assets/img/nav_icon_qingmiao.svg'),
           activeIcon: require('@/assets/img/nav_icon_qingmiao_active.svg')
         },

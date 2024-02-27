@@ -26,14 +26,14 @@ export const packageList = [
     has_icon: false,
     has_del: true,
     unit: '一年',
-    payTips: '立减500元 可开发票'
+    payTips: '立减130元 可开发票'
   },
   {
     id: 3,
     title: '按张付费*10张',
     price: '19.9',
     corner: '',
-    desc: '1.9/张',
+    desc: '1.99元/张',
     txt: '张数永久有效',
     has_icon: false,
     has_del: false,
@@ -45,7 +45,7 @@ export const packageList = [
     title: '按张付费*1张',
     price: '9.9',
     corner: '',
-    desc: '9.9/张',
+    desc: '9.9元/张',
     txt: '张数永久有效',
     has_icon: false,
     has_del: false,

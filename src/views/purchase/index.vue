@@ -84,7 +84,7 @@
         </div>
         <button class="payBtn">立即开通</button>
       </div>
-      <div class="tips">开通会员即代表同意<a href="/" target="_blank">《会员服务协议》</a></div>
+<!--      <div class="tips">开通会员即代表同意<a href="/" target="_blank">《会员服务协议》</a></div>-->
     </div>
   </div>
 </template>

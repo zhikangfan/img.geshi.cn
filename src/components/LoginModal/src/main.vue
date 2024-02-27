@@ -28,7 +28,7 @@
           </div>
           <button class="loginBtn" type="submit">登录</button>
           <div class="tips">
-            登录即代表同意 <a href="/" target="_blank">用户协议</a> 和 <a href="/" target="_blank">隐私政策</a>
+            登录即代表同意 <a href="/agreement.html" target="_blank">用户协议</a> 和 <a href="/privacy.html" target="_blank">隐私政策</a>
           </div>
         </form>
       </div>

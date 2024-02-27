@@ -1,13 +1,18 @@
 <template>
   <div class="personalCenterPage">
     <div class="loginBox">
-      <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
-      <div class="loginBtn" @click="handleLogin" v-if="!isLogin">登录/注册</div>
+      <div class="noLoginBox" v-if="!isLogin" @click="handleLogin">
+        <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
+        <div class="loginBtn">登录/注册</div>
+      </div>
       <div class="userInfo" v-else>
-        <div class="nickname">{{this.$store.state.userStore.userInfo?.username}}</div>
+        <div class="nickname">{{ this.$store.state.userStore.userInfo?.username }}</div>
         <div class="info">
           <div class="tag" v-if="this.$store.state.userStore.allCert?.vip === VIP_LEVEL.NON_VIP">免费用户</div>
-          <div class="userIdBox">ID:<span class="userId">{{this.$store.state.userStore.userInfo?.uid}}</span><span class="copyBtn"></span></div>
+          <div class="userIdBox">
+            ID:<span class="userId">{{ this.$store.state.userStore.userInfo?.uid }}</span
+            ><span class="copyBtn" :data-clipboard-text="this.$store.state.userStore.userInfo?.uid"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -20,48 +25,48 @@
           </div>
           <div class="desc">解锁更多功能，尊享所有权益</div>
         </div>
-        <button class="buyBtn" @click="jumpTo('/m/purchase')">立即开通</button>
+        <button class="buyBtn" @click="handleOpen">立即开通</button>
       </div>
     </div>
     <div class="section">
       <div class="navList">
         <div class="navItem">
           <div class="navItemLeft">
-            <span class="icon"></span>
+            <span class="icon feedback"></span>
             <span class="title">意见反馈</span>
           </div>
           <span class="right_icon"></span>
         </div>
         <div class="navItem">
           <div class="navItemLeft">
-            <span class="icon"></span>
+            <span class="icon customer"></span>
             <span class="title">客服中心</span>
           </div>
           <span class="right_icon"></span>
         </div>
-        <div class="navItem" @click="onOpenExchangeModal">
-          <div class="navItemLeft">
-            <span class="icon"></span>
-            <span class="title">兑换码激活</span>
-          </div>
-          <span class="right_icon"></span>
-        </div>
-        <div class="navItem" @click="jumpTo('/redeem-code')">
-          <div class="navItemLeft">
-            <span class="icon"></span>
-            <span class="title">兑换码</span>
-          </div>
-          <span class="right_icon"></span>
-        </div>
+        <!--        <div class="navItem" @click="onOpenExchangeModal">-->
+        <!--          <div class="navItemLeft">-->
+        <!--            <span class="icon activationCodeJiHuo"></span>-->
+        <!--            <span class="title">兑换码激活</span>-->
+        <!--          </div>-->
+        <!--          <span class="right_icon"></span>-->
+        <!--        </div>-->
+        <!--        <div class="navItem" @click="jumpTo('/redeem-code')">-->
+        <!--          <div class="navItemLeft">-->
+        <!--            <span class="icon activationCode"></span>-->
+        <!--            <span class="title">兑换码</span>-->
+        <!--          </div>-->
+        <!--          <span class="right_icon"></span>-->
+        <!--        </div>-->
       </div>
     </div>
-    <MyTabBar/>
+    <MyTabBar />
     <van-popup v-model="isShowExchange" :round="true" :close-on-popstate="true" :safe-area-inset-bottom="true">
       <div class="exchangeBox">
         <span class="close" @click="onCloseExchangeModal"></span>
         <div class="titleBox">兑换码激活</div>
         <div class="exchangeContent">
-          <input type="text" class="input" placeholder="请输入PC端兑换码"/>
+          <input type="text" class="input" placeholder="请输入PC端兑换码" />
           <button class="activeBtn">立即激活</button>
         </div>
         <dl class="tipsList">
@@ -77,18 +82,21 @@
   </div>
 </template>
 <script>
-import MyTabBar from "@/components/TabBar/index.vue";
-import {mapGetters, mapState} from "vuex";
-import {VIP_LEVEL} from "@/store/user.store";
+import MyTabBar from '@/components/TabBar/index.vue'
+import { mapGetters, mapState } from 'vuex'
+import { VIP_LEVEL } from '@/store/user.store'
+import ClipboardJS from 'clipboard'
+import {Toast} from "vant";
 
 export default {
   name: 'PersonalCenter',
-  components: {MyTabBar},
+  components: { MyTabBar },
   props: {},
   data() {
     return {
       VIP_LEVEL,
-      isShowExchange: false
+      isShowExchange: false,
+      clipboard: null
     }
   },
   computed: {
@@ -109,6 +117,13 @@ export default {
     jumpTo(path) {
       this.$router.push(path)
     },
+    handleOpen() {
+      if (this.isLogin) {
+        this.jumpTo('/m/purchase')
+      } else {
+        this.handleLogin()
+      }
+    },
     handleLogin() {
       this.$loginModal({
         onHandleClose: () => {
@@ -117,8 +132,16 @@ export default {
       })
     }
   },
-  created() {
-    console.log(this.isLogin, this.$store.state.userStore.userInfo, '---login')
+  created() {},
+  mounted() {
+    this.clipboard?.destroy()
+    this.clipboard = new ClipboardJS('.copyBtn')
+    this.clipboard.on('success', () => {
+      Toast('复制成功')
+    })
+  },
+  beforeDestroy() {
+    this.clipboard?.destroy()
   }
 }
 </script>
