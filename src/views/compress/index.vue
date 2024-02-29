@@ -49,39 +49,45 @@
     </div>
     <div class="panelContainer">
       <div class="panel" v-if="!isExecuted || isLoading">
-        <div class="panelItem">
-          <span class="title">压缩比例：</span>
-          <div class="panelItemRight">
-            <van-slider
-                    v-model="options.quality"
-                    @change="onQualityChange"
-                    :min="1"
-                    :max="100"
-                    bar-height="4px"
-                    active-color="#165DFF"
-            >
-              <template #button>
-                <div class="custom-button"></div>
-              </template>
-            </van-slider>
-            <span class="txt">{{ options.quality }}%</span>
-          </div>
-        </div>
-        <div class="panelItem margin">
-          <span class="title">指定大小：</span>
-          <div class="panelItemRight">
-            <div class="inputBox">
-              <input type="number" v-model="options.size" />
-              <span class="unit">KB</span>
+        <van-radio-group v-model="checkFunc">
+          <van-radio name="ratio" icon-size="18px">
+            <div class="panelItem">
+              <span class="title">压缩比例：</span>
+              <div class="panelItemRight">
+                <van-slider
+                  v-model="options.ratio"
+                  @change="onRatioChange"
+                  :min="1"
+                  :max="100"
+                  bar-height="4px"
+                  active-color="#165DFF"
+                >
+                  <template #button>
+                    <div class="custom-button"></div>
+                  </template>
+                </van-slider>
+                <span class="txt">{{ options.ratio }}%</span>
+              </div>
+            </div>
+          </van-radio>
+          <van-radio name="size" icon-size="18px">
+            <div class="panelItem margin">
+              <span class="title">指定大小：</span>
+              <div class="panelItemRight">
+                <div class="inputBox">
+                  <input type="number" v-model="options.size" />
+                  <span class="unit">KB</span>
+                </div>
+              </div>
+            </div>
+          </van-radio>
+          <div class="panelItem">
+            <span class="title"></span>
+            <div class="otherSize">
+              <div class="size" @click="onChangeSize(size)" v-for="size in otherSizes" :key="size">{{ size }}</div>
             </div>
           </div>
-        </div>
-        <div class="panelItem">
-          <span class="title"></span>
-          <div class="otherSize">
-            <div class="size" @click="onChangeSize(size)" v-for="size in otherSizes" :key="size">{{ size }}</div>
-          </div>
-        </div>
+        </van-radio-group>
       </div>
 
       <div class="btnGroup" v-if="isExecuted && !isLoading">
@@ -98,11 +104,13 @@
   </div>
 </template>
 <script>
-import { ImagePreview, Toast } from 'vant'
+import {Dialog, ImagePreview, Toast} from 'vant'
 import { compressImage } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
 import Uploader from '@/components/Uploader/index.vue'
 import { saveAs } from 'file-saver'
+import {VIP_LEVEL} from "@/store/user.store";
+
 export default {
   name: 'Compress',
   components: {
@@ -115,11 +123,13 @@ export default {
       isExecuted: false, // 是否执行过压缩
       options: {
         //执行的压缩参数
-        quality: 70, // 透明度
+        ratio: 70, // 透明度
         size: '' // 单位kb
       },
       fileList: [],
-      isLoading: false // 图片是否处理中
+      checkFunc: 'ratio', // 选择的压缩方式ratio: 压缩比例，size: 指定大小
+      isLoading: false, // 图片是否处理中
+      isBuyVip: false, // 是否去购买vip
     }
   },
   methods: {
@@ -140,18 +150,62 @@ export default {
       })
     },
     // 监听透明度发生变化
-    onQualityChange(value) {
-      this.options.quality = value
+    onRatioChange(value) {
+      this.options.ratio = value
+      this.checkFunc = 'ratio'
     },
     // 监听用户尺寸发生变化
     onChangeSize(value) {
       this.options.size = value
+      this.checkFunc = 'size'
+    },
+    handleLogin() {
+      this.$loginModal({
+        onHandleClose: () => {
+          console.log('close')
+        }
+      })
+    },
+    // 检查用户
+    checkUser() {
+      // 判断用户是否登录
+      let isLogin = this.$store.getters["userStore/isLogin"]
+      if (!isLogin) {
+        this.handleLogin()
+        return false
+      }
+      let {vip, has_image_count} = this.$store.state.userStore.allCert
+      // 判断用户等级
+      if (vip === VIP_LEVEL.NON_VIP) { // 没有VIP
+        Dialog.confirm({
+          title: '温馨提示',
+          message: '请开通VIP后下载！'
+        }).then(() => {
+          this.isBuyVip = true
+          this.$router.push({
+            name: 'purchase'
+          })
+        }).catch(() => {
+          // TODO: 点击取消
+        })
+        return false
+      }
+      // 判断用户是否有券
+      if (vip === VIP_LEVEL.COUNT_VIP) { // 当用户为次数vip的时候
+        // has_image_count
+        // 过滤出来用户选中的 但未下载的
+        let needDownloadList = this.fileList.filter((item, idx) => {
+          return item.checked && !item.download
+        })
+        return needDownloadList <= has_image_count
+      }
+      if (vip === VIP_LEVEL.TIME_VIP || vip === VIP_LEVEL.PERMANENT_VIP || vip === VIP_LEVEL.THREE_DAY_VIP) { // 当用户vip类型为时间vip 永久vip 3天vip的时候
+        return true
+      }
     },
     // 压缩前校验
     checkCondition() {
-      // TODO: 校验用户
-
-      let { size, quality } = this.options
+      let { size } = this.options
       if (size === 0) {
         Toast('指定大小数值需大于0')
         return false
@@ -165,7 +219,6 @@ export default {
         Toast('请输入数字')
         return false
       }
-
       return true
     },
     onSelectCard(idx) {
@@ -193,13 +246,17 @@ export default {
     },
     // 开始压缩
     onStart() {
-      let checkResult = this.checkCondition()
-      if (!checkResult) {
-        return
+
+      if (this.checkFunc === 'size') {
+        let checkResult = this.checkCondition()
+        if (!checkResult) {
+          return
+        }
       }
+
       this.isLoading = true // 开启loading
       this.isExecuted = true
-      let { size, quality } = this.options
+      let { size, ratio } = this.options
       let taskList = []
 
       const toast = Toast({
@@ -212,7 +269,10 @@ export default {
         let taskFn = new Promise(resolve => {
           ;(async (resolve, item, idx) => {
             try {
-              let options = size ? { quality: quality / 100, size: size * 1024 } : { quality: quality / 100 }
+              if (this.checkFunc === 'ratio') { // 选择压缩比例，直接换算成指定size
+                size = item.raw.size * (ratio / 100)
+              }
+              let options = this.checkFunc === 'ratio' ? {size: item.raw.size * (ratio / 100)} : { size: size * 1024 }
               let resultBlob = await compressImage(item.raw, options)
               let resultInfo = await getImageFileInfo(resultBlob)
               let result = { ...item, result: resultInfo, status: true, checked: false }
@@ -263,9 +323,17 @@ export default {
         }
         return item.checked
       })
-      downloadList.forEach(item => {
-        saveAs(item.result.raw, item.name)
-      })
+      if (downloadList.length === 0) {
+        Toast('未选择要下载的图片！')
+        return
+      }
+      let allowAction = this.checkUser()
+      if (allowAction) {
+        downloadList.forEach(item => {
+          saveAs(item.result.raw, item.name)
+        })
+      }
+
     }
   },
   created() {
@@ -287,6 +355,29 @@ export default {
           name: 'home'
         })
       }
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    // 如果有处理好的图片，离开之前给出提示
+    let filterData = this.fileList.filter(item => item.status)
+    let isAllowLeave = filterData.length == 0
+    if (isAllowLeave) {
+      next()
+    } else {
+      // 如果用户因为去开通vip跳走的可以直接通过
+      if (this.isBuyVip) {
+        next()
+      } else {
+        Dialog.confirm({
+          title: '温馨提示',
+          message: '您的文件已处理成功，离开文件将丢失确认要放弃吗？'
+        }).then(() => {
+          next()
+        }).catch(() => {
+
+        })
+      }
+
     }
   }
 }

@@ -1,12 +1,13 @@
 <template>
   <div class="personalCenterPage">
-    <div class="loginBox">
-      <div class="noLoginBox" v-if="!isLogin" @click="handleLogin">
-        <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
-        <div class="loginBtn">登录/注册</div>
-      </div>
-      <div class="userInfo" v-else>
-        <div class="nickname">{{ this.$store.state.userStore.userInfo?.username }}</div>
+    <div class="noLoginBox" v-if="!isLogin" @click="handleLogin">
+      <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
+      <div class="loginBtn">登录/注册</div>
+    </div>
+    <div class="loginBox" v-else>
+      <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
+      <div class="userInfo">
+        <div class="nickname">轻秒{{ this.$store.state.userStore.userInfo?.uid }}</div>
         <div class="info">
           <div class="tag" v-if="this.$store.state.userStore.allCert?.vip === VIP_LEVEL.NON_VIP">免费用户</div>
           <div class="userIdBox">
@@ -30,14 +31,14 @@
     </div>
     <div class="section">
       <div class="navList">
-        <div class="navItem">
+        <div class="navItem" @click="openWindow('https://work.weixin.qq.com/kfid/kfcb34fb19127a8aa5f')">
           <div class="navItemLeft">
             <span class="icon feedback"></span>
             <span class="title">意见反馈</span>
           </div>
           <span class="right_icon"></span>
         </div>
-        <div class="navItem">
+        <div class="navItem" @click="openWindow('https://work.weixin.qq.com/kfid/kfcb34fb19127a8aa5f')">
           <div class="navItemLeft">
             <span class="icon customer"></span>
             <span class="title">客服中心</span>
@@ -130,9 +131,14 @@ export default {
           console.log('close')
         }
       })
+    },
+    openWindow(url) {
+      window.open(url)
     }
   },
-  created() {},
+  created() {
+    console.log(this.$store.state.userStore, '---userStore')
+  },
   mounted() {
     this.clipboard?.destroy()
     this.clipboard = new ClipboardJS('.copyBtn')

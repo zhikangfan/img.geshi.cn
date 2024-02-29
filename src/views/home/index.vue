@@ -126,7 +126,6 @@ export default {
     },
     onSelectFunc(func) {
       this.selectFunc = func
-      console.log(func,this.config.find(item => item.function === func))
       let {
         uploadConfig: { tips }
       } = this.config.find(item => item.function === func)

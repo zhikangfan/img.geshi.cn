@@ -71,11 +71,12 @@
   </div>
 </template>
 <script>
-import { ImagePreview, Toast } from 'vant'
+import {Dialog, ImagePreview, Toast} from 'vant'
 import Uploader from '@/components/Uploader/index.vue'
 import { changeImgDpi } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
 import {saveAs} from 'file-saver'
+import {VIP_LEVEL} from "@/store/user.store";
 export default {
   name: 'Dpi',
   components: { Uploader },
@@ -91,7 +92,8 @@ export default {
       isExecuted: false, // 是否执行过修改
       options: {
         dpi: 96
-      }
+      },
+      isBuyVip: false, // 是否去购买vip
     }
   },
   methods: {
@@ -154,7 +156,50 @@ export default {
         })
       })
     },
-
+    handleLogin() {
+      this.$loginModal({
+        onHandleClose: () => {
+          console.log('close')
+        }
+      })
+    },
+    // 检查用户
+    checkUser() {
+      // 判断用户是否登录
+      let isLogin = this.$store.getters["userStore/isLogin"]
+      if (!isLogin) {
+        this.handleLogin()
+        return false
+      }
+      let {vip, has_image_count} = this.$store.state.userStore.allCert
+      // 判断用户等级
+      if (vip === VIP_LEVEL.NON_VIP) { // 没有VIP
+        Dialog.confirm({
+          title: '温馨提示',
+          message: '请开通VIP后下载！'
+        }).then(() => {
+          this.isBuyVip = true
+          this.$router.push({
+            name: 'purchase'
+          })
+        }).catch(() => {
+          // TODO: 点击取消
+        })
+        return false
+      }
+      // 判断用户是否有券
+      if (vip === VIP_LEVEL.COUNT_VIP) { // 当用户为次数vip的时候
+        // has_image_count
+        // 过滤出来用户选中的 但未下载的
+        let needDownloadList = this.fileList.filter((item, idx) => {
+          return item.checked && !item.download
+        })
+        return needDownloadList <= has_image_count
+      }
+      if (vip === VIP_LEVEL.TIME_VIP || vip === VIP_LEVEL.PERMANENT_VIP || vip === VIP_LEVEL.THREE_DAY_VIP) { // 当用户vip类型为时间vip 永久vip 3天vip的时候
+        return true
+      }
+    },
     // 下载选中的图片
     onClickDownload() {
       let downloadList = this.fileList.filter((item,idx) => {
@@ -164,9 +209,16 @@ export default {
         }
         return item.checked
       })
-      downloadList.forEach(item => {
-        saveAs(item.result.raw, item.name)
-      })
+      if (downloadList.length === 0) {
+        Toast('未选择要下载的图片！')
+        return
+      }
+      let allowAction = this.checkUser()
+      if (allowAction) {
+        downloadList.forEach(item => {
+          saveAs(item.result.raw, item.name)
+        })
+      }
     },
     onStart() {
       this.isLoading = true // 开启loading
@@ -226,6 +278,29 @@ export default {
           name: 'home'
         })
       }
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    // 如果有处理好的图片，离开之前给出提示
+    let filterData = this.fileList.filter(item => item.status)
+    let isAllowLeave = filterData.length == 0
+    if (isAllowLeave) {
+      next()
+    } else {
+      // 如果用户因为去开通vip跳走的可以直接通过
+      if (this.isBuyVip) {
+        next()
+      } else {
+        Dialog.confirm({
+          title: '温馨提示',
+          message: '您的文件已处理成功，离开文件将丢失确认要放弃吗？'
+        }).then(() => {
+          next()
+        }).catch(() => {
+
+        })
+      }
+
     }
   }
 }

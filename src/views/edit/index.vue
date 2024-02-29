@@ -282,6 +282,8 @@ export default {
         this.options.width = width
         this.options.height = height
 
+        // this.cropper.setAspectRatio(width / height)
+
 
         // this.createCropper({
         //   cropBoxResizable: false,
@@ -370,8 +372,9 @@ export default {
         viewMode: 1,
         dragMode: 'none',
         center: false,
-        zoomable: false,
-        cropBoxResizable: true,
+        zoomable: false, // 禁止用户缩放
+        zoomOnTouch: false,
+        cropBoxResizable: true, // 允许改变尺寸
         autoCropArea: 1,
         crop(e) {
           // console.log(e)
@@ -401,27 +404,13 @@ export default {
     this.onSelectFormat(value)
   },
   async mounted() {
-    // let scale = this.calculateScale(
-    //   {
-    //     width: this.$refs.imgBoxRef.getBoundingClientRect().width,
-    //     height: this.$refs.imgBoxRef.getBoundingClientRect().height
-    //   },
-    //   { width: this.file.width, height: this.file.height }
-    // )
-    // this.file.scaleImgSrc = await this.createImg({
-    //   src: this.file.src,
-    //   width: this.file.width * scale,
-    //   height: this.file.height * scale,
-    //   dy: 0,
-    //   dx: 0
-    // })
-    // this.$forceUpdate()
     this.$nextTick(() => {
       let that = this;
       that.cropper = new Cropper(this.$refs.cropperRef, {
         viewMode: 1,
         dragMode: 'none',
         center: false,
+        autoCropArea: 1,
         crop(e) {
           that.options.width = Math.ceil(e.detail.width)
           that.options.height = Math.ceil(e.detail.height)

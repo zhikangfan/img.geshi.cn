@@ -8,10 +8,9 @@ import { imageFormatConvert } from '@/core/imageFormatConvert'
 /**
  * @description 根据
  * @param blob
- * @param quality 0 - 10
  * @returns {Promise<*|Blob>}
  */
-export async function compressImage(blob, { quality, size }) {
+export async function compressImage(blob, { size }) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => {
@@ -20,7 +19,7 @@ export async function compressImage(blob, { quality, size }) {
       const wasmLocation = 'https://res.yunkun.cn/magick.wasm'
       initializeImageMagick(wasmLocation).then(() => {
         ImageMagick.read(uint8Array, function (image) {
-          image.quality = quality * 10
+          // image.quality = quality * 10
           image.write(image.format, data => {
             let blob = new Blob([data], {
               type: image.format
@@ -56,32 +55,37 @@ export async function compressImage(blob, { quality, size }) {
     }
     reader.readAsArrayBuffer(blob)
   })
-  /**
-   * 当传递的清晰度小于 0.01 或者
-   */
-  if (quality >= 1) {
-    return blob
-  }
-  if (quality < 0.01) {
-    quality = 0.01
-  }
-  let outputBlob
-  if (size && size > 0) {
-    outputBlob = await compressAccurately(blob, {
-      accuracy: 0.95,
-      type: blob.type,
-      size: size
-    })
-  }
-
-  /**
-   * 如果转换后的格式发生了变化，则重新创建一个blob将原type传入
-   */
-  if (outputBlob.type !== blob.type) {
-    return new Blob([outputBlob], { type: blob.type })
-  }
-  return outputBlob
 }
+
+/**
+ * @description 改变图片清晰度
+ * @param blob
+ * @param quality
+ * @returns {Promise<unknown>}
+ */
+export async function changeImageQuality(blob, { quality }) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const arrayBuffer = reader.result // reader.result 是文件内容
+      const uint8Array = new Uint8Array(arrayBuffer)
+      const wasmLocation = 'https://res.yunkun.cn/magick.wasm'
+      initializeImageMagick(wasmLocation).then(() => {
+        ImageMagick.read(uint8Array, function (image) {
+          image.quality = quality * 10
+          image.write(image.format, data => {
+            let blob = new Blob([data], {
+              type: image.format
+            })
+            resolve(blob)
+          })
+        })
+      })
+    }
+    reader.readAsArrayBuffer(blob)
+  })
+}
+
 
 /**
  * 压缩PNG

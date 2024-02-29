@@ -4,7 +4,7 @@
       <div class="userInfo">
         <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
         <div class="infoRight">
-          <div class="nickname">{{this.$store.state.userStore.userInfo?.username}}</div>
+          <div class="nickname">轻秒{{this.$store.state.userStore.userInfo?.uid}}</div>
           <div class="desc">开通VIP会员 尊享更多特权</div>
         </div>
       </div>
