@@ -137,7 +137,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$store.state.userStore, '---userStore')
   },
   mounted() {
     this.clipboard?.destroy()

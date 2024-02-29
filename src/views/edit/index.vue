@@ -371,8 +371,7 @@ export default {
     },
     handleDownload() {
       if (this.cropper) {
-        // let allowAction = this.checkUser()
-        let allowAction = true
+        let allowAction = this.checkUser()
         if (allowAction) {
           const toast = Toast({
             type: 'loading',
@@ -382,23 +381,21 @@ export default {
           })
           this.cropper.getCroppedCanvas().toBlob(async blob => {
             try {
-              console.log(blob, '---blob')
-              // let blobData = this.createImg({
-              //   src: URL.createObjectURL(blob),
-              //   width: this.options.width,
-              //   height: this.options.height,
-              //   dx: 0,
-              //   dy: 0,
-              //   type: this.options.format === 'png' ? 'image/png' : 'image/jpeg'
-              // })
-              // let finalBlob = blobData
-              // if (this.options.compressSize !== this.file.raw.size) {
-              //   finalBlob = await compressImage(blobData, {size: this.options.compressSize})
-              // }
-              // saveAs(finalBlob, `${this.file.filename}.${this.options.format}`)
+              let blobData = await this.createImg({
+                src: URL.createObjectURL(blob),
+                width: this.options.width,
+                height: this.options.height,
+                dx: 0,
+                dy: 0,
+                type: this.options.format === 'png' ? 'image/png' : 'image/jpeg'
+              })
+              let finalBlob = blobData
+              if (this.options.compressSize !== this.file.raw.size) {
+                finalBlob = await compressImage(blobData, {size: this.options.compressSize})
+              }
+              saveAs(finalBlob, `${this.file.filename}.${this.options.format}`)
 
             } catch (e) {
-              console.log(e)
               Toast.fail({
                 message: '导出失败!',
                 duration: 1500
