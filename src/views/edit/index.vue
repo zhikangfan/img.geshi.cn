@@ -1,7 +1,7 @@
 <template>
   <div class="editPage">
     <div class="imgBox" ref="imgBoxRef">
-      <img :src="file.src" alt="" ref="cropperRef" class="img"/>
+      <img :src="file.src" alt="" ref="cropperRef" class="img" />
     </div>
     <div class="panelContainer">
       <div class="imgInfo">
@@ -32,7 +32,7 @@
               </div>
               <div :class="{ inputBox: true }">
                 <span>高</span>
-                <input type="number" v-model="options.height"/>
+                <input type="number" v-model="options.height" />
                 <span>px</span>
               </div>
             </div>
@@ -45,14 +45,14 @@
         <div class="panelItemContent">
           <div class="sizeLine" v-for="(group, idx) in customSizes" :key="idx">
             <div
-              :class="{ sizeItem: true, checked: selectSizeId === size.id }"
-              v-for="(size, index) in group"
-              :key="index"
-              @click="onSelectSize(size.id, size.width, size.height)"
+                    :class="{ sizeItem: true, checked: selectSizeId === size.id }"
+                    v-for="(size, index) in group"
+                    :key="index"
+                    @click="onSelectSize(size.id, size.width, size.height)"
             >
               <span class="txt">{{ size.title }}</span>
               <span class="value"
-                >{{ size.id === 'custom' || size.id === 'more' ? size.subTitle : `${size.width}*${size.height}` }}
+              >{{ size.id === 'custom' || size.id === 'more' ? size.subTitle : `${size.width}*${size.height}` }}
               </span>
             </div>
           </div>
@@ -65,12 +65,12 @@
             <span class="title">最小压缩</span>
             <div class="sliderBox">
               <van-slider
-                v-model="options.compressSize"
-                @change="onCompressSizeChange"
-                :min="1"
-                :max="file.raw.size || 0"
-                bar-height="4px"
-                active-color="#165DFF"
+                      v-model="options.compressSize"
+                      @change="onCompressSizeChange"
+                      :min="1"
+                      :max="file.raw.size || 0"
+                      bar-height="4px"
+                      active-color="#165DFF"
               >
                 <template #button>
                   <div class="custom-button"></div>
@@ -87,10 +87,10 @@
         <div class="panelItemContent">
           <div class="radioLine">
             <div
-              class="radioItem"
-              v-for="format in formatList"
-              :key="format.value"
-              @click="onSelectFormat(format.value)"
+                    class="radioItem"
+                    v-for="format in formatList"
+                    :key="format.value"
+                    @click="onSelectFormat(format.value)"
             >
               <span :class="{ radio: true, checked: format.value === options.format }"></span>
               <span class="title">{{ format.title }}</span>
@@ -101,16 +101,16 @@
     </div>
     <div class="btnGroup">
       <Uploader :on-success="onUploadSuccess">
-      <button class="default btn">重新上传</button>
+        <button class="default btn">重新上传</button>
       </Uploader>
       <button class="btn primary" @click="handleDownload">导出</button>
     </div>
     <van-popup
-      v-model="isShowCheckSizeModal"
-      :round="true"
-      :close-on-click-overlay="true"
-      :close-on-popstate="true"
-      :safe-area-inset-bottom="true"
+            v-model="isShowCheckSizeModal"
+            :round="true"
+            :close-on-click-overlay="true"
+            :close-on-popstate="true"
+            :safe-area-inset-bottom="true"
     >
       <div class="checkSizeModal">
         <div class="checkSizeModalContainer">
@@ -119,10 +119,10 @@
             <div class="checkSizeContent">
               <div class="checkSizeLine" v-for="(sizeGroup, id) in sizeCategory.sizes" :key="id">
                 <div
-                  :class="{ checkSizeItem: true, checked: selectModalSizeId === size.id }"
-                  v-for="(size, index) in sizeGroup"
-                  :key="size.with + '_' + index"
-                  @click="onSelectModalSize(size.id, size.width, size.height)"
+                        :class="{ checkSizeItem: true, checked: selectModalSizeId === size.id }"
+                        v-for="(size, index) in sizeGroup"
+                        :key="size.with + '_' + index"
+                        @click="onSelectModalSize(size.id, size.width, size.height)"
                 >
                   <div class="txt">{{ size.title }}</div>
                   <div class="size">{{ size.width }}*{{ size.height }}</div>
@@ -143,12 +143,15 @@
 import { editSizeList } from '@/config'
 import { formatFileSize } from '../../utils'
 import Cropper from 'cropperjs'
-import {saveAs} from 'file-saver'
-import Uploader from "@/components/Uploader/index.vue";
-import {Toast} from "vant";
+import { saveAs } from 'file-saver'
+import Uploader from '@/components/Uploader/index.vue'
+import { Dialog, Toast } from 'vant'
+import { VIP_LEVEL } from '@/store/user.store'
+import { compressImage } from '@/core'
+
 export default {
   name: 'Edit',
-  components: {Uploader},
+  components: { Uploader },
   props: {},
   data() {
     return {
@@ -182,7 +185,7 @@ export default {
         height: 0
       },
       file: {}, // 待处理文件
-      isShowConfirmBtn: false, // 是否显示确定
+      isShowConfirmBtn: false // 是否显示确定
     }
   },
   computed: {
@@ -217,21 +220,6 @@ export default {
   },
   methods: {
     formatFileSize,
-    calculateScale(origin, target) {
-      const originWidth = origin.width
-      const originHeight = origin.height
-      const targetWidth = target.width
-      const targetHeight = target.height
-      // 如果target的width和height都没有超过origin的width和height，则直接返回1
-      if (targetWidth <= originWidth && targetHeight <= originHeight) {
-        return 1
-      }
-      // 按照宽度
-      if (originWidth / originHeight < targetWidth / targetHeight) {
-        return originWidth / targetWidth
-      } // 按照宽度缩放
-      return originHeight / targetHeight
-    },
     splitIntoChunks(arr, chunkSize) {
       const result = []
       for (let i = 0; i < arr.length; i += chunkSize) {
@@ -245,6 +233,7 @@ export default {
       this.selectSizeId = this.selectModalSizeId
       this.options.width = this.selectModalSize.width
       this.options.height = this.selectModalSize.height
+      this.cropper.setAspectRatio(this.options.width / this.options.height)
     },
     // 取消选择
     onCancel() {
@@ -255,44 +244,47 @@ export default {
         height: 0
       }
     },
-    onCompressSizeChange() {},
+    onCompressSizeChange() {
+    },
     // 选择格式
     onSelectFormat(format) {
       this.options.format = format
     },
     // 选择尺寸
     onSelectSize(id, width, height) {
-      if (id === 'custom') {
-        // 点击自定义
-        this.selectSizeId = id
-        this.selectModalSizeId = id
-        this.isShowConfirmBtn = true
-        this.createCropper({
-          cropBoxResizable: true,
-          aspectRatio: width / height
-        })
-      } else if (id === 'more') {
-        // 点击更多
+      if (id === 'more') { // 点击更多
         this.isShowCheckSizeModal = true
       } else {
-        // 选择的尺寸
         this.selectSizeId = id
         this.selectModalSizeId = id
-        this.isShowConfirmBtn = false
-        this.options.width = width
-        this.options.height = height
-
-        // this.cropper.setAspectRatio(width / height)
-
-
-        // this.createCropper({
-        //   cropBoxResizable: false,
-        //   aspectRatio: width / height
-        // })
-
+        this.isShowConfirmBtn = id === 'custom' // 是否展示确认按钮，只有选择了自定义才展示
+        if (id !== 'custom') {
+          this.options.width = width
+          this.options.height = height
+        }
+        // const aspectRatio = id === 'custom' ? Number(undefined) : width / height
+        // this.cropper?.setAspectRatio(aspectRatio)
+        let that = this
+        let cropFunc = () => {
+        }
+        if (id === 'custom') {
+          cropFunc = (e) => {
+            that.options.width = Math.floor(e.detail.width)
+            that.options.height = Math.floor(e.detail.height)
+          }
+        }
+        this.cropper = this.createCropper({
+          cropBoxResizable: id === 'custom', // 允许改变尺寸
+          aspectRatio: id === 'custom' ? Number(undefined) : width / height,
+          zoomable: id === 'custom', // 禁止用户缩放
+          zoomOnTouch: id === 'custom',
+          zoomOnWheel: id === 'custom',
+          crop: cropFunc
+        })
 
 
       }
+
     },
     // 选择弹窗里的尺寸
     onSelectModalSize(id, width, height) {
@@ -306,41 +298,118 @@ export default {
       e.preventDefault()
       return '图片还未处理或下载，是否要离开？'
     },
-    onUploadSuccess() {
-      Toast('nonono!')
+    // 重新上传
+    onUploadSuccess(fileList) {
+      let file = fileList[0]
+      this.reset(file)
+      // this.cropper?.destroy()
+      let that = this;
+      this.$nextTick(() => {
+        this.cropper = this.createCropper({
+          crop(e) {
+            that.options.width = Math.floor(e.detail.width)
+            that.options.height = Math.floor(e.detail.height)
+          }
+        })
+      })
+
     },
     // 点击确认， 设置宽度
     onClickConfirmBtn() {
 
-
-      // this.isShowConfirmBtn = false
-      // if (this.options.width > this.file.width || this.options.height > this.file.height) {
-      //   this.createCropper({
-      //     aspectRatio: this.options.width / this.options.height
-      //   })
-      // } else {
-      //   this.createCropper({
-      //     cropBoxResizable: false,
-      //     data: {
-      //       width: this.options.width,
-      //       height: this.options.height
-      //     }
-      //   })
-      // }
-
+      this.cropper = this.createCropper({
+        cropBoxResizable: false, // 允许改变尺寸
+        aspectRatio: this.options.width / this.options.height,
+        zoomable: false, // 禁止用户缩放
+        zoomOnTouch: false,
+        zoomOnWheel: false,
+        crop: () => {
+        }
+      })
+      this.isShowConfirmBtn = false
+    },
+    handleLogin() {
+      this.$loginModal({
+        onHandleClose: () => {
+          console.log('close')
+        }
+      })
+    },
+    // 检查用户
+    checkUser() {
+      // 判断用户是否登录
+      let isLogin = this.$store.getters['userStore/isLogin']
+      if (!isLogin) {
+        this.handleLogin()
+        return false
+      }
+      let { vip, has_image_count } = this.$store.state.userStore.allCert
+      // 判断用户等级
+      if (vip === VIP_LEVEL.NON_VIP) { // 没有VIP
+        Dialog.confirm({
+          title: '温馨提示',
+          message: '请开通VIP后下载！'
+        }).then(() => {
+          this.isBuyVip = true
+          this.$router.push({
+            name: 'purchase'
+          })
+        }).catch(() => {
+          // TODO: 点击取消
+        })
+        return false
+      }
+      // 判断用户是否有券
+      if (vip === VIP_LEVEL.COUNT_VIP) { // 当用户为次数vip的时候
+        // 判断当前图片是否下载过
+        let needDownloadList = this.file.download ? 0 : 1
+        return needDownloadList <= has_image_count
+      }
+      if (vip === VIP_LEVEL.TIME_VIP || vip === VIP_LEVEL.PERMANENT_VIP || vip === VIP_LEVEL.THREE_DAY_VIP) { // 当用户vip类型为时间vip 永久vip 3天vip的时候
+        return true
+      }
     },
     handleDownload() {
       if (this.cropper) {
-        this.cropper.getCroppedCanvas().toBlob(blob => {
-          // saveAs(blob, )
-          let type = 'image/jpeg'
-          if (this.options.format === 'jpg') {
-            type = 'image/jpg'
-          } else if (this.options.format === 'png') {
-            type = 'image/png'
-          }
-          saveAs(new Blob([blob], {type}),`${this.file.filename}.${this.options.format}`)
-        })
+        // let allowAction = this.checkUser()
+        let allowAction = true
+        if (allowAction) {
+          const toast = Toast({
+            type: 'loading',
+            duration: 0, // 持续展示 toast
+            forbidClick: true,
+            message: '正在导出...'
+          })
+          this.cropper.getCroppedCanvas().toBlob(async blob => {
+            try {
+              console.log(blob, '---blob')
+              // let blobData = this.createImg({
+              //   src: URL.createObjectURL(blob),
+              //   width: this.options.width,
+              //   height: this.options.height,
+              //   dx: 0,
+              //   dy: 0,
+              //   type: this.options.format === 'png' ? 'image/png' : 'image/jpeg'
+              // })
+              // let finalBlob = blobData
+              // if (this.options.compressSize !== this.file.raw.size) {
+              //   finalBlob = await compressImage(blobData, {size: this.options.compressSize})
+              // }
+              // saveAs(finalBlob, `${this.file.filename}.${this.options.format}`)
+
+            } catch (e) {
+              console.log(e)
+              Toast.fail({
+                message: '导出失败!',
+                duration: 1500
+              })
+            } finally {
+              toast?.clear()
+            }
+
+          })
+        }
+
       }
     },
     createImg(options) {
@@ -355,70 +424,80 @@ export default {
         img.crossOrigin = 'anonymous'
         img.onload = () => {
           ctx.drawImage(img, options.dx, options.dy, options.width, options.height)
-          let src = canvas.toDataURL(options.type || 'image/jpeg', 1)
-          resolve(src)
+          canvas.toBlob((blob) => {
+            resolve(blob)
+          }, options.type || 'image/jpeg', 1)
         }
         img.onerror = () => {
           reject()
         }
       })
     },
-    createCropper(options={}) {
-      if (this.cropper) {
-        this.cropper.destroy()
+    createCropper(options = {}) {
+      this.cropper?.destroy()
+      if (this.$refs.cropperRef) {
+        return new Cropper(this.$refs.cropperRef, {
+          viewMode: 1,
+          dragMode: 'none',
+          center: false,
+          zoomable: true, // 禁止用户缩放
+          zoomOnTouch: true,
+          zoomOnWheel: true,
+          cropBoxResizable: true, // 允许改变尺寸
+          autoCropArea: 1,
+          crop(e) {
+          },
+          ...options
+        })
       }
-      let that = this;
-      this.cropper =new Cropper(this.$refs.cropperRef, {
-        viewMode: 1,
-        dragMode: 'none',
-        center: false,
-        zoomable: false, // 禁止用户缩放
-        zoomOnTouch: false,
-        cropBoxResizable: true, // 允许改变尺寸
-        autoCropArea: 1,
-        crop(e) {
-          // console.log(e)
-          that.options.width = Math.ceil(e.detail.width)
-          that.options.height = Math.ceil(e.detail.height)
-        },
-        ...options
+    },
+    reset(file) {
+      this.isShowCheckSizeModal = false
+      this.selectSizeId = '' // 选中的当前尺寸
+      this.selectModalSizeId = '' // 选中的弹窗里的ID
+      this.selectModalSize = {
+        // 选中的弹窗里的尺寸
+        width: 0,
+        height: 0
+      }
+      this.options = {
+        compressSize: 0,
+        format: 'jpg',
+        width: 0,
+        height: 0
+      }
+      this.isShowConfirmBtn = false // 是否显示确定
+      this.init(file)
+    },
+    init(file) {
+      this.file = file
+      this.options.width = this.file.width
+      this.options.height = this.file.height
+      this.options.compressSize = this.file.raw.size
+      this.customSizes.forEach(group => {
+        group.forEach(item => {
+          if (item.id === 'custom') {
+            let { id, width, height } = item
+            this.onSelectSize(id, width, height)
+          }
+        })
       })
+      let { value } = this.formatList.find(item => item.value === this.file.suffix)
+      this.onSelectFormat(value)
     }
   },
-  async created() {
-    this.file = this.$route.params.fileList[0]
 
-    this.sliderMaxValue = this.file.size
-    this.options.width = this.file.width
-    this.options.height = this.file.height
-    this.options.compressSize = this.file.raw.size
-    this.customSizes.forEach(group => {
-      group.forEach(item => {
-        if (item.id === 'custom') {
-          let { id, width, height } = item
-          this.onSelectSize(id, width, height)
-        }
-      })
-    })
-    let { value } = this.formatList.find(item => item.value === this.file.suffix)
-    this.onSelectFormat(value)
+  async created() {
+    this.init(this.$route.params.fileList[0])
   },
   async mounted() {
-    this.$nextTick(() => {
-      let that = this;
-      that.cropper = new Cropper(this.$refs.cropperRef, {
-        viewMode: 1,
-        dragMode: 'none',
-        center: false,
-        autoCropArea: 1,
-        crop(e) {
-          that.options.width = Math.ceil(e.detail.width)
-          that.options.height = Math.ceil(e.detail.height)
-        }
-      })
+    let that = this;
+    this.cropper = this.createCropper({
+      crop(e) {
+        that.options.width = Math.floor(e.detail.width)
+        that.options.height = Math.floor(e.detail.height)
+      }
     })
-
-    // this.createCropper()
 
     window.addEventListener('beforeunload', e => this.onLeave(e))
   },
