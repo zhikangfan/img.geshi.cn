@@ -276,9 +276,9 @@ export default {
         this.cropper = this.createCropper({
           cropBoxResizable: id === 'custom', // 允许改变尺寸
           aspectRatio: id === 'custom' ? Number(undefined) : width / height,
-          zoomable: id === 'custom', // 禁止用户缩放
-          zoomOnTouch: id === 'custom',
-          zoomOnWheel: id === 'custom',
+          // zoomable: id === 'custom', // 禁止用户缩放
+          // zoomOnTouch: id === 'custom',
+          // zoomOnWheel: id === 'custom',
           crop: cropFunc
         })
 
@@ -320,9 +320,9 @@ export default {
       this.cropper = this.createCropper({
         cropBoxResizable: false, // 允许改变尺寸
         aspectRatio: this.options.width / this.options.height,
-        zoomable: false, // 禁止用户缩放
-        zoomOnTouch: false,
-        zoomOnWheel: false,
+        // zoomable: false, // 禁止用户缩放
+        // zoomOnTouch: false,
+        // zoomOnWheel: false,
         crop: () => {
         }
       })
