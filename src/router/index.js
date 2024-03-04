@@ -10,7 +10,7 @@ const BASE_KD = {
 }
 const routes = [
   {
-    path: '/m',
+    path: '/',
     name: 'home',
     meta: {
       tdk: {
@@ -21,7 +21,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/m/compress',
+    path: '/compress',
     name: 'compress',
     component: () => import('@/views/compress/index.vue'),
     meta: {
@@ -32,7 +32,7 @@ const routes = [
     }
   },
   {
-    path: '/m/edit',
+    path: '/edit',
     name: 'edit',
     meta: {
       tdk: {
@@ -43,7 +43,7 @@ const routes = [
     component: () => import('@/views/edit/index.vue'),
   },
   {
-    path: '/m/convert',
+    path: '/convert',
     name: 'convert',
     meta: {
       tdk: {
@@ -54,7 +54,7 @@ const routes = [
     component: () => import('@/views/convert/index.vue'),
   },
   {
-    path: '/m/redeem-code',
+    path: '/redeem-code',
     name: 'redeem-code',
     meta: {
       tdk: {
@@ -65,7 +65,7 @@ const routes = [
     component: () => import('@/views/redeemCode/index.vue'),
   },
   {
-    path: '/m/purchase',
+    path: '/purchase',
     name: 'purchase',
     meta: {
       tdk: {
@@ -76,7 +76,7 @@ const routes = [
     component: () => import('@/views/purchase/index.vue'),
   },
   {
-    path: '/m/personal-center',
+    path: '/personal-center',
     name: 'personal-center',
     meta: {
       tdk: {
@@ -87,7 +87,7 @@ const routes = [
     component: () => import('@/views/personalCenter/index.vue'),
   },
   {
-    path: '/m/edit-dpi',
+    path: '/edit-dpi',
     name: 'edit-dpi',
     meta: {
       tdk: {
@@ -98,9 +98,9 @@ const routes = [
     component: () => import('@/views/dpi/index.vue'),
   },
   {
-    path: '/m/*',
+    path: '/*',
     name: 'NotFound',
-    redirect: () => '/m'
+    redirect: () => '/'
   }
 ]
 

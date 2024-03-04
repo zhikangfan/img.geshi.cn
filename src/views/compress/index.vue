@@ -50,12 +50,12 @@
     <div class="panelContainer">
       <div class="panel" v-if="!isExecuted || isLoading">
         <van-radio-group v-model="checkFunc">
-          <van-radio name="ratio" icon-size="18px">
+          <van-radio name="quality" icon-size="18px">
             <div class="panelItem">
-              <span class="title">压缩比例：</span>
+              <span class="title">清晰度：</span>
               <div class="panelItemRight">
                 <van-slider
-                  v-model="options.ratio"
+                  v-model="options.quality"
                   @change="onRatioChange"
                   :min="1"
                   :max="100"
@@ -66,7 +66,7 @@
                     <div class="custom-button"></div>
                   </template>
                 </van-slider>
-                <span class="txt">{{ options.ratio }}%</span>
+                <span class="txt">{{ options.quality }}%</span>
               </div>
             </div>
           </van-radio>
@@ -105,7 +105,7 @@
 </template>
 <script>
 import {Dialog, ImagePreview, Toast} from 'vant'
-import { compressImage } from '@/core'
+import {compressImage, outputTheSpecifiedSize} from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
 import Uploader from '@/components/Uploader/index.vue'
 import { saveAs } from 'file-saver'
@@ -123,11 +123,11 @@ export default {
       isExecuted: false, // 是否执行过压缩
       options: {
         //执行的压缩参数
-        ratio: 70, // 透明度
+        quality: 70, // 透明度
         size: '' // 单位kb
       },
       fileList: [],
-      checkFunc: 'ratio', // 选择的压缩方式ratio: 压缩比例，size: 指定大小
+      checkFunc: 'quality', // 选择的压缩方式quality: 清晰度，size: 指定大小
       isLoading: false, // 图片是否处理中
       isBuyVip: false, // 是否去购买vip
     }
@@ -151,8 +151,8 @@ export default {
     },
     // 监听透明度发生变化
     onRatioChange(value) {
-      this.options.ratio = value
-      this.checkFunc = 'ratio'
+      this.options.quality = value
+      this.checkFunc = 'quality'
     },
     // 监听用户尺寸发生变化
     onChangeSize(value) {
@@ -256,7 +256,6 @@ export default {
 
       this.isLoading = true // 开启loading
       this.isExecuted = true
-      let { size, ratio } = this.options
       let taskList = []
 
       const toast = Toast({
@@ -269,11 +268,13 @@ export default {
         let taskFn = new Promise(resolve => {
           ;(async (resolve, item, idx) => {
             try {
-              if (this.checkFunc === 'ratio') { // 选择压缩比例，直接换算成指定size
-                size = item.raw.size * (ratio / 100)
-              }
-              let options = this.checkFunc === 'ratio' ? {size: item.raw.size * (ratio / 100)} : { size: size * 1024 }
+              let options = this.checkFunc === 'quality' ? {quality: this.options.quality / 100} : { maxSize: this.options.size }
+              console.log(options, '---oo', this.checkFunc)
               let resultBlob = await compressImage(item.raw, options)
+              if (this.checkFunc !== 'quality') {
+                resultBlob = await outputTheSpecifiedSize(item.raw, options)
+              }
+
               let resultInfo = await getImageFileInfo(resultBlob)
               let result = { ...item, result: resultInfo, status: true, checked: false }
               this.fileList.splice(idx, 1, result)

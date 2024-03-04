@@ -16,13 +16,13 @@ export default {
       tabBar: [
         {
           title: '轻秒',
-          path: '/m/',
+          path: '/',
           icon: require('@/assets/img/nav_icon_qingmiao.svg'),
           activeIcon: require('@/assets/img/nav_icon_qingmiao_active.svg')
         },
         {
           title: '我的',
-          path: '/m/personal-center',
+          path: '/personal-center',
           icon: require('@/assets/img/nav_icon_me.svg'),
           activeIcon: require('@/assets/img/nav_icon_me_active.svg')
         }

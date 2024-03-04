@@ -120,7 +120,7 @@ export default {
     },
     handleOpen() {
       if (this.isLogin) {
-        this.jumpTo('/m/purchase')
+        this.jumpTo('/purchase')
       } else {
         this.handleLogin()
       }

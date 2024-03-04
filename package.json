@@ -9,7 +9,8 @@
     "prepare": "husky install",
     "lint-staged": "lint-staged",
     "format": "prettier --write \"{src,public,scripts}/**/*.{vue,js,less,css}\" --ignore-path .prettierignore",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "scp": "node scripts/publish.js"
   },
   "dependencies": {
     "@imagemagick/magick-wasm": "^0.0.23",

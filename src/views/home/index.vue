@@ -4,7 +4,7 @@
       <div class="funcList">
         <div :class="{ funcItem: true, checked: selectFunc === 'compress' }" @click="onSelectFunc('compress')">
           <span class="icon compress_icon"></span>
-          <span class="title">压缩</span>
+          <span class="title">图片压缩</span>
         </div>
         <div
           :class="{ funcItem: true, checked: selectFunc === 'convert' }"

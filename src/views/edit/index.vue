@@ -27,12 +27,12 @@
             <div class="changeSizeBoxLeft">
               <div :class="{ inputBox: true }">
                 <span>宽</span>
-                <input type="number" v-model="options.width" />
+                <input type="number" :disabled="!isShowConfirmBtn" v-model="options.width" />
                 <span>px</span>
               </div>
               <div :class="{ inputBox: true }">
                 <span>高</span>
-                <input type="number" v-model="options.height" />
+                <input type="number" :disabled="!isShowConfirmBtn" v-model="options.height" />
                 <span>px</span>
               </div>
             </div>
@@ -274,7 +274,7 @@ export default {
           }
         }
         this.cropper = this.createCropper({
-          cropBoxResizable: id === 'custom', // 允许改变尺寸
+          // cropBoxResizable: id === 'custom', // 允许改变尺寸
           aspectRatio: id === 'custom' ? Number(undefined) : width / height,
           // zoomable: id === 'custom', // 禁止用户缩放
           // zoomOnTouch: id === 'custom',
@@ -316,9 +316,16 @@ export default {
     },
     // 点击确认， 设置宽度
     onClickConfirmBtn() {
-
+      if (this.options.width <= 0) {
+        Toast('宽度必须大于等于1！')
+        return
+      }
+      if (this.options.height <= 0) {
+        Toast('高度必须大于等于1！')
+        return
+      }
       this.cropper = this.createCropper({
-        cropBoxResizable: false, // 允许改变尺寸
+        // cropBoxResizable: false, // 允许改变尺寸
         aspectRatio: this.options.width / this.options.height,
         // zoomable: false, // 禁止用户缩放
         // zoomOnTouch: false,
@@ -396,6 +403,7 @@ export default {
               saveAs(finalBlob, `${this.file.filename}.${this.options.format}`)
 
             } catch (e) {
+              console.log(e)
               Toast.fail({
                 message: '导出失败!',
                 duration: 1500
@@ -435,13 +443,15 @@ export default {
       if (this.$refs.cropperRef) {
         return new Cropper(this.$refs.cropperRef, {
           viewMode: 1,
-          dragMode: 'none',
+          dragMode: 'move',
           center: false,
           zoomable: true, // 禁止用户缩放
           zoomOnTouch: true,
           zoomOnWheel: true,
           cropBoxResizable: true, // 允许改变尺寸
           autoCropArea: 1,
+          minCropBoxWidth: 1,
+          minCropBoxHeight: 1,
           crop(e) {
           },
           ...options
