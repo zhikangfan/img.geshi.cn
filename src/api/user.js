@@ -9,23 +9,7 @@ import authAxios from '@/axios/authAxios'
 export function userLogin(code) {
   return axios.get('/api/wxlogin?code=' + code)
 }
-/**
- * @description 获取支付状态
- * @param {*} orderId 订单ID
- */
-export function getPayStatus(orderId) {
-  return authAxios.post(
-    '/imageformat/getorder',
-    {
-      order_id: orderId
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-  )
-}
+
 
 /**
  * @description 扣除用户下载次数
@@ -70,7 +54,7 @@ export const userMobileLogin = ({mobile_phone, code}) => {
   return axios.post('/api/smslogin', {
     mobile_phone,
     smscode: code,
-    code: 'qingmiao'
+    code: 'image_convert_h5'
   })
 }
 /**
@@ -79,6 +63,7 @@ export const userMobileLogin = ({mobile_phone, code}) => {
  */
 export const getMobileCode = (mobile_phone) => {
   return axios.post('/api/code', {
-    mobile_phone
+    mobile_phone,
+    code: 'image_convert_h5'
   })
 }

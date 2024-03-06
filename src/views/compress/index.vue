@@ -110,6 +110,7 @@ import getImageFileInfo from '@/utils/getImageFileInfo'
 import Uploader from '@/components/Uploader/index.vue'
 import { saveAs } from 'file-saver'
 import {VIP_LEVEL} from "@/store/user.store";
+import {duce} from "@/api";
 
 export default {
   name: 'Compress',
@@ -167,7 +168,7 @@ export default {
       })
     },
     // 检查用户
-    checkUser() {
+    async checkUser() {
       // 判断用户是否登录
       let isLogin = this.$store.getters["userStore/isLogin"]
       if (!isLogin) {
@@ -197,7 +198,32 @@ export default {
         let needDownloadList = this.fileList.filter((item, idx) => {
           return item.checked && !item.download
         })
-        return needDownloadList <= has_image_count
+        if (needDownloadList > has_image_count) {
+          Dialog.confirm({
+            title: '温馨提示',
+            message: '剩余次数不足！',
+            confirmButtonText: '去购买'
+          }).then(() => {
+            this.isBuyVip = true
+            this.$router.push({
+              name: 'purchase'
+            })
+          }).catch(() => {
+            // TODO: 点击取消
+          })
+
+          return false
+        } else {
+          // 扣除相应次数
+          let res = await duce(needDownloadList.length)
+          if (res.data.status !== 0) {
+            Toast.fail({
+              message: '下载失败！'
+            })
+          }
+          return res.data.status === 0
+        }
+
       }
       if (vip === VIP_LEVEL.TIME_VIP || vip === VIP_LEVEL.PERMANENT_VIP || vip === VIP_LEVEL.THREE_DAY_VIP) { // 当用户vip类型为时间vip 永久vip 3天vip的时候
         return true
@@ -316,23 +342,30 @@ export default {
     },
 
     // 下载选中的图片
-    onClickDownload() {
+    async onClickDownload() {
       let downloadList = this.fileList.filter((item, idx) => {
         // 标记一下是否被下载过
-        if (item.checked) {
-          this.fileList.splice(idx, 1, { ...item, download: true })
-        }
+        // if (item.checked) {
+        //   this.fileList.splice(idx, 1, { ...item, download: true })
+        // }
         return item.checked
       })
       if (downloadList.length === 0) {
         Toast('未选择要下载的图片！')
         return
       }
-      let allowAction = this.checkUser()
+      let allowAction = await this.checkUser()
       if (allowAction) {
         downloadList.forEach(item => {
+          this.fileList.forEach((file,idx) => {
+            if (item.id === file.id) {
+              file['download'] = true
+              this.fileList.splice(idx, 1, file)
+            }
+          })
           saveAs(item.result.raw, item.name)
         })
+        await this.$store.dispatch('userStore/updateAllCert')
       }
 
     }

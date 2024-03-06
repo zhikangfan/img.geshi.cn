@@ -28,6 +28,7 @@ export default {
       state.downloadToken = payload
     },
     updateUserInfo: (state, userInfo) => {
+      console.log(userInfo, '--')
       state.userInfo = userInfo
     },
     updateAllCert: (state, payload) => {
@@ -49,6 +50,7 @@ export default {
     updateAllCert: async ({ commit }) => {
       try {
         let res = await getUserInfo()
+        console.log(res, '---updateAllCert')
         commit('updateAllCert', res.data.data)
       } catch (e) {
         commit('updateAllCert', {})

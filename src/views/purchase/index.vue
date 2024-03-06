@@ -5,7 +5,7 @@
         <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
         <div class="infoRight">
           <div class="nickname">轻秒{{ this.$store.state.userStore.userInfo?.uid }}</div>
-          <div class="desc">开通VIP会员 尊享更多特权</div>
+          <div class="desc">{{info}}</div>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
         <img src="@/assets/img/devices.svg" alt="" class="icon" />
         <div class="descContent">
           <div class="descTitle">多端通用</div>
-          <div class="desc">微信小程序与网页权益互通，PC端更多功能</div>
+          <div class="desc">与网页权益互通，PC端更多功能</div>
         </div>
       </div>
       <div class="descItem">
@@ -86,13 +86,15 @@
         </div>
         <button class="payBtn" @click="handlePay">立即开通</button>
       </div>
-      <!--      <div class="tips">开通会员即代表同意<a href="/" target="_blank">《会员服务协议》</a></div>-->
+      <div class="tips">没有自动续费，请放心购买</div>
     </div>
   </div>
 </template>
 <script>
 import { packageList } from '@/config'
 import { createOrder, getPayStatus } from '@/api'
+import { Toast } from 'vant'
+import {VIP_LEVEL} from "@/store/user.store";
 
 export default {
   name: 'Purchase',
@@ -105,6 +107,21 @@ export default {
       pollCount: 0, // 轮询次数
       payResultTimer: null,
       currentPackage: {}
+    }
+  },
+  computed: {
+    info() {
+      let {vip, vip_expiration_date, has_image_count} = this.$store.state.userStore.allCert
+      switch (vip) {
+        case VIP_LEVEL.PERMANENT_VIP:
+          return `到期时间：永久`
+        case VIP_LEVEL.TIME_VIP:
+          return `到期时间：${vip_expiration_date}`
+        case VIP_LEVEL.COUNT_VIP:
+          return `剩余次数：${has_image_count}`
+        default :
+          return `开通VIP会员 尊享更多特权`
+      }
     }
   },
   methods: {
@@ -122,6 +139,7 @@ export default {
 
       if (this.pollCount > 5000) {
         // TODO: 支付超时
+
         return
       }
 
@@ -132,6 +150,9 @@ export default {
           // await this.updateAllCert(r.data.data.money) // 更新用户权益
 
           await this.$store.dispatch('updateUserInfo')
+          Toast.success({
+            message: '支付成功'
+          })
 
           // Message({
           //   type: 'success',
@@ -144,29 +165,49 @@ export default {
           // trackOrder(this.checkID, orderId, r.data.data.money.cash_total)
           // this.hidePurchaseModal()
         } else {
-          this.lookup(orderId)
+          Toast.fail({
+            message: '支付失败'
+          })
+          // this.lookup(orderId)
         }
       }, 1500)
 
       this.pollCount++ // 增加轮询次数
     },
-    async handlePay() {
-      console.log(this.currentPackage, '---currentPage')
-      const { id } = this.currentPackage
-      let res = await createOrder(10)
-      if (res.data.status == 0) {
-        let payUrl = res.data.data
-        window.open(`${payUrl}&redirect_url=${window.encodeURIComponent('https://passportapi.qingmiao.com')}`)
-      }
 
-      console.log(res.data.data)
+    async handlePay() {
+      const { id } = this.currentPackage
+      let res = await createOrder(id)
+      if (res.data.status == 0) {
+        let { wechat_url, order_id } = res.data.data
+        const wechatUrl = `${wechat_url}&redirect_url=${window.encodeURIComponent('https://img.geshi.cn/purchase?order_id=' + order_id)}`
+        await window.location.replace(wechatUrl)
+      }
     }
   },
-  created() {
+  async created() {
     this.onCheckPackage(1)
   },
-  updated() {
-    console.log('111')
+  async mounted() {
+    let { order_id } = this.$route.query
+    console.log(order_id, '---orderId')
+    if (order_id) {
+      let r = await getPayStatus(order_id)
+      console.log(r, '---payStatus')
+      if (r.data.status === 0 && r.data.data.order.status === 1) {
+        // 查询成功 并且 状态为1 或者支付超时
+        // 更新用户权益
+        await this.$store.dispatch('userStore/updateAllCert')
+        // Toast.success({
+        //   message: '支付成功'
+        // })
+
+        // FIXME: 浮点数精度丢失，可以采用第三方库处理，也可以后端处理
+        // uploadPayData(Math.ceil(this.price * 100)).catch(e => {})
+        // trackOrder(this.checkID, orderId, r.data.data.money.cash_total)
+        // this.hidePurchaseModal()
+      }
+    }
   }
 }
 </script>

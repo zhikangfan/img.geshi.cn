@@ -5,14 +5,17 @@
       <div class="loginBtn">登录/注册</div>
     </div>
     <div class="loginBox" v-else>
-      <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
+      <div class="avatarBox">
+        <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
+        <img v-if="this.$store.state.userStore.allCert?.vip === VIP_LEVEL.PERMANENT_VIP || this.$store.state.userStore.allCert?.vip === VIP_LEVEL.TIME_VIP || this.$store.state.userStore.allCert?.vip === VIP_LEVEL.THREE_DAY_VIP" src="@/assets/img/vip_icon.svg" alt="" class="vip_icon">
+      </div>
       <div class="userInfo">
         <div class="nickname">轻秒{{ this.$store.state.userStore.userInfo?.uid }}</div>
         <div class="info">
-          <div class="tag" v-if="this.$store.state.userStore.allCert?.vip === VIP_LEVEL.NON_VIP">免费用户</div>
+<!--          <div class="tag" v-if="this.$store.state.userStore.allCert?.vip === VIP_LEVEL.NON_VIP">免费用户</div>-->
           <div class="userIdBox">
-            ID:<span class="userId">{{ this.$store.state.userStore.userInfo?.uid }}</span
-            ><span class="copyBtn" :data-clipboard-text="this.$store.state.userStore.userInfo?.uid"></span>
+            ID:<span class="userId">{{ this.$store.state.userStore.userInfo?.uid }}</span>
+            <span class="copyBtn" :data-clipboard-text="this.$store.state.userStore.userInfo?.uid"></span>
           </div>
         </div>
       </div>
@@ -22,23 +25,24 @@
         <div class="cardLeft">
           <div class="cardTop">
             <span class="icon"></span>
-            <span class="title">VIP会员</span>
+            <span class="title">{{this.$store.state.userStore.allCert?.vip === VIP_LEVEL.PERMANENT_VIP ? '终身会员' : this.$store.state.userStore.allCert?.vip === VIP_LEVEL.TIME_VIP ? '年会员' : 'VIP会员'}}</span>
           </div>
-          <div class="desc">解锁更多功能，尊享所有权益</div>
+          <div class="desc">{{this.$store.state.userStore.allCert?.vip === VIP_LEVEL.PERMANENT_VIP ? '无限制' : (this.$store.state.userStore.allCert?.vip === VIP_LEVEL.TIME_VIP || this.$store.state.userStore.allCert?.vip === VIP_LEVEL.THREE_DAY_VIP) ? `到期时间：${this.$store.state.userStore.allCert?.vip_expiration_date}` : this.$store.state.userStore.allCert?.vip === VIP_LEVEL.COUNT_VIP ? `剩余次数：${this.$store.state.userStore.allCert?.has_image_count}` : '解锁更多功能，尊享所有权益'}}</div>
         </div>
-        <button class="buyBtn" @click="handleOpen">立即开通</button>
+        <button class="buyBtn" v-if="this.$store.state.userStore.allCert?.vip === VIP_LEVEL.PERMANENT_VIP">永久</button>
+        <button class="buyBtn" v-else @click="handleOpen">{{(this.$store.state.userStore.allCert?.vip === VIP_LEVEL.TIME_VIP || this.$store.state.userStore.allCert?.vip === VIP_LEVEL.COUNT_VIP) ? '限时升级' : `立即开通`}}</button>
       </div>
     </div>
     <div class="section">
       <div class="navList">
-        <div class="navItem" @click="openWindow('https://work.weixin.qq.com/kfid/kfcb34fb19127a8aa5f')">
+        <div class="navItem" @click="openWindow('https://work.weixin.qq.com/kfid/kfc34ae1a91908f3348')">
           <div class="navItemLeft">
             <span class="icon feedback"></span>
             <span class="title">意见反馈</span>
           </div>
           <span class="right_icon"></span>
         </div>
-        <div class="navItem" @click="openWindow('https://work.weixin.qq.com/kfid/kfcb34fb19127a8aa5f')">
+        <div class="navItem" @click="openWindow('https://work.weixin.qq.com/kfid/kfc34ae1a91908f3348')">
           <div class="navItemLeft">
             <span class="icon customer"></span>
             <span class="title">客服中心</span>
@@ -84,7 +88,7 @@
 </template>
 <script>
 import MyTabBar from '@/components/TabBar/index.vue'
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import { VIP_LEVEL } from '@/store/user.store'
 import ClipboardJS from 'clipboard'
 import {Toast} from "vant";

@@ -29,7 +29,7 @@ export const packageList = [
     payTips: '立减130元 可开发票'
   },
   {
-    id: 3,
+    id: 4,
     title: '按张付费*10张',
     price: '19.9',
     corner: '',
@@ -41,7 +41,7 @@ export const packageList = [
     payTips: '张数永久有效'
   },
   {
-    id: 4,
+    id: 3,
     title: '按张付费*1张',
     price: '9.9',
     corner: '',
@@ -212,3 +212,138 @@ export const editSizeList = [
     ]
   }
 ]
+
+export const FILE_TYPE = [
+  {
+    type: 'image/png',
+    ext: 'png',
+    alias: 'PNG'
+  },
+  {
+    type: 'image/jpeg',
+    ext: 'jpg',
+    alias: 'JPG'
+  },
+  {
+    type: 'image/jpeg',
+    ext: 'jpeg',
+    alias: 'JPEG'
+  },
+  {
+    type: 'image/gif',
+    ext: 'gif',
+    alias: 'GIF'
+  },
+  {
+    type: 'image/bmp',
+    ext: 'bmp',
+    alias: 'BMP'
+  },
+  {
+    type: 'image/webp',
+    ext: 'webp',
+    alias: 'WEBP'
+  },
+  {
+    type: 'image/tiff',
+    ext: 'tif',
+    alias: 'TIF'
+  },
+  {
+    type: 'image/tiff',
+    ext: 'tiff',
+    alias: 'TIFF'
+  },
+  {
+    type: 'avif.avif',
+    ext: 'avif',
+    alias: 'AVIF'
+  },
+  {
+    type: 'image/heic',
+    ext: 'heic',
+    alias: 'HEIC'
+  },
+  {
+    type: 'image/svg+xml',
+    ext: 'svg',
+    alias: 'SVG'
+  },
+  {
+    type: 'application/pdf',
+    ext: 'pdf',
+    alias: 'PDF'
+  },
+  {
+    type: 'application/msword',
+    ext: 'doc',
+    alias: 'Word'
+  },
+  {
+    type: 'application/wps-writer',
+    ext: 'doc',
+    alias: 'Word'
+  },
+  {
+    type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ext: 'docx',
+    alias: 'Word'
+  },
+  {
+    type: 'application/vnd.ms-excel',
+    ext: 'xls',
+    alias: 'Excel'
+  },
+  {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ext: 'xlsx',
+    alias: 'Excel'
+  },
+  {
+    type: 'application/vnd.ms-powerpoint',
+    ext: 'ppt',
+    alias: 'PPT'
+  },
+  {
+    type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    ext: 'pptx',
+    alias: 'PPT'
+  },
+  {
+    type: 'application/acad',
+    ext: 'dwg',
+    alias: 'CAD'
+  },
+  {
+    type: 'application/x-acad',
+    ext: 'dwg',
+    alias: 'CAD'
+  },
+  {
+    type: 'application/dxf',
+    ext: 'dxf',
+    alias: 'CAD'
+  },
+  {
+    type: 'application/x-dxf',
+    ext: 'dxf',
+    alias: 'CAD'
+  },
+  {
+    type: 'application/x-dwt',
+    ext: 'dwt',
+    alias: 'CAD'
+  },
+  {
+    type: 'application/x-dws',
+    ext: 'dws',
+    alias: 'CAD'
+  },
+  {
+    type: 'application/octet-stream',
+    ext: 'dwt',
+    alias: 'CAD'
+  }
+]
+export const SUB_CODE = 'default'
+export const SOFT_CODE = 'image_enhance'

@@ -2,6 +2,10 @@
   <div class="homePage">
     <div class="funcArea">
       <div class="funcList">
+        <div :class="{ funcItem: true, checked: selectFunc === 'edit' }" @click="onSelectFunc('edit')">
+          <span class="icon size_icon"></span>
+          <span class="title">修改尺寸</span>
+        </div>
         <div :class="{ funcItem: true, checked: selectFunc === 'compress' }" @click="onSelectFunc('compress')">
           <span class="icon compress_icon"></span>
           <span class="title">图片压缩</span>
@@ -12,10 +16,6 @@
         >
           <span class="icon format_icon"></span>
           <span class="title">格式转换</span>
-        </div>
-        <div :class="{ funcItem: true, checked: selectFunc === 'edit' }" @click="onSelectFunc('edit')">
-          <span class="icon size_icon"></span>
-          <span class="title">修改尺寸</span>
         </div>
         <div :class="{ funcItem: true, checked: selectFunc === 'edit-dpi' }" @click="onSelectFunc('edit-dpi')">
           <span class="icon dpi_icon"></span>
@@ -101,7 +101,7 @@ export default {
         {
           function: 'edit',
           uploadConfig: {
-            tips: '修改为多种证件照尺寸及压缩指定大小'
+            tips: '多种证件照尺寸及压缩指定大小'
           }
         },
         {
@@ -133,7 +133,7 @@ export default {
     }
   },
   created() {
-    this.onSelectFunc('compress')
+    this.onSelectFunc('edit')
   }
 }
 </script>

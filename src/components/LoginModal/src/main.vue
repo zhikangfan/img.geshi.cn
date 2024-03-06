@@ -142,7 +142,8 @@ export default {
       let res  = await userMobileLogin({mobile_phone, code})
       if (res.data.status === 0) {
         setToken(res.data.data)
-        await this.setUserInfo(res.data.data)
+        await this.$store.dispatch('userStore/setUserInfo', res.data.data)
+        await this.$store.dispatch('userStore/updateAllCert')
         Toast('登录成功！')
       } else {
         Toast('登录失败！')
