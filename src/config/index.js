@@ -346,4 +346,7 @@ export const FILE_TYPE = [
   }
 ]
 export const SUB_CODE = 'default'
-export const SOFT_CODE = 'image_enhance'
+/**
+ * 软件CODE
+ */
+export const SOFT_CODE = 'qingmiao'

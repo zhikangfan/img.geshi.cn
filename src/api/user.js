@@ -1,5 +1,6 @@
 import axios from '@/axios'
 import authAxios from '@/axios/authAxios'
+import {SOFT_CODE} from "@/config";
 
 /**
  * @description 登录
@@ -55,7 +56,7 @@ export const userMobileLogin = ({mobile_phone, code}) => {
     mobile_phone,
     smscode: code,
     // code: 'image_convert_h5'
-    code: 'qingmiao'
+    code: SOFT_CODE
   })
 }
 /**
@@ -66,6 +67,6 @@ export const getMobileCode = (mobile_phone) => {
   return axios.post('/api/code', {
     mobile_phone,
     // code: 'image_convert_h5'
-    code: 'qingmiao'
+    code: SOFT_CODE
   })
 }

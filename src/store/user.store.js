@@ -50,7 +50,6 @@ export default {
     updateAllCert: async ({ commit }) => {
       try {
         let res = await getUserInfo()
-        console.log(res, '---updateAllCert')
         commit('updateAllCert', res.data.data)
       } catch (e) {
         commit('updateAllCert', {})

@@ -85,7 +85,6 @@ import {saveAs} from 'file-saver'
 import {VIP_LEVEL} from "@/store/user.store";
 import {duce} from "@/api";
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { stat } from '@babel/core/lib/gensync-utils/fs'
 export default {
   name: 'Convert',
   components: { Uploader },
