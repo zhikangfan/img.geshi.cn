@@ -310,7 +310,7 @@ export default {
               }
 
               let resultInfo = await getImageFileInfo(resultBlob)
-              let result = { ...item, result: resultInfo, status: true, checked: false }
+              let result = { ...item, result: resultInfo, status: true, checked: true }
               this.fileList.splice(idx, 1, result)
               resolve(result)
             } catch (e) {
