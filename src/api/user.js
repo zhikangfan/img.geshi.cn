@@ -54,7 +54,8 @@ export const userMobileLogin = ({mobile_phone, code}) => {
   return axios.post('/api/smslogin', {
     mobile_phone,
     smscode: code,
-    code: 'image_convert_h5'
+    // code: 'image_convert_h5'
+    code: 'qingmiao'
   })
 }
 /**
@@ -64,6 +65,7 @@ export const userMobileLogin = ({mobile_phone, code}) => {
 export const getMobileCode = (mobile_phone) => {
   return axios.post('/api/code', {
     mobile_phone,
-    code: 'image_convert_h5'
+    // code: 'image_convert_h5'
+    code: 'qingmiao'
   })
 }

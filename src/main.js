@@ -18,6 +18,7 @@ import router from './router'
 import store from './store'
 
 import { Popup, CountDown, Uploader, Slider, Toast, SwipeCell, Button, Image as VanImage, Radio, RadioGroup } from 'vant'
+import {getToken} from "@/utils/token";
 
 Vue.use(MetaInfo)
 Vue.use(Uploader)
@@ -39,9 +40,14 @@ router.beforeEach((to, from ,next) => {
   // 未登录不能跳转到购买页
   if (to.name === 'purchase' && !isLogin) {
       next({
-        path: '/m/'
+        path: '/'
       })
     return
+  }
+  if (!!getToken()) {
+   store.dispatch('userStore/updateAllCert').catch(e => {})
+  } else {
+    store.dispatch('userStore/logout').catch(e => {})
   }
   next()
 

@@ -101,7 +101,7 @@ export default {
         {
           function: 'edit',
           uploadConfig: {
-            tips: '多种证件照尺寸及压缩指定大小'
+            tips: '同时处理证件照尺寸、格式、指定大小'
           }
         },
         {
