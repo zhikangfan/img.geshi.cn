@@ -84,6 +84,8 @@ import getImageFileInfo from '@/utils/getImageFileInfo'
 import {saveAs} from 'file-saver'
 import {VIP_LEVEL} from "@/store/user.store";
 import {duce} from "@/api";
+import { mapActions, mapGetters, mapState } from 'vuex'
+import { stat } from '@babel/core/lib/gensync-utils/fs'
 export default {
   name: 'Convert',
   components: { Uploader },
@@ -125,7 +127,16 @@ export default {
       isBuyVip: false, // 是否去购买vip
     }
   },
+  computed: {
+    ...mapState('userStore', {
+      allCert: state => state.allCert
+    }),
+    ...mapGetters('userStore', {
+      isLogin: 'isLogin'
+    })
+  },
   methods: {
+    ...mapActions('userStore', ['updateAllCert']),
     // 点击预览
     handlePreview(file) {
       ImagePreview({
@@ -188,12 +199,12 @@ export default {
     // 检查用户
     async checkUser() {
       // 判断用户是否登录
-      let isLogin = this.$store.getters["userStore/isLogin"]
+      let isLogin = this.isLogin
       if (!isLogin) {
         this.handleLogin()
         return false
       }
-      let {vip, has_image_count} = this.$store.state.userStore.allCert
+      let {vip, has_image_count} = this.allCert
       // 判断用户等级
       if (vip === VIP_LEVEL.NON_VIP) { // 没有VIP
         Dialog.confirm({
@@ -271,7 +282,7 @@ export default {
           })
           saveAs(item.result.raw, `${item.filename}.${this.options.to}`)
         })
-        await this.$store.dispatch('userStore/updateAllCert')
+        await this.updateAllCert()
       }
 
     },

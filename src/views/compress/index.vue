@@ -111,6 +111,7 @@ import Uploader from '@/components/Uploader/index.vue'
 import { saveAs } from 'file-saver'
 import {VIP_LEVEL} from "@/store/user.store";
 import {duce} from "@/api";
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'Compress',
@@ -133,7 +134,14 @@ export default {
       isBuyVip: false, // 是否去购买vip
     }
   },
+  computed: {
+    ...mapState('userStore', {
+      allCert: state => state.allCert
+    }),
+    ...mapGetters('userStore', ['isLogin']),
+  },
   methods: {
+    ...mapActions('userStore', ['updateAllCert']),
     onLeave(e) {
       e.preventDefault()
       return '图片还未处理或下载，是否要离开？'
@@ -170,12 +178,12 @@ export default {
     // 检查用户
     async checkUser() {
       // 判断用户是否登录
-      let isLogin = this.$store.getters["userStore/isLogin"]
+      let isLogin = this.isLogin
       if (!isLogin) {
         this.handleLogin()
         return false
       }
-      let {vip, has_image_count} = this.$store.state.userStore.allCert
+      let {vip, has_image_count} = this.allCert
       // 判断用户等级
       if (vip === VIP_LEVEL.NON_VIP) { // 没有VIP
         Dialog.confirm({
@@ -365,7 +373,7 @@ export default {
           })
           saveAs(item.result.raw, item.name)
         })
-        await this.$store.dispatch('userStore/updateAllCert')
+        await this.updateAllCert()
       }
 
     }

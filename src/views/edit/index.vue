@@ -149,6 +149,7 @@ import { Dialog, Toast } from 'vant'
 import { VIP_LEVEL } from '@/store/user.store'
 import { compressImage } from '@/core'
 import {duce} from "@/api";
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'Edit',
@@ -190,6 +191,10 @@ export default {
     }
   },
   computed: {
+    ...mapState('userStore', {
+      allCert: state => state.allCert
+    }),
+    ...mapGetters('userStore', ['isLogin']),
     customSizes() {
       let list = []
       this.sizeList.forEach(category => {
@@ -219,7 +224,9 @@ export default {
       return this.splitIntoChunks(middleArray, 3)
     }
   },
+
   methods: {
+    ...mapActions('userStore',['updateAllCert']),
     formatFileSize,
     splitIntoChunks(arr, chunkSize) {
       const result = []
@@ -346,12 +353,12 @@ export default {
     // 检查用户
     async checkUser() {
       // 判断用户是否登录
-      let isLogin = this.$store.getters['userStore/isLogin']
+      let isLogin = this.isLogin
       if (!isLogin) {
         this.handleLogin()
         return false
       }
-      let { vip, has_image_count } = this.$store.state.userStore.allCert
+      let { vip, has_image_count } = this.allCert
       // 判断用户等级
       if (vip === VIP_LEVEL.NON_VIP) { // 没有VIP
         Dialog.confirm({
@@ -426,7 +433,7 @@ export default {
                 finalBlob = await compressImage(blobData, {size: this.options.compressSize})
               }
               saveAs(finalBlob, `${this.file.filename}.${this.options.format}`)
-              await this.$store.dispatch('userStore/updateAllCert')
+              await this.updateAllCert()
 
             } catch (e) {
               console.log(e)

@@ -4,7 +4,7 @@
       <div class="userInfo">
         <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
         <div class="infoRight">
-          <div class="nickname">轻秒{{ this.$store.state.userStore.userInfo?.uid }}</div>
+          <div class="nickname">轻秒{{ userInfo?.uid }}</div>
           <div class="desc">{{info}}</div>
         </div>
       </div>
@@ -95,6 +95,7 @@ import { packageList } from '@/config'
 import { createOrder, getPayStatus } from '@/api'
 import { Toast } from 'vant'
 import {VIP_LEVEL} from "@/store/user.store";
+import { mapState } from 'vuex'
 
 export default {
   name: 'Purchase',
@@ -110,8 +111,12 @@ export default {
     }
   },
   computed: {
+    ...mapState('userStore', {
+      allCert: state => state.allCert,
+      userInfo: state => state.userInfo
+    }),
     info() {
-      let {vip, vip_expiration_date, has_image_count} = this.$store.state.userStore.allCert
+      let {vip, vip_expiration_date, has_image_count} = this.allCert
       switch (vip) {
         case VIP_LEVEL.PERMANENT_VIP:
           return `到期时间：永久`
