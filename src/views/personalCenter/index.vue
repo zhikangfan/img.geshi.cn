@@ -27,7 +27,7 @@
             <span class="icon"></span>
             <span class="title">{{allCert?.vip === VIP_LEVEL.PERMANENT_VIP ? '终身会员' : allCert?.vip === VIP_LEVEL.TIME_VIP ? '年会员' : 'VIP会员'}}</span>
           </div>
-          <div class="desc">{{allCert?.vip === VIP_LEVEL.PERMANENT_VIP ? '无限制' : (allCert?.vip === VIP_LEVEL.TIME_VIP || allCert?.vip === VIP_LEVEL.THREE_DAY_VIP) ? `到期时间：${allCert?.vip_expiration_date}` : allCert?.vip === VIP_LEVEL.COUNT_VIP ? `剩余次数：${allCert?.has_image_count}` : '解锁更多功能，尊享所有权益'}}</div>
+          <div class="desc">{{allCert?.vip === VIP_LEVEL.PERMANENT_VIP ? '无限制' : (allCert?.vip === VIP_LEVEL.TIME_VIP || allCert?.vip === VIP_LEVEL.THREE_DAY_VIP) ? `到期时间：${allCert?.vip_expiration_date}` : allCert?.vip === VIP_LEVEL.COUNT_VIP ? `剩余张数：${allCert?.has_image_count}` : '解锁更多功能，尊享所有权益'}}</div>
         </div>
         <button class="buyBtn" v-if="allCert?.vip === VIP_LEVEL.PERMANENT_VIP">永久</button>
         <button class="buyBtn" v-else @click="handleOpen">{{(allCert?.vip === VIP_LEVEL.TIME_VIP || allCert?.vip === VIP_LEVEL.COUNT_VIP) ? '限时升级' : `立即开通`}}</button>

@@ -247,7 +247,7 @@ export default {
         if (needCount > has_image_count) {
           Dialog.confirm({
             title: '温馨提示',
-            message: '剩余次数不足！',
+            message: '剩余张数不足！',
             confirmButtonText: '去购买'
           })
                   .then(() => {

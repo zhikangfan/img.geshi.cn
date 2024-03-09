@@ -73,7 +73,7 @@
     </div>
     <dl class="buyTips">
       <dt>购买须知</dt>
-      <dd>按张付费购买下载次数 <span class="strong">永久有效</span></dd>
+      <dd>按张付费购买下载张数 <span class="strong">永久有效</span></dd>
       <dd>开通任一会员，会员有效期内所有功能 <span class="strong">不限使用，不限张数</span></dd>
     </dl>
     <div class="payArea">
@@ -123,7 +123,7 @@ export default {
         case VIP_LEVEL.TIME_VIP:
           return `到期时间：${vip_expiration_date}`
         case VIP_LEVEL.COUNT_VIP:
-          return `剩余次数：${has_image_count}`
+          return `剩余张数：${has_image_count}`
         default :
           return `开通VIP会员 尊享更多特权`
       }

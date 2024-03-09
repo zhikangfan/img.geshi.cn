@@ -90,7 +90,7 @@
                 <span class="title">指定大小：</span>
                 <div class="inputBox">
                   <input type="number" v-model="options.setSize" />
-                  <span class="unit">KB</span>
+                  <span class="unit">KB<span class="s">（可手动输入数值）</span></span>
                 </div>
               </div>
             </div>
@@ -426,7 +426,7 @@ export default {
         if (needDownloadList > has_image_count) {
           Dialog.confirm({
             title: '温馨提示',
-            message: '剩余次数不足！',
+            message: '剩余张数不足！',
             confirmButtonText: '去购买'
           })
             .then(() => {
