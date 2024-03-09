@@ -63,6 +63,12 @@
         <!--          </div>-->
         <!--          <span class="right_icon"></span>-->
         <!--        </div>-->
+        <div class="navItem" @click="handleLogout" v-if="isLogin">
+          <div class="navItemLeft">
+            <span class="icon logout"></span>
+            <span class="title">退出登录</span>
+          </div>
+        </div>
       </div>
     </div>
     <MyTabBar />
@@ -88,7 +94,7 @@
 </template>
 <script>
 import MyTabBar from '@/components/TabBar/index.vue'
-import { mapGetters, mapState } from 'vuex'
+import {mapActions, mapGetters, mapState} from 'vuex'
 import { VIP_LEVEL } from '@/store/user.store'
 import ClipboardJS from 'clipboard'
 import {Toast} from "vant";
@@ -114,6 +120,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions('userStore', ['logout']),
     // 打开兑换窗口
     onOpenExchangeModal() {
       this.isShowExchange = true
@@ -142,6 +149,9 @@ export default {
     },
     openWindow(url) {
       window.open(url)
+    },
+    handleLogout() {
+      this.logout()
     }
   },
   created() {

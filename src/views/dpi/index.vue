@@ -235,6 +235,11 @@ export default {
     },
     // 下载选中的图片
     async onClickDownload() {
+      const toast = Toast.loading({
+        duration: 0,
+        forbidClick: true,
+        message: '下载中...'
+      })
       let downloadList = this.fileList.filter((item,idx) => {
         return item.checked
       })
@@ -257,6 +262,7 @@ export default {
         })
         await this.updateAllCert()
       }
+      toast.clear()
     },
     onStart() {
       this.isLoading = true // 开启loading

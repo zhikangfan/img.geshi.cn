@@ -3,7 +3,7 @@ import FileType from 'file-type/browser'
 import { Density, DensityUnit, ImageMagick, initializeImageMagick } from '@imagemagick/magick-wasm'
 import { imageFormatConvert } from '@/core/imageFormatConvert'
 // import * as Magick from './magickApi'
-import {call} from 'wasm-imagemagick'
+// import {call} from 'wasm-imagemagick'
 
 /**
  * @description 根据

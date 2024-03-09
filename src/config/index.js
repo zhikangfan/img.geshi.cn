@@ -350,3 +350,4 @@ export const SUB_CODE = 'default'
  * 软件CODE
  */
 export const SOFT_CODE = 'qingmiao'
+// export const SOFT_CODE = 'image_convert_h5'

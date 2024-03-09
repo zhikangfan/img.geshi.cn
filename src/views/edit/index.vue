@@ -432,8 +432,17 @@ export default {
               if (this.options.compressSize !== this.file.raw.size) {
                 finalBlob = await compressImage(blobData, {size: this.options.compressSize})
               }
-              saveAs(finalBlob, `${this.file.filename}.${this.options.format}`)
-              await this.updateAllCert()
+              console.log(finalBlob, '00fin')
+              // await saveAs(finalBlob, `${this.file.filename}.${this.options.format}`)
+              saveAs('https://res.yunkun.cn/img_geshicn/img/compress_step_2.png', 'test.png');
+
+              // let a = document.createElement('a')
+              // a.style.display = 'none'
+              // a.href = 'https://res.yunkun.cn/img_geshicn/img/compress_step_2.png'
+              // a.download = 'test.png'
+              // document.body.appendChild(a)
+              // a.click()
+
 
             } catch (e) {
               console.log(e)
@@ -442,6 +451,7 @@ export default {
                 duration: 1500
               })
             } finally {
+              await this.updateAllCert()
               toast?.clear()
             }
 

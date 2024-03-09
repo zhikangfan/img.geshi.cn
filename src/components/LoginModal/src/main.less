@@ -19,8 +19,51 @@
     text-align: center;
   }
 
+  .tips {
+    padding: 10px 0;
+    text-align: center;
+    font-size: 12px;
+    color: #858891;
+
+    a {
+      color: #858891;
+    }
+  }
+
+  .switchLogin {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .switchText {
+      position: relative;
+      font-size: 12px;
+      color: #B4B7BC;
+
+      //&::after {
+      //  content: '';
+      //  position: absolute;
+      //  left: 50%;
+      //  top: 50%;
+      //  transform: translate(-50%, -50%);
+      //  width: 120%;
+      //  height: 1px;
+      //  background: #B4B7BC;
+      //}
+      span {
+        background: #fff;
+      }
+    }
+
+    .loginIcon {
+      margin-top: 7px;
+      width: 38px;
+      height: 38px;
+    }
+  }
+
   .formBox {
-    padding: 32px;
+    padding: 32px 32px 0 32px;
 
     .inputBox {
       display: flex;
@@ -94,14 +137,87 @@
       outline: none;
     }
 
-    .tips {
-      text-align: center;
-      font-size: 12px;
-      color: #858891;
 
-      a {
-        color: #858891;
+  }
+
+  .wxLoginBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .codeBox {
+
+      //width: 200px;
+      //height: 200px;
+      width: 191px;
+      height: 191px;
+      margin: 5px 0;
+
+      .qrcode {
+        width: 100%;
+        height: 100%;
       }
+      .loadingBox {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 25px;
+          height: 25px;
+          z-index: 2;
+          border-radius: 50%;
+          overflow: hidden;
+          background: url('./assets/loading.png') no-repeat center/cover;
+          animation: rotate linear 0.8s infinite;
+        }
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      .refreshBox {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        color: #fff;
+        font-size: 16px;
+        background-color: rgba(0, 0, 0, 0.5);
+
+        .icon {
+          display: block;
+          width: 35px;
+          height: 35px;
+          margin-bottom: 8px;
+          cursor: pointer;
+          background: url('./assets/refresh.svg') no-repeat center/35px 35px;
+        }
+      }
+    }
+    .wxTips {
+      font-size: 12px;
+      color: #B4B7BC;
+      margin-bottom: 5px;
     }
   }
 }

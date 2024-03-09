@@ -351,11 +351,12 @@ export default {
 
     // 下载选中的图片
     async onClickDownload() {
+      const toast = Toast.loading({
+        duration: 0,
+        forbidClick: true,
+        message: '下载中...'
+      })
       let downloadList = this.fileList.filter((item, idx) => {
-        // 标记一下是否被下载过
-        // if (item.checked) {
-        //   this.fileList.splice(idx, 1, { ...item, download: true })
-        // }
         return item.checked
       })
       if (downloadList.length === 0) {
@@ -375,7 +376,7 @@ export default {
         })
         await this.updateAllCert()
       }
-
+      toast.clear()
     }
   },
   created() {
