@@ -61,7 +61,6 @@ export function imageFormatConvert(file, { to }) {
       const wasmLocation = 'https://res.yunkun.cn/magick.wasm'
       initializeImageMagick(wasmLocation).then(() => {
         ImageMagick.read(uint8Array, function (image) {
-          console.log(getFormatTypeByExt(to), '1223')
           image.write(getFormatTypeByExt(to) || image.format, data => {
             let blob = new Blob([data], {
               type: getTypeByExt(to)

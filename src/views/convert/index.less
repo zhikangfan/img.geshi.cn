@@ -19,6 +19,7 @@
       margin-bottom: 8px;
 
       .previewImg {
+        flex-shrink: 0;
         position: relative;
         display: flex;
         justify-content: center;
@@ -57,6 +58,11 @@
       }
 
       .infoBox {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
         .infoItem {
           display: flex;
           align-items: center;
@@ -85,6 +91,21 @@
                 color: #165DFF;
               }
             }
+          }
+        }
+
+        .infoBoxLeft {
+          flex: 1;
+
+        }
+
+        .infoBoxRight {
+          flex-shrink: 0;
+
+          .downloadBtn {
+            width: 20px;
+            height: 20px;
+            background: url('../../assets/img/download.svg') no-repeat center/cover;
           }
         }
 

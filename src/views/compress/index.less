@@ -19,6 +19,7 @@
       margin-bottom: 8px;
 
       .previewImg {
+        flex-shrink: 0;
         position: relative;
         display: flex;
         justify-content: center;
@@ -49,6 +50,10 @@
       }
 
       .infoBox {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         .infoItem {
           display: flex;
           align-items: center;
@@ -70,8 +75,18 @@
             }
           }
         }
+        .infoBoxLeft {
+          flex: 1;
 
-
+        }
+        .infoBoxRight {
+          flex-shrink: 0;
+          .downloadBtn {
+            width: 20px;
+            height: 20px;
+            background: url('../../assets/img/download.svg') no-repeat center/cover;
+          }
+        }
       }
 
       .errorBox {
@@ -135,8 +150,8 @@
           }
 
           .custom-button {
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             background: #FFFFFF;
             box-shadow: 0px 2px 4px 0px rgba(23, 31, 149, 0.5);
             border: 2px solid #165DFF;

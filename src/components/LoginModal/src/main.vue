@@ -53,7 +53,7 @@
               <span class="text">刷新</span>
             </div>
           </div>
-          <div class="wxTips">（保存图片到相册->微信扫描识别二维码）</div>
+          <div class="wxTips">（长按二维码保存图片或截屏->微信扫描识别二维码）</div>
         </div>
         <div class="switchLogin">
           <div class="switchText">

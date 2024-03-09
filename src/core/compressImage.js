@@ -41,7 +41,6 @@ export async function compressImage(blob, { quality }) {
  * @returns {Promise<*|Blob>}
  */
 export async function compressImageTT(blob, { size, quality }) {
-  console.log({size, quality}, '---compress toptions')
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => {
@@ -151,7 +150,6 @@ export async function compressPng(params) {
   ]
   let result = await call(files, command)
   if (result.exitCode !== 0) {
-    console.log('error', result)
     return
   }
   const outputImage = result.outputFiles[0]

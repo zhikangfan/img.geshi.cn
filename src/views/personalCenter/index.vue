@@ -143,7 +143,6 @@ export default {
     handleLogin() {
       this.$loginModal({
         onHandleClose: () => {
-          console.log('close')
         }
       })
     },

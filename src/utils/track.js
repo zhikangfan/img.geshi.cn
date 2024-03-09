@@ -4,7 +4,6 @@ export function trackLogin() {
     window.uetq.push('event', 'login', {'event_category': 'login'})
     // window.UET && window.UET('event', 'login', {'event_category': 'login'});
   } catch (e) {
-    console.log(e)
   }
 
 }
@@ -23,6 +22,5 @@ export function trackOrder(id, orderId, price) {
     //   'event_value': price
     // });
   } catch (e) {
-    console.log(e)
   }
 }

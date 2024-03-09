@@ -28,7 +28,6 @@ export default {
       state.downloadToken = payload
     },
     updateUserInfo: (state, userInfo) => {
-      console.log(userInfo, '--')
       state.userInfo = userInfo
     },
     updateAllCert: (state, payload) => {

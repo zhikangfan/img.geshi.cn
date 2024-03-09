@@ -45,14 +45,14 @@
         <div class="panelItemContent">
           <div class="sizeLine" v-for="(group, idx) in customSizes" :key="idx">
             <div
-                    :class="{ sizeItem: true, checked: selectSizeId === size.id }"
-                    v-for="(size, index) in group"
-                    :key="index"
-                    @click="onSelectSize(size.id, size.width, size.height)"
+              :class="{ sizeItem: true, checked: selectSizeId === size.id }"
+              v-for="(size, index) in group"
+              :key="index"
+              @click="onSelectSize(size.id, size.width, size.height)"
             >
               <span class="txt">{{ size.title }}</span>
               <span class="value"
-              >{{ size.id === 'custom' || size.id === 'more' ? size.subTitle : `${size.width}*${size.height}` }}
+                >{{ size.id === 'custom' || size.id === 'more' ? size.subTitle : `${size.width}*${size.height}` }}
               </span>
             </div>
           </div>
@@ -60,37 +60,55 @@
       </div>
       <div class="panelItem">
         <div class="panelTitleBox">压缩至</div>
-        <div class="panelItemContent">
-          <div class="panelItemContentRight">
-            <span class="title">最小压缩</span>
-            <div class="sliderBox">
-              <van-slider
-                      v-model="options.compressSize"
-                      @change="onCompressSizeChange"
-                      :min="1"
-                      :max="file.raw.size || 0"
-                      bar-height="4px"
-                      active-color="#165DFF"
-              >
-                <template #button>
-                  <div class="custom-button"></div>
-                </template>
-              </van-slider>
-              <span class="value">约{{ formatFileSize(options.compressSize) }}</span>
+        <van-radio-group v-model="checkFunc">
+          <van-radio name="ratio" icon-size="18px">
+            <div class="panelItemContent">
+              <div class="panelItemContentRight">
+                <span class="title">最小压缩</span>
+                <div class="sliderBox">
+                  <span class="value">约{{ formatFileSize(options.compressSize) }}</span>
+                  <van-slider
+                    v-model="options.compressSize"
+                    @change="onCompressSizeChange"
+                    :min="1"
+                    :max="file.raw.size || 0"
+                    bar-height="4px"
+                    active-color="#165DFF"
+                  >
+                    <template #button>
+                      <div class="custom-button"></div>
+                    </template>
+                  </van-slider>
+                </div>
+                <span class="txt">{{ file.formatSize }}</span>
+              </div>
             </div>
-            <span class="txt">{{ file.formatSize }}</span>
+          </van-radio>
+          <van-radio name="size" icon-size="18px">
+            <div class="panelItemContent">
+              <div class="panelItemContentRight">
+                <span class="title">指定大小：</span>
+                <div class="inputBox">
+                  <input type="number" v-model="options.setSize" />
+                  <span class="unit">KB</span>
+                </div>
+              </div>
+            </div>
+          </van-radio>
+          <div class="otherSize">
+            <div class="size" @click="onChangeSize(size)" v-for="size in otherSizes" :key="size">{{ size }}</div>
           </div>
-        </div>
+        </van-radio-group>
       </div>
       <div class="panelItem">
         <div class="panelTitleBox">导出格式为</div>
         <div class="panelItemContent">
           <div class="radioLine">
             <div
-                    class="radioItem"
-                    v-for="format in formatList"
-                    :key="format.value"
-                    @click="onSelectFormat(format.value)"
+              class="radioItem"
+              v-for="format in formatList"
+              :key="format.value"
+              @click="onSelectFormat(format.value)"
             >
               <span :class="{ radio: true, checked: format.value === options.format }"></span>
               <span class="title">{{ format.title }}</span>
@@ -106,11 +124,11 @@
       <button class="btn primary" @click="handleDownload">导出</button>
     </div>
     <van-popup
-            v-model="isShowCheckSizeModal"
-            :round="true"
-            :close-on-click-overlay="true"
-            :close-on-popstate="true"
-            :safe-area-inset-bottom="true"
+      v-model="isShowCheckSizeModal"
+      :round="true"
+      :close-on-click-overlay="true"
+      :close-on-popstate="true"
+      :safe-area-inset-bottom="true"
     >
       <div class="checkSizeModal">
         <div class="checkSizeModalContainer">
@@ -119,10 +137,10 @@
             <div class="checkSizeContent">
               <div class="checkSizeLine" v-for="(sizeGroup, id) in sizeCategory.sizes" :key="id">
                 <div
-                        :class="{ checkSizeItem: true, checked: selectModalSizeId === size.id }"
-                        v-for="(size, index) in sizeGroup"
-                        :key="size.with + '_' + index"
-                        @click="onSelectModalSize(size.id, size.width, size.height)"
+                  :class="{ checkSizeItem: true, checked: selectModalSizeId === size.id }"
+                  v-for="(size, index) in sizeGroup"
+                  :key="size.with + '_' + index"
+                  @click="onSelectModalSize(size.id, size.width, size.height)"
                 >
                   <div class="txt">{{ size.title }}</div>
                   <div class="size">{{ size.width }}*{{ size.height }}</div>
@@ -137,10 +155,11 @@
         </div>
       </div>
     </van-popup>
+    <DownloadImage v-model="visible" :src="downloadSrc" :direction="direction" @close="handleClose" />
   </div>
 </template>
 <script>
-import { editSizeList } from '@/config'
+import { BUCKET, editSizeList } from '@/config'
 import { formatFileSize } from '../../utils'
 import Cropper from 'cropperjs'
 import { saveAs } from 'file-saver'
@@ -148,15 +167,20 @@ import Uploader from '@/components/Uploader/index.vue'
 import { Dialog, Toast } from 'vant'
 import { VIP_LEVEL } from '@/store/user.store'
 import { compressImage } from '@/core'
-import {duce} from "@/api";
+import { duce } from '@/api'
 import { mapActions, mapGetters, mapState } from 'vuex'
+import { uploadOSS } from '@/utils/uploadOSS'
+import { v4 as uuidV4 } from 'uuid'
+import DownloadImage from '@/components/DownloadImage/index.vue'
+import getImageFileInfo from '@/utils/getImageFileInfo'
 
 export default {
   name: 'Edit',
-  components: { Uploader },
+  components: { DownloadImage, Uploader },
   props: {},
   data() {
     return {
+      otherSizes: [10, 30, 50, 100, 200],
       formatList: [
         {
           title: 'JPG',
@@ -182,12 +206,17 @@ export default {
       },
       options: {
         compressSize: 0,
+        setSize: '',
         format: 'jpg',
         width: 0,
         height: 0
       },
       file: {}, // 待处理文件
-      isShowConfirmBtn: false // 是否显示确定
+      checkFunc: 'ratio',
+      isShowConfirmBtn: false, // 是否显示确定
+      visible: false,
+      direction: 'horizontal',
+      downloadSrc: ''
     }
   },
   computed: {
@@ -226,7 +255,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('userStore',['updateAllCert']),
+    ...mapActions('userStore', ['updateAllCert']),
     formatFileSize,
     splitIntoChunks(arr, chunkSize) {
       const result = []
@@ -252,15 +281,15 @@ export default {
         height: 0
       }
     },
-    onCompressSizeChange() {
-    },
+    onCompressSizeChange() {},
     // 选择格式
     onSelectFormat(format) {
       this.options.format = format
     },
     // 选择尺寸
     onSelectSize(id, width, height) {
-      if (id === 'more') { // 点击更多
+      if (id === 'more') {
+        // 点击更多
         this.isShowCheckSizeModal = true
       } else {
         this.selectSizeId = id
@@ -273,10 +302,9 @@ export default {
         // const aspectRatio = id === 'custom' ? Number(undefined) : width / height
         // this.cropper?.setAspectRatio(aspectRatio)
         let that = this
-        let cropFunc = () => {
-        }
+        let cropFunc = () => {}
         if (id === 'custom') {
-          cropFunc = (e) => {
+          cropFunc = e => {
             that.options.width = Math.floor(e.detail.width)
             that.options.height = Math.floor(e.detail.height)
           }
@@ -289,10 +317,7 @@ export default {
           // zoomOnWheel: id === 'custom',
           crop: cropFunc
         })
-
-
       }
-
     },
     // 选择弹窗里的尺寸
     onSelectModalSize(id, width, height) {
@@ -306,12 +331,31 @@ export default {
       e.preventDefault()
       return '图片还未处理或下载，是否要离开？'
     },
+    // 压缩前校验
+    checkCondition() {
+      let { setSize } = this.options
+      let number = Number(setSize)
+      let flag = Number.isNaN(number)
+      if (flag) {
+        Toast('请输入数字')
+        return false
+      }
+      if (number === 0) {
+        Toast('指定大小数值需大于0')
+        return false
+      }
+      if (number && number <= 0) {
+        Toast('指定大小数值需大于0')
+        return false
+      }
+      return true
+    },
     // 重新上传
     onUploadSuccess(fileList) {
       let file = fileList[0]
       this.reset(file)
       // this.cropper?.destroy()
-      let that = this;
+      let that = this
       this.$nextTick(() => {
         this.cropper = this.createCropper({
           crop(e) {
@@ -320,7 +364,6 @@ export default {
           }
         })
       })
-
     },
     // 点击确认， 设置宽度
     onClickConfirmBtn() {
@@ -338,15 +381,13 @@ export default {
         // zoomable: false, // 禁止用户缩放
         // zoomOnTouch: false,
         // zoomOnWheel: false,
-        crop: () => {
-        }
+        crop: () => {}
       })
       this.isShowConfirmBtn = false
     },
     handleLogin() {
       this.$loginModal({
         onHandleClose: () => {
-          console.log('close')
         }
       })
     },
@@ -360,22 +401,26 @@ export default {
       }
       let { vip, has_image_count } = this.allCert
       // 判断用户等级
-      if (vip === VIP_LEVEL.NON_VIP) { // 没有VIP
+      if (vip === VIP_LEVEL.NON_VIP) {
+        // 没有VIP
         Dialog.confirm({
           title: '温馨提示',
           message: '请开通VIP后下载！'
-        }).then(() => {
-          this.isBuyVip = true
-          this.$router.push({
-            name: 'purchase'
-          })
-        }).catch(() => {
-          // TODO: 点击取消
         })
+          .then(() => {
+            this.isBuyVip = true
+            this.$router.push({
+              name: 'purchase'
+            })
+          })
+          .catch(() => {
+            // TODO: 点击取消
+          })
         return false
       }
       // 判断用户是否有券
-      if (vip === VIP_LEVEL.COUNT_VIP) { // 当用户为次数vip的时候
+      if (vip === VIP_LEVEL.COUNT_VIP) {
+        // 当用户为次数vip的时候
         // 判断当前图片是否下载过
         let needDownloadList = this.file.download ? 0 : 1
         if (needDownloadList > has_image_count) {
@@ -383,19 +428,21 @@ export default {
             title: '温馨提示',
             message: '剩余次数不足！',
             confirmButtonText: '去购买'
-          }).then(() => {
-            this.isBuyVip = true
-            this.$router.push({
-              name: 'purchase'
-            })
-          }).catch(() => {
-            // TODO: 点击取消
           })
+            .then(() => {
+              this.isBuyVip = true
+              this.$router.push({
+                name: 'purchase'
+              })
+            })
+            .catch(() => {
+              // TODO: 点击取消
+            })
 
           return false
         } else {
           // 扣除相应次数
-          let res = await duce(needDownloadList.length)
+          let res = await duce(needDownloadList)
           if (res.data.status !== 0) {
             Toast.fail({
               message: '下载失败！'
@@ -404,12 +451,19 @@ export default {
           return res.data.status === 0
         }
       }
-      if (vip === VIP_LEVEL.TIME_VIP || vip === VIP_LEVEL.PERMANENT_VIP || vip === VIP_LEVEL.THREE_DAY_VIP) { // 当用户vip类型为时间vip 永久vip 3天vip的时候
+      if (vip === VIP_LEVEL.TIME_VIP || vip === VIP_LEVEL.PERMANENT_VIP || vip === VIP_LEVEL.THREE_DAY_VIP) {
+        // 当用户vip类型为时间vip 永久vip 3天vip的时候
         return true
       }
     },
     async handleDownload() {
       if (this.cropper) {
+        if (this.checkFunc === 'size') {
+          let checkResult = this.checkCondition()
+          if (!checkResult) {
+            return
+          }
+        }
         let allowAction = await this.checkUser()
         if (allowAction) {
           const toast = Toast({
@@ -429,23 +483,28 @@ export default {
                 type: this.options.format === 'png' ? 'image/png' : 'image/jpeg'
               })
               let finalBlob = blobData
-              if (this.options.compressSize !== this.file.raw.size) {
-                finalBlob = await compressImage(blobData, {size: this.options.compressSize})
+
+              let finalCompressSize =
+                this.checkFunc === 'size' ? this.options.setSize * 1024 : this.options.compressSize
+
+
+              if (finalCompressSize !== this.file.raw.size) {
+                finalBlob = await compressImage(blobData, { size: finalCompressSize })
               }
-              console.log(finalBlob, '00fin')
-              // await saveAs(finalBlob, `${this.file.filename}.${this.options.format}`)
-              saveAs('https://res.yunkun.cn/img_geshicn/img/compress_step_2.png', 'test.png');
+              let result = await getImageFileInfo(finalBlob)
+              this.file.result = result
+              let filename = `${uuidV4()}_${new Date().getTime()}_${Math.floor(Math.random() * 1000)}_${
+                this.file.filename
+              }.${this.options.format}`
 
-              // let a = document.createElement('a')
-              // a.style.display = 'none'
-              // a.href = 'https://res.yunkun.cn/img_geshicn/img/compress_step_2.png'
-              // a.download = 'test.png'
-              // document.body.appendChild(a)
-              // a.click()
-
-
+              let res = await uploadOSS(filename, finalBlob, BUCKET)
+              this.file.result.src = res.url
+              let currentFile = this.file
+              this.direction = currentFile?.result?.width < currentFile?.result?.height ? 'horizontal' : 'vertical'
+              this.downloadSrc = currentFile?.result?.src
+              this.visible = true
+              this.file.download = true
             } catch (e) {
-              console.log(e)
               Toast.fail({
                 message: '导出失败!',
                 duration: 1500
@@ -454,11 +513,14 @@ export default {
               await this.updateAllCert()
               toast?.clear()
             }
-
           })
         }
-
       }
+    },
+    handleClose() {
+      this.visible = false
+      this.downloadSrc = ''
+      this.direction = 'horizontal'
     },
     createImg(options) {
       return new Promise((resolve, reject) => {
@@ -472,9 +534,13 @@ export default {
         img.crossOrigin = 'anonymous'
         img.onload = () => {
           ctx.drawImage(img, options.dx, options.dy, options.width, options.height)
-          canvas.toBlob((blob) => {
-            resolve(blob)
-          }, options.type || 'image/jpeg', 1)
+          canvas.toBlob(
+            blob => {
+              resolve(blob)
+            },
+            options.type || 'image/jpeg',
+            1
+          )
         }
         img.onerror = () => {
           reject()
@@ -495,8 +561,7 @@ export default {
           autoCropArea: 1,
           minCropBoxWidth: 1,
           minCropBoxHeight: 1,
-          crop(e) {
-          },
+          crop(e) {},
           ...options
         })
       }
@@ -510,13 +575,19 @@ export default {
         width: 0,
         height: 0
       }
+
       this.options = {
         compressSize: 0,
+        setSize: '',
         format: 'jpg',
         width: 0,
         height: 0
       }
       this.isShowConfirmBtn = false // 是否显示确定
+      this.checkFunc = 'ratio'
+      this.visible = false
+      this.direction = 'horizontal'
+      this.downloadSrc = ''
       this.init(file)
     },
     init(file) {
@@ -534,6 +605,11 @@ export default {
       })
       let { value } = this.formatList.find(item => item.value === this.file.suffix)
       this.onSelectFormat(value)
+    },
+    // 监听用户尺寸发生变化
+    onChangeSize(value) {
+      this.options.setSize = value
+      this.checkFunc = 'size'
     }
   },
 
@@ -541,7 +617,7 @@ export default {
     this.init(this.$route.params.fileList[0])
   },
   async mounted() {
-    let that = this;
+    let that = this
     this.cropper = this.createCropper({
       crop(e) {
         that.options.width = Math.floor(e.detail.width)

@@ -1,0 +1,36 @@
+.downloadImagePop {
+  height: 90vh;
+  position: relative;
+
+  .close {
+    position: absolute;
+    right: 16px;
+    top: 11px;
+    width: 26px;
+    height: 26px;
+    background: url('../../assets/img/log_in_button_exit.svg') no-repeat center/cover;
+  }
+
+  .imgBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+      padding: 50px 20px 20px 20px;
+      height: 90%;
+      width: 100%;
+    .img {
+      max-height: 100%;
+      max-width: 100%;
+      height: auto;
+      width: 100%;
+      &.horizontal {
+        height: 100%;
+        width: auto;
+      }
+    }
+  }
+  .tips {
+
+    text-align: center;
+  }
+}

@@ -2,7 +2,7 @@
   <div class="compressPage">
     <div class="cardList">
       <van-swipe-cell v-for="(file, idx) in fileList" :key="file.id">
-        <div :class="{ cardItem: true, checked: file.checked }" @click="onSelectCard(idx)">
+        <div :class="{ cardItem: true }">
           <div class="previewImg" @click.stop="handlePreview(file)">
             <van-image
               fit="contain"
@@ -12,29 +12,33 @@
           </div>
           <div class="errorBox" v-if="isExecuted && !isLoading && !file.status">处理失败</div>
           <div v-else class="infoBox">
-            <div class="infoItem">
-              <span class="title">内存：</span>
-              <div class="infoValue">
-                <span :class="{ value: true, strong: isExecuted && !isLoading }">{{
-                  isExecuted && !isLoading ? file.result?.formatSize : file.formatSize
-                }}</span>
-                <span class="originValue" v-if="isExecuted && !isLoading">（原{{ file.formatSize }}）</span>
+            <div class="infoBoxLeft">
+              <div class="infoItem">
+                <span class="title">内存：</span>
+                <div class="infoValue">
+                  <span :class="{ value: true, strong: isExecuted && !isLoading }">{{
+                    isExecuted && !isLoading ? file.result?.formatSize : file.formatSize
+                  }}</span>
+                  <span class="originValue" v-if="isExecuted && !isLoading">（原{{ file.formatSize }}）</span>
+                </div>
+              </div>
+              <div class="infoItem">
+                <span class="title">格式：</span>
+                <div class="infoValue">
+                  <span class="value">{{ file.suffix }}</span>
+                </div>
+              </div>
+              <div class="infoItem">
+                <span class="title">尺寸：</span>
+                <div class="infoValue">
+                  <span class="value">宽{{ file.width }}px*高{{ file.height }}px</span>
+                </div>
               </div>
             </div>
-            <div class="infoItem">
-              <span class="title">格式：</span>
-              <div class="infoValue">
-                <span class="value">{{ file.suffix }}</span>
-              </div>
-            </div>
-            <div class="infoItem">
-              <span class="title">尺寸：</span>
-              <div class="infoValue">
-                <span class="value">宽{{ file.width }}px*高{{ file.height }}px</span>
-              </div>
+            <div class="infoBoxRight" v-if="isExecuted && !isLoading && file.status">
+              <div class="downloadBtn" @click="handleDownload(file)"></div>
             </div>
           </div>
-          <div class="checkBox" v-if="isExecuted && !isLoading && file.status"></div>
         </div>
         <template #right>
           <van-button
@@ -91,8 +95,8 @@
       </div>
 
       <div class="btnGroup" v-if="isExecuted && !isLoading">
-        <button class="default btn" @click="goBack">返回</button>
-        <button class="btn primary" @click="onClickDownload">下载选中的图片</button>
+        <button class="default btn" @click="goBack">上一步</button>
+        <button class="btn primary" @click="jumpTo('/')">返回首页</button>
       </div>
       <div class="btnGroup" v-else>
         <Uploader :on-success="onUploadSuccess">
@@ -101,21 +105,27 @@
         <button class="btn primary" @click="onStart">开始压缩</button>
       </div>
     </div>
+    <DownloadImage v-model="visible" :src="downloadSrc" :direction="direction" @close="handleClose" />
   </div>
 </template>
 <script>
-import {Dialog, ImagePreview, Toast} from 'vant'
-import {compressImage, outputTheSpecifiedSize} from '@/core'
+import { Dialog, ImagePreview, Toast } from 'vant'
+import { compressImage, outputTheSpecifiedSize } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
 import Uploader from '@/components/Uploader/index.vue'
 import { saveAs } from 'file-saver'
-import {VIP_LEVEL} from "@/store/user.store";
-import {duce} from "@/api";
+import { VIP_LEVEL } from '@/store/user.store'
+import { duce } from '@/api'
 import { mapActions, mapGetters, mapState } from 'vuex'
+import DownloadImage from '@/components/DownloadImage/index.vue'
+import { uploadOSS } from '@/utils/uploadOSS'
+import { v4 as uuidV4 } from 'uuid'
+import { BUCKET } from '@/config'
 
 export default {
   name: 'Compress',
   components: {
+    DownloadImage,
     Uploader
   },
   props: {},
@@ -132,13 +142,16 @@ export default {
       checkFunc: 'quality', // 选择的压缩方式quality: 清晰度，size: 指定大小
       isLoading: false, // 图片是否处理中
       isBuyVip: false, // 是否去购买vip
+      visible: false,
+      direction: 'horizontal',
+      downloadSrc: ''
     }
   },
   computed: {
     ...mapState('userStore', {
       allCert: state => state.allCert
     }),
-    ...mapGetters('userStore', ['isLogin']),
+    ...mapGetters('userStore', ['isLogin'])
   },
   methods: {
     ...mapActions('userStore', ['updateAllCert']),
@@ -171,101 +184,94 @@ export default {
     handleLogin() {
       this.$loginModal({
         onHandleClose: () => {
-          console.log('close')
         }
       })
     },
     // 检查用户
-    async checkUser() {
+    async checkUser(needCount = 0) {
       // 判断用户是否登录
       let isLogin = this.isLogin
       if (!isLogin) {
         this.handleLogin()
         return false
       }
-      let {vip, has_image_count} = this.allCert
+      let { vip, has_image_count } = this.allCert
       // 判断用户等级
-      if (vip === VIP_LEVEL.NON_VIP) { // 没有VIP
+      if (vip === VIP_LEVEL.NON_VIP) {
+        // 没有VIP
         Dialog.confirm({
           title: '温馨提示',
           message: '请开通VIP后下载！'
-        }).then(() => {
-          this.isBuyVip = true
-          this.$router.push({
-            name: 'purchase'
-          })
-        }).catch(() => {
-          // TODO: 点击取消
         })
-        return false
-      }
-      // 判断用户是否有券
-      if (vip === VIP_LEVEL.COUNT_VIP) { // 当用户为次数vip的时候
-        // has_image_count
-        // 过滤出来用户选中的 但未下载的
-        let needDownloadList = this.fileList.filter((item, idx) => {
-          return item.checked && !item.download
-        })
-        if (needDownloadList > has_image_count) {
-          Dialog.confirm({
-            title: '温馨提示',
-            message: '剩余次数不足！',
-            confirmButtonText: '去购买'
-          }).then(() => {
+          .then(() => {
             this.isBuyVip = true
             this.$router.push({
               name: 'purchase'
             })
-          }).catch(() => {
+          })
+          .catch(() => {
             // TODO: 点击取消
           })
+        return false
+      }
+      // 判断用户是否有券
+      if (vip === VIP_LEVEL.COUNT_VIP) {
+        // 当用户为次数vip的时候
+        if (needCount > has_image_count) {
+          Dialog.confirm({
+            title: '温馨提示',
+            message: '剩余次数不足！',
+            confirmButtonText: '去购买'
+          })
+            .then(() => {
+              this.isBuyVip = true
+              this.$router.push({
+                name: 'purchase'
+              })
+            })
+            .catch(() => {
+              // TODO: 点击取消
+            })
 
           return false
-        } else {
-          // 扣除相应次数
-          let res = await duce(needDownloadList.length)
-          if (res.data.status !== 0) {
-            Toast.fail({
-              message: '下载失败！'
-            })
-          }
-          return res.data.status === 0
         }
+        return needCount <= has_image_count
 
+        // else {
+        // 扣除相应次数
+        // let res = await duce(needCount)
+        // if (res.data.status !== 0) {
+        //   Toast.fail({
+        //     message: '下载失败！'
+        //   })
+        // }
+        //   return res.data.status === 0
+        // }
       }
-      if (vip === VIP_LEVEL.TIME_VIP || vip === VIP_LEVEL.PERMANENT_VIP || vip === VIP_LEVEL.THREE_DAY_VIP) { // 当用户vip类型为时间vip 永久vip 3天vip的时候
+      if (vip === VIP_LEVEL.TIME_VIP || vip === VIP_LEVEL.PERMANENT_VIP || vip === VIP_LEVEL.THREE_DAY_VIP) {
+        // 当用户vip类型为时间vip 永久vip 3天vip的时候
         return true
       }
     },
     // 压缩前校验
     checkCondition() {
       let { size } = this.options
-      if (size === 0) {
-        Toast('指定大小数值需大于0')
-        return false
-      }
-      if (size && size <= 0) {
-        Toast('指定大小数值需大于0')
-        return false
-      }
-      let flag = Number.isNaN(Number(size))
+      let number = Number(size)
+
+      let flag = Number.isNaN(number)
       if (flag) {
         Toast('请输入数字')
         return false
       }
+      if (number === 0) {
+        Toast('指定大小数值需大于0')
+        return false
+      }
+      if (number && number <= 0) {
+        Toast('指定大小数值需大于0')
+        return false
+      }
       return true
-    },
-    onSelectCard(idx) {
-      // 没点击过压缩，不能执行
-      if (!this.isExecuted) {
-        return
-      }
-      // 处理失败的图片不要被选
-      if (!this.fileList[idx].status) {
-        Toast('该图片处理失败！')
-      } else {
-        this.fileList.splice(idx, 1, { ...this.fileList[idx], checked: !this.fileList[idx].checked })
-      }
     },
     onDeleteCard(idx) {
       if (this.fileList.length === 1) {
@@ -280,7 +286,6 @@ export default {
     },
     // 开始压缩
     onStart() {
-
       if (this.checkFunc === 'size') {
         let checkResult = this.checkCondition()
         if (!checkResult) {
@@ -302,8 +307,8 @@ export default {
         let taskFn = new Promise(resolve => {
           ;(async (resolve, item, idx) => {
             try {
-              let options = this.checkFunc === 'quality' ? {quality: this.options.quality / 100} : { maxSize: this.options.size }
-              console.log(options, '---oo', this.checkFunc)
+              let options =
+                this.checkFunc === 'quality' ? { quality: this.options.quality / 100 } : { maxSize: this.options.size }
               let resultBlob = await compressImage(item.raw, options)
               if (this.checkFunc !== 'quality') {
                 resultBlob = await outputTheSpecifiedSize(item.raw, options)
@@ -348,35 +353,82 @@ export default {
         })
       })
     },
-
-    // 下载选中的图片
-    async onClickDownload() {
-      const toast = Toast.loading({
-        duration: 0,
-        forbidClick: true,
-        message: '下载中...'
-      })
-      let downloadList = this.fileList.filter((item, idx) => {
-        return item.checked
-      })
-      if (downloadList.length === 0) {
-        Toast('未选择要下载的图片！')
+    // 打开下载弹窗
+    openDownloadWindow(currentFile) {
+      let index = this.fileList.findIndex(item => item.id === currentFile.id)
+      currentFile.download = true
+      this.fileList.splice(index, 1, currentFile)
+      this.direction = currentFile?.result?.width < currentFile?.result?.height ? 'horizontal' : 'vertical'
+      this.downloadSrc = currentFile?.result?.src
+      this.visible = true
+    },
+    async handleDownload(currentFile) {
+      // 没点击过压缩，不能执行
+      if (!this.isExecuted) {
+        Toast('未执行压缩')
         return
       }
-      let allowAction = await this.checkUser()
-      if (allowAction) {
-        downloadList.forEach(item => {
-          this.fileList.forEach((file,idx) => {
-            if (item.id === file.id) {
-              file['download'] = true
-              this.fileList.splice(idx, 1, file)
-            }
-          })
-          saveAs(item.result.raw, item.name)
-        })
-        await this.updateAllCert()
+      // 处理失败的图片不要被选
+      if (!currentFile.status) {
+        Toast('该图片处理失败！')
+        return
       }
-      toast.clear()
+      let needCount = currentFile.download ? 0 : 1 // 需要使用的下载张数
+      let allowAction = await this.checkUser(needCount)
+      if (allowAction) {
+        // 判读是否下载过
+        if (!currentFile.download) {
+          let fileName = `${uuidV4()}_${new Date().getTime()}_${Math.floor(Math.random() * 1000)}_${currentFile.name}`
+          if (this.allCert?.vip === VIP_LEVEL.COUNT_VIP) {
+            let tips = `当前剩余张数：${this.allCert?.has_image_count}  本次需扣除：1`
+            Dialog.confirm({
+              title: '下载图片',
+              message: tips
+            })
+              .then(() => {
+                let toast = Toast.loading({
+                  duration: 0,
+                  forbidClick: true,
+                  message: '下载中...'
+                })
+                // 将内容上传到oss
+                uploadOSS(fileName, currentFile.result?.raw, BUCKET)
+                  .then(res => {
+                    toast.clear()
+                    currentFile.result.src = res.url
+                    this.openDownloadWindow(currentFile)
+
+                    duce(needCount)
+                      .catch(() => {})
+                      .finally(() => {
+                        this.updateAllCert()
+                      })
+                  })
+                  .catch(() => {
+                    toast.clear()
+                  })
+              })
+              .catch(() => {})
+          } else {
+            let toast = Toast.loading({
+              duration: 0,
+              forbidClick: true,
+              message: '下载中...'
+            })
+            let res = await uploadOSS(fileName, currentFile.result?.raw, BUCKET)
+            currentFile.result.src = res.url
+            toast.clear()
+            this.openDownloadWindow(currentFile)
+          }
+        } else {
+          this.openDownloadWindow(currentFile)
+        }
+      }
+    },
+    handleClose() {
+      this.visible = false
+      this.downloadSrc = ''
+      this.direction = 'horizontal'
     }
   },
   created() {
@@ -414,13 +466,12 @@ export default {
         Dialog.confirm({
           title: '温馨提示',
           message: '您的文件已处理成功，离开文件将丢失确认要放弃吗？'
-        }).then(() => {
-          next()
-        }).catch(() => {
-
         })
+          .then(() => {
+            next()
+          })
+          .catch(() => {})
       }
-
     }
   }
 }

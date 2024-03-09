@@ -351,3 +351,5 @@ export const SUB_CODE = 'default'
  */
 export const SOFT_CODE = 'qingmiao'
 // export const SOFT_CODE = 'image_convert_h5'
+
+export const BUCKET = 'pdfgeshi'

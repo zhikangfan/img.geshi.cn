@@ -195,10 +195,8 @@ export default {
   },
   async mounted() {
     let { order_id } = this.$route.query
-    console.log(order_id, '---orderId')
     if (order_id) {
       let r = await getPayStatus(order_id)
-      console.log(r, '---payStatus')
       if (r.data.status === 0 && r.data.data.order.status === 1) {
         // 查询成功 并且 状态为1 或者支付超时
         // 更新用户权益
