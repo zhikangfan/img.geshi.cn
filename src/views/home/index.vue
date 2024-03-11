@@ -22,7 +22,7 @@
           <span class="title">修改DPI</span>
         </div>
       </div>
-      <Uploader :on-success="onUploadSuccess" class="uploader">
+      <Uploader :on-success="onUploadSuccess" class="uploader" :multiple="isAllowMultiple">
         <div class="uploadContainer">
           <span class="icon"></span>
           <div class="tips">{{ uploadTips }}</div>
@@ -111,6 +111,7 @@ export default {
           }
         }
       ],
+      isAllowMultiple: true, //是否允许多张上传
       selectFunc: '', // 当前选中的方法
       uploadTips: ''
     }
@@ -126,6 +127,8 @@ export default {
     },
     onSelectFunc(func) {
       this.selectFunc = func
+      this.isAllowMultiple = !(this.selectFunc === 'edit')
+
       let {
         uploadConfig: { tips }
       } = this.config.find(item => item.function === func)

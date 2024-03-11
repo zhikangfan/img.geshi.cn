@@ -118,7 +118,7 @@
       </div>
     </div>
     <div class="btnGroup">
-      <Uploader :on-success="onUploadSuccess">
+      <Uploader :on-success="onUploadSuccess" :max-count="1" :multiple="false">
         <button class="default btn">重新上传</button>
       </Uploader>
       <button class="btn primary" @click="handleDownload">导出</button>
@@ -403,19 +403,23 @@ export default {
       // 判断用户等级
       if (vip === VIP_LEVEL.NON_VIP) {
         // 没有VIP
-        Dialog.confirm({
-          title: '温馨提示',
-          message: '请开通VIP后下载！'
+        // Dialog.confirm({
+        //   title: '温馨提示',
+        //   message: '请开通VIP后下载！'
+        // })
+        //   .then(() => {
+        //     this.isBuyVip = true
+        //     this.$router.push({
+        //       name: 'purchase'
+        //     })
+        //   })
+        //   .catch(() => {
+        //     // TODO: 点击取消
+        //   })
+        this.isBuyVip = true
+        await this.$router.push({
+          name: 'purchase'
         })
-          .then(() => {
-            this.isBuyVip = true
-            this.$router.push({
-              name: 'purchase'
-            })
-          })
-          .catch(() => {
-            // TODO: 点击取消
-          })
         return false
       }
       // 判断用户是否有券
@@ -424,20 +428,25 @@ export default {
         // 判断当前图片是否下载过
         let needDownloadList = this.file.download ? 0 : 1
         if (needDownloadList > has_image_count) {
-          Dialog.confirm({
-            title: '温馨提示',
-            message: '剩余张数不足！',
-            confirmButtonText: '去购买'
+          // Dialog.confirm({
+          //   title: '温馨提示',
+          //   message: '剩余张数不足！',
+          //   confirmButtonText: '去购买'
+          // })
+          //   .then(() => {
+          //     this.isBuyVip = true
+          //     this.$router.push({
+          //       name: 'purchase'
+          //     })
+          //   })
+          //   .catch(() => {
+          //     // TODO: 点击取消
+          //   })
+
+          this.isBuyVip = true
+          await this.$router.push({
+            name: 'purchase'
           })
-            .then(() => {
-              this.isBuyVip = true
-              this.$router.push({
-                name: 'purchase'
-              })
-            })
-            .catch(() => {
-              // TODO: 点击取消
-            })
 
           return false
         } else {
@@ -594,7 +603,7 @@ export default {
       this.file = file
       this.options.width = this.file.width
       this.options.height = this.file.height
-      this.options.compressSize = this.file.raw.size
+      this.options.compressSize = Math.floor(this.file.raw.size * 0.3)
       this.customSizes.forEach(group => {
         group.forEach(item => {
           if (item.id === 'custom') {

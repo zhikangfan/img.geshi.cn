@@ -82,6 +82,7 @@ import { Toast } from 'vant'
 import { getLoginQrCode, getLoginStatus, getMobileCode, userMobileLogin } from '@/api'
 import { setToken } from '@/utils/token'
 import { mapActions } from 'vuex'
+import {uploadLoginData} from "@/utils/baiduOCPC";
 
 const QR_CODE_STATUS = {
   SUCCESS: 'success',
@@ -198,6 +199,7 @@ export default {
         setToken(res.data.data)
         await this.setUserInfo(res.data.data)
         await this.updateAllCert()
+        uploadLoginData().catch(e => {})
         Toast('登录成功！')
       } else {
         Toast('登录失败！')
@@ -219,8 +221,7 @@ export default {
           setToken(r.data.data)
           await this.setUserInfo(r.data.data)
           await this.updateAllCert()
-
-          // uploadLoginData().catch(e => {})
+          uploadLoginData().catch(e => {})
           // trackLogin()
           this.handleClose()
           Toast('登录成功！')

@@ -1,9 +1,10 @@
 <template>
   <van-uploader
-    :multiple="true"
-    :max-count="12"
+    :multiple="multiple"
+    :max-count="maxCount"
     :before-read="beforeRead"
     :after-read="afterRead"
+    :max-size="maxSize"
   >
     <slot></slot>
   </van-uploader>
@@ -27,7 +28,7 @@ export default {
       type: Number,
       default: 100 * 1024 * 1024
     },
-    macCount: {
+    maxCount: {
       type: Number,
       default: 12
     },

@@ -96,6 +96,7 @@ import { createOrder, getPayStatus } from '@/api'
 import { Toast } from 'vant'
 import {VIP_LEVEL} from "@/store/user.store";
 import { mapState } from 'vuex'
+import {uploadPayData} from "@/utils/baiduOCPC";
 
 export default {
   name: 'Purchase',
@@ -201,12 +202,10 @@ export default {
         // 查询成功 并且 状态为1 或者支付超时
         // 更新用户权益
         await this.$store.dispatch('userStore/updateAllCert')
-        // Toast.success({
-        //   message: '支付成功'
-        // })
-
-        // FIXME: 浮点数精度丢失，可以采用第三方库处理，也可以后端处理
-        // uploadPayData(Math.ceil(this.price * 100)).catch(e => {})
+        Toast.success({
+          message: '支付成功'
+        })
+        uploadPayData(r.data.data.order.amount).catch(e => {})
         // trackOrder(this.checkID, orderId, r.data.data.money.cash_total)
         // this.hidePurchaseModal()
       }

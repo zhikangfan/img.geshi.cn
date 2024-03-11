@@ -82,7 +82,7 @@
         <Uploader :on-success="onUploadSuccess">
           <button class="default btn">重新上传</button>
         </Uploader>
-        <button class="btn primary" @click="onStart">立即修改</button>
+        <button class="btn primary" @click="onStart">开始转换</button>
       </div>
     </div>
     <DownloadImage v-model="visible" :src="downloadSrc" :direction="direction" @close="handleClose" />
@@ -226,40 +226,47 @@ export default {
       // 判断用户等级
       if (vip === VIP_LEVEL.NON_VIP) {
         // 没有VIP
-        Dialog.confirm({
-          title: '温馨提示',
-          message: '请开通VIP后下载！'
+        // Dialog.confirm({
+        //   title: '温馨提示',
+        //   message: '请开通VIP后下载！'
+        // })
+        //         .then(() => {
+        //           this.isBuyVip = true
+        //           this.$router.push({
+        //             name: 'purchase'
+        //           })
+        //         })
+        //         .catch(() => {
+        //           // TODO: 点击取消
+        //         })
+        this.isBuyVip = true
+        await this.$router.push({
+          name: 'purchase'
         })
-                .then(() => {
-                  this.isBuyVip = true
-                  this.$router.push({
-                    name: 'purchase'
-                  })
-                })
-                .catch(() => {
-                  // TODO: 点击取消
-                })
         return false
       }
       // 判断用户是否有券
       if (vip === VIP_LEVEL.COUNT_VIP) {
         // 当用户为次数vip的时候
         if (needCount > has_image_count) {
-          Dialog.confirm({
-            title: '温馨提示',
-            message: '剩余张数不足！',
-            confirmButtonText: '去购买'
+          // Dialog.confirm({
+          //   title: '温馨提示',
+          //   message: '剩余张数不足！',
+          //   confirmButtonText: '去购买'
+          // })
+          //         .then(() => {
+          //           this.isBuyVip = true
+          //           this.$router.push({
+          //             name: 'purchase'
+          //           })
+          //         })
+          //         .catch(() => {
+          //           // TODO: 点击取消
+          //         })
+          this.isBuyVip = true
+          await this.$router.push({
+            name: 'purchase'
           })
-                  .then(() => {
-                    this.isBuyVip = true
-                    this.$router.push({
-                      name: 'purchase'
-                    })
-                  })
-                  .catch(() => {
-                    // TODO: 点击取消
-                  })
-
           return false
         }
         return needCount <= has_image_count
