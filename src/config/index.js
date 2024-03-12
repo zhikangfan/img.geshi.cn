@@ -1,4 +1,5 @@
 import {v4 as uuid} from "uuid";
+import {VIP_LEVEL} from "@/store/user.store";
 
 /**
  * 购买页套餐配置
@@ -14,7 +15,21 @@ export const packageList = [
     has_icon: true, // 是否有闪电符号
     has_del: true, // 是否有删除线
     unit: '终身',
-    payTips: '直降500元 可开发票'
+    payTips: '直降500元 可开发票',
+    level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.PERMANENT_VIP]
+  },
+  {
+    id: 10,
+    title: '终身会员',
+    price: '39',
+    corner: '直降530元',
+    desc: '原价¥569',
+    txt: '终身免费使用',
+    has_icon: true, // 是否有闪电符号
+    has_del: true, // 是否有删除线
+    unit: '终身',
+    payTips: '直降530元 可开发票',
+    level: [ VIP_LEVEL.TIME_VIP, VIP_LEVEL.THREE_DAY_VIP]
   },
   {
     id: 2,
@@ -26,7 +41,8 @@ export const packageList = [
     has_icon: false,
     has_del: true,
     unit: '一年',
-    payTips: '立减130元 可开发票'
+    payTips: '立减130元 可开发票',
+    level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.PERMANENT_VIP]
   },
   {
     id: 4,
@@ -38,7 +54,8 @@ export const packageList = [
     has_icon: false,
     has_del: false,
     unit: '10张',
-    payTips: '张数永久有效'
+    payTips: '张数永久有效',
+    level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.TIME_VIP, VIP_LEVEL.THREE_DAY_VIP, VIP_LEVEL.PERMANENT_VIP]
   },
   {
     id: 3,
@@ -50,7 +67,8 @@ export const packageList = [
     has_icon: false,
     has_del: false,
     unit: '张',
-    payTips: '张数永久有效'
+    payTips: '张数永久有效',
+    level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.TIME_VIP, VIP_LEVEL.THREE_DAY_VIP, VIP_LEVEL.PERMANENT_VIP]
   }
 ]
 

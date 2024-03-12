@@ -16,7 +16,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import { Popup, CountDown, Uploader, Slider, Toast, SwipeCell, Button, Image as VanImage, Radio, RadioGroup } from 'vant'
+import { Popup, CountDown, Uploader, Slider, Toast, SwipeCell, Button, Image as VanImage, Radio, RadioGroup, Dialog } from 'vant'
 import {getToken} from "@/utils/token";
 
 Vue.use(MetaInfo)
@@ -30,6 +30,7 @@ Vue.use(Button)
 Vue.use(VanImage)
 Vue.use(Radio)
 Vue.use(RadioGroup)
+Vue.use(Dialog)
 Vue.use(LoginModal, {
   store,
   router

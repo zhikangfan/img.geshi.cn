@@ -395,3 +395,97 @@
     }
   }
 }
+
+.retentionDialog {
+  position: relative;
+  .closeBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    background: url('../../assets/img/close_dialog.svg') no-repeat center/cover;
+  }
+  .titleBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    color: rgba(77, 42, 0, 1);
+    font-weight: 600;
+    font-size: 20px;
+    background: url('../../assets/img/retention_bg_1.svg') no-repeat center/cover;
+  }
+  .retentionContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .priceArea {
+      width: 238px;
+      height: 72px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: url('../../assets/img/retention_bg_2.svg') no-repeat center/cover;
+
+      .price {
+        font-size: 20px;
+        color: rgba(255, 59, 48, 1);
+        font-weight: 600;
+        margin-left: 42px;
+        margin-bottom: 8px;
+      }
+      .packageDesc {
+        margin-right: 26px;
+        font-size: 16px;
+        font-weight: 500;
+        color: rgba(77, 42, 0, 1);
+        margin-bottom: 6px;
+
+        &.packageDesc2 {
+          margin-right: 36px;
+        }
+      }
+
+    }
+
+    .funcList {
+      display: flex;
+      align-items: center;
+      margin: 16px 0;
+      .funcItem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 16px;
+        .icon {
+          width: 40px;
+          height: 40px;
+          margin-bottom: 4px;
+        }
+        .txt {
+          color: rgba(201, 168, 105, 1);
+          font-size: 12px;
+        }
+      }
+    }
+
+    .btn {
+      height: 48px;
+      width: 238px;
+      border: none;
+      outline: none;
+      border-radius: 52px;
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(249, 220, 160, 1);
+      background: linear-gradient(0deg, #333 0%, #333 100%), #165DFF;
+    }
+    .tips {
+      padding-top: 11px;
+      padding-bottom: 24px;
+      font-size: 12px;
+      color: rgba(60, 60, 67, 0.6);
+    }
+  }
+}

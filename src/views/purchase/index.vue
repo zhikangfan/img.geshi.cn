@@ -18,6 +18,7 @@
             v-for="item in packageList"
             :key="item.id"
             @click="onCheckPackage(item.id)"
+            v-if="item.level.includes(allCert?.vip)"
           >
             <div class="corner" v-if="item.corner">
               <span class="icon" v-if="item.has_icon"></span>
@@ -88,6 +89,66 @@
       </div>
       <div class="tips">没有自动续费，请放心购买</div>
     </div>
+    <van-dialog v-model="visible"  :show-confirm-button="false">
+      <div class="retentionDialog">
+        <div class="closeBtn" @click="handleClose"></div>
+        <div class="titleBox">
+          新人福利送达！
+        </div>
+        <div class="retentionContainer">
+          <div class="priceArea">
+            <div class="price">¥19.9</div>
+            <div class="packageDesc">3天体验VIP</div>
+          </div>
+          <div class="funcList">
+            <div class="funcItem">
+              <img src="@/assets/img/pi_liang_chu_li.svg" alt="" class="icon">
+              <span class="txt">批量处理</span>
+            </div>
+            <div class="funcItem">
+              <img src="@/assets/img/bu_xian_ci_shu.svg" alt="" class="icon">
+              <span class="txt">不限次数</span>
+            </div>
+            <div class="funcItem">
+              <img src="@/assets/img/quan_zhan_tong_yong.svg" alt="" class="icon">
+              <span class="txt">全站通用</span>
+            </div>
+          </div>
+          <button class="btn" @click="retentionPay">立即开通</button>
+          <p class="tips">没有自动续费，请放心购买！</p>
+        </div>
+      </div>
+    </van-dialog>
+    <van-dialog v-model="visible2"  :show-confirm-button="false">
+      <div class="retentionDialog">
+        <div class="closeBtn" @click="handleClose2"></div>
+        <div class="titleBox">
+          限时升级福利！
+        </div>
+        <div class="retentionContainer">
+          <div class="priceArea">
+            <div class="price">¥39.9</div>
+            <div class="packageDesc packageDesc2">终身会员</div>
+          </div>
+          <div class="funcList">
+            <div class="funcItem">
+              <img src="@/assets/img/pi_liang_chu_li.svg" alt="" class="icon">
+              <span class="txt">批量处理</span>
+            </div>
+            <div class="funcItem">
+              <img src="@/assets/img/bu_xian_ci_shu.svg" alt="" class="icon">
+              <span class="txt">不限次数</span>
+            </div>
+            <div class="funcItem">
+              <img src="@/assets/img/quan_zhan_tong_yong.svg" alt="" class="icon">
+              <span class="txt">全站通用</span>
+            </div>
+          </div>
+          <button class="btn" @click="retentionPay2">立即开通</button>
+          <p class="tips">没有自动续费，请放心购买！</p>
+        </div>
+      </div>
+    </van-dialog>
   </div>
 </template>
 <script>
@@ -108,7 +169,9 @@ export default {
       checkId: -1, // 默认选中
       pollCount: 0, // 轮询次数
       payResultTimer: null,
-      currentPackage: {}
+      currentPackage: {},
+      visible: false,
+    visible2: false
     }
   },
   computed: {
@@ -136,49 +199,32 @@ export default {
       this.checkId = id
       this.currentPackage = this.packageList.find(item => item.id === id)
     },
-    /**
-     * @description 轮询，获取支付状态
-     * @param orderId 订单ID
-     */
-    lookup(orderId) {
-      clearTimeout(this.payResultTimer)
+    handleClose() {
+      this.visible = false
+    },
 
-      if (this.pollCount > 5000) {
-        // TODO: 支付超时
-
-        return
+    handleClose2() {
+      this.visible2 = false
+    },
+    async retentionPay() {
+      const id = 11 // 3天vip
+      let res = await createOrder(id)
+      if (res.data.status == 0) {
+        let { wechat_url, order_id } = res.data.data
+        const wechatUrl = `${wechat_url}&redirect_url=${window.encodeURIComponent('https://img.geshi.cn/purchase?order_id=' + order_id + '&retention=1')}`
+        await window.location.replace(wechatUrl)
       }
-
-      this.payResultTimer = setTimeout(async () => {
-        let r = await getPayStatus(orderId)
-        if (r.data.status === 0 && r.data.data.order.status === 1) {
-          // 查询成功 并且 状态为1 或者支付超时
-          // await this.updateAllCert(r.data.data.money) // 更新用户权益
-
-          await this.$store.dispatch('updateUserInfo')
-          Toast.success({
-            message: '支付成功'
-          })
-
-          // Message({
-          //   type: 'success',
-          //   message: '支付成功'
-          // })
-          clearTimeout(this.payResultTimer)
-
-          // FIXME: 浮点数精度丢失，可以采用第三方库处理，也可以后端处理
-          // uploadPayData(Math.ceil(this.price * 100)).catch(e => {})
-          // trackOrder(this.checkID, orderId, r.data.data.money.cash_total)
-          // this.hidePurchaseModal()
-        } else {
-          Toast.fail({
-            message: '支付失败'
-          })
-          // this.lookup(orderId)
-        }
-      }, 1500)
-
-      this.pollCount++ // 增加轮询次数
+      this.visible = false
+    },
+    async retentionPay2() {
+      const id = 5 // 3天vip
+      let res = await createOrder(id)
+      if (res.data.status == 0) {
+        let { wechat_url, order_id } = res.data.data
+        const wechatUrl = `${wechat_url}&redirect_url=${window.encodeURIComponent('https://img.geshi.cn/purchase?order_id=' + order_id + '&retention=1')}`
+        await window.location.replace(wechatUrl)
+      }
+      this.visible2 = false
     },
 
     async handlePay() {
@@ -195,7 +241,7 @@ export default {
     this.onCheckPackage(1)
   },
   async mounted() {
-    let { order_id } = this.$route.query
+    let { order_id, retention } = this.$route.query
     if (order_id) {
       let r = await getPayStatus(order_id)
       if (r.data.status === 0 && r.data.data.order.status === 1) {
@@ -206,8 +252,14 @@ export default {
           message: '支付成功'
         })
         uploadPayData(r.data.data.order.amount).catch(e => {})
-        // trackOrder(this.checkID, orderId, r.data.data.money.cash_total)
-        // this.hidePurchaseModal()
+      }
+      if (!retention && this.allCert?.vip === VIP_LEVEL.NON_VIP) {
+        this.visible = true
+        this.visible2 = false
+      }
+      if (!retention && this.allCert?.vip === VIP_LEVEL.COUNT_VIP) {
+        this.visible = false
+        this.visible2 = true
       }
     }
   }
