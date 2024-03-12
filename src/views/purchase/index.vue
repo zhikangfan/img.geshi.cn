@@ -5,7 +5,7 @@
         <img src="@/assets/img/avatar.svg" alt="" class="avatar" />
         <div class="infoRight">
           <div class="nickname">轻秒{{ userInfo?.uid }}</div>
-          <div class="desc">{{info}}</div>
+          <div class="desc">{{ info }}</div>
         </div>
       </div>
     </div>
@@ -89,12 +89,10 @@
       </div>
       <div class="tips">没有自动续费，请放心购买</div>
     </div>
-    <van-dialog v-model="visible"  :show-confirm-button="false">
+    <van-dialog v-model="visible" :show-confirm-button="false">
       <div class="retentionDialog">
         <div class="closeBtn" @click="handleClose"></div>
-        <div class="titleBox">
-          新人福利送达！
-        </div>
+        <div class="titleBox">新人福利送达！</div>
         <div class="retentionContainer">
           <div class="priceArea">
             <div class="price">¥19.9</div>
@@ -102,15 +100,15 @@
           </div>
           <div class="funcList">
             <div class="funcItem">
-              <img src="@/assets/img/pi_liang_chu_li.svg" alt="" class="icon">
+              <img src="@/assets/img/pi_liang_chu_li.svg" alt="" class="icon" />
               <span class="txt">批量处理</span>
             </div>
             <div class="funcItem">
-              <img src="@/assets/img/bu_xian_ci_shu.svg" alt="" class="icon">
+              <img src="@/assets/img/bu_xian_ci_shu.svg" alt="" class="icon" />
               <span class="txt">不限次数</span>
             </div>
             <div class="funcItem">
-              <img src="@/assets/img/quan_zhan_tong_yong.svg" alt="" class="icon">
+              <img src="@/assets/img/quan_zhan_tong_yong.svg" alt="" class="icon" />
               <span class="txt">全站通用</span>
             </div>
           </div>
@@ -119,12 +117,10 @@
         </div>
       </div>
     </van-dialog>
-    <van-dialog v-model="visible2"  :show-confirm-button="false">
+    <van-dialog v-model="visible2" :show-confirm-button="false">
       <div class="retentionDialog">
         <div class="closeBtn" @click="handleClose2"></div>
-        <div class="titleBox">
-          限时升级福利！
-        </div>
+        <div class="titleBox">限时升级福利！</div>
         <div class="retentionContainer">
           <div class="priceArea">
             <div class="price">¥39.9</div>
@@ -132,15 +128,15 @@
           </div>
           <div class="funcList">
             <div class="funcItem">
-              <img src="@/assets/img/pi_liang_chu_li.svg" alt="" class="icon">
+              <img src="@/assets/img/pi_liang_chu_li.svg" alt="" class="icon" />
               <span class="txt">批量处理</span>
             </div>
             <div class="funcItem">
-              <img src="@/assets/img/bu_xian_ci_shu.svg" alt="" class="icon">
+              <img src="@/assets/img/bu_xian_ci_shu.svg" alt="" class="icon" />
               <span class="txt">不限次数</span>
             </div>
             <div class="funcItem">
-              <img src="@/assets/img/quan_zhan_tong_yong.svg" alt="" class="icon">
+              <img src="@/assets/img/quan_zhan_tong_yong.svg" alt="" class="icon" />
               <span class="txt">全站通用</span>
             </div>
           </div>
@@ -171,7 +167,8 @@ export default {
       payResultTimer: null,
       currentPackage: {},
       visible: false,
-    visible2: false
+    visible2: false,
+      allowNext: false
     }
   },
   computed: {
@@ -201,10 +198,14 @@ export default {
     },
     handleClose() {
       this.visible = false
+      this.allowNext = true
+      this.$router.back()
     },
 
     handleClose2() {
       this.visible2 = false
+      this.allowNext = true
+      this.$router.back()
     },
     async retentionPay() {
       const id = 11 // 3天vip
@@ -212,6 +213,7 @@ export default {
       if (res.data.status == 0) {
         let { wechat_url, order_id } = res.data.data
         const wechatUrl = `${wechat_url}&redirect_url=${window.encodeURIComponent('https://img.geshi.cn/purchase?order_id=' + order_id + '&retention=1')}`
+        this.allowNext = true
         await window.location.replace(wechatUrl)
       }
       this.visible = false
@@ -222,6 +224,7 @@ export default {
       if (res.data.status == 0) {
         let { wechat_url, order_id } = res.data.data
         const wechatUrl = `${wechat_url}&redirect_url=${window.encodeURIComponent('https://img.geshi.cn/purchase?order_id=' + order_id + '&retention=1')}`
+        this.allowNext = true
         await window.location.replace(wechatUrl)
       }
       this.visible2 = false
@@ -233,6 +236,7 @@ export default {
       if (res.data.status == 0) {
         let { wechat_url, order_id } = res.data.data
         const wechatUrl = `${wechat_url}&redirect_url=${window.encodeURIComponent('https://img.geshi.cn/purchase?order_id=' + order_id)}`
+        this.allowNext = true
         await window.location.replace(wechatUrl)
       }
     }
@@ -253,15 +257,46 @@ export default {
         })
         uploadPayData(r.data.data.order.amount).catch(e => {})
       }
-      if (!retention && this.allCert?.vip === VIP_LEVEL.NON_VIP) {
+
+    }
+
+    history.pushState(null, null, document.URL);
+    let that = this;
+    window.addEventListener("popstate",() => {
+      if (this.allCert?.vip === VIP_LEVEL.NON_VIP) {
         this.visible = true
         this.visible2 = false
       }
-      if (!retention && this.allCert?.vip === VIP_LEVEL.COUNT_VIP) {
+      if (this.allCert?.vip === VIP_LEVEL.COUNT_VIP) {
         this.visible = false
         this.visible2 = true
       }
-    }
+    }, false);
+  },
+  beforeRouteLeave(to, from, next) {
+    next()
+    // if ((this.allCert?.vip === VIP_LEVEL.NON_VIP || this.allCert?.vip === VIP_LEVEL.COUNT_VIP)) {
+    //   if (!this.allowNext) {
+    //     next(false)
+    //     // FIXME: 需延时才能弹出弹窗
+    //     setTimeout(() => {
+    //       if (this.allCert?.vip === VIP_LEVEL.NON_VIP) {
+    //         this.visible = true
+    //         this.visible2 = false
+    //       }
+    //       if (this.allCert?.vip === VIP_LEVEL.COUNT_VIP) {
+    //         this.visible = false
+    //         this.visible2 = true
+    //       }
+    //     },10)
+    //   } else {
+    //     next(true)
+    //   }
+    //
+    // } else {
+    //   next(true)
+    // }
+
   }
 }
 </script>
