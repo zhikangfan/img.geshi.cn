@@ -18,7 +18,7 @@ export async function uploadPayData(amount) {
     '/imageformat/order_baidu',
     {
       bdVID: localStorage.getItem('bd_vid'),
-      amount: amount
+      amount: parseInt(amount)
     },
     {
       headers: {

@@ -22,7 +22,7 @@
           <span class="title">修改DPI</span>
         </div>
       </div>
-      <Uploader :on-success="onUploadSuccess" class="uploader" :multiple="isAllowMultiple">
+      <Uploader :on-success="onUploadSuccess" class="uploader" :multiple="isAllowMultiple" :accept="accept">
         <div class="uploadContainer">
           <span class="icon"></span>
           <div class="tips">{{ uploadTips }}</div>
@@ -89,31 +89,36 @@ export default {
         {
           function: 'compress',
           uploadConfig: {
-            tips: '证件照压缩、保持清晰度、压缩指定大小'
+            tips: '证件照压缩、保持清晰度、压缩指定大小',
+            accept: '.jpg,.jpeg,.png,.bmp,.webp'
           }
         },
         {
           function: 'convert',
           uploadConfig: {
-            tips: '批量转换图片格式为JPG、PNG、WEBP等'
+            tips: '批量转换图片格式为JPG、PNG、WEBP等',
+            accept: '.jpg,.jpeg,.png,.bmp,.webp,.heic,.tiff'
           }
         },
         {
           function: 'edit',
           uploadConfig: {
-            tips: '同时处理证件照尺寸、格式、指定大小'
+            tips: '同时处理证件照尺寸、格式、指定大小',
+            accept: '.jpg,.jpeg,.png,.bmp'
           }
         },
         {
           function: 'edit-dpi',
           uploadConfig: {
-            tips: '批量处理图片分辨率DPI'
+            tips: '批量处理图片分辨率DPI',
+            accept: '.jpg,.jpeg,.png'
           }
         }
       ],
       isAllowMultiple: true, //是否允许多张上传
       selectFunc: '', // 当前选中的方法
-      uploadTips: ''
+      uploadTips: '',
+      accept: '.jpg,.jpeg,.png,.bmp,.webp'
     }
   },
   methods: {
@@ -130,9 +135,10 @@ export default {
       this.isAllowMultiple = !(this.selectFunc === 'edit')
 
       let {
-        uploadConfig: { tips }
+        uploadConfig: { tips,accept }
       } = this.config.find(item => item.function === func)
       this.uploadTips = tips
+      this.accept = accept
     }
   },
   created() {

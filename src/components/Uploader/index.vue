@@ -5,6 +5,7 @@
     :before-read="beforeRead"
     :after-read="afterRead"
     :max-size="maxSize"
+    :accept="accept"
   >
     <slot></slot>
   </van-uploader>
@@ -16,9 +17,13 @@ export default {
   name: 'Uploader',
   components: {},
   props: {
+    // accept: {
+    //   type: Array,
+    //   default: () => ['image/png', 'image/jpg', 'image/jpeg', 'image/webp', 'image/bmp']
+    // },
     accept: {
-      type: Array,
-      default: () => ['image/png', 'image/jpg', 'image/jpeg', 'image/webp', 'image/bmp']
+      type: String,
+      default: '.jpg,.jpeg,.png,.bmp,.webp'
     },
     multiple: {
       type: Boolean,

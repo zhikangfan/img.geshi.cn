@@ -118,7 +118,7 @@
       </div>
     </div>
     <div class="btnGroup">
-      <Uploader :on-success="onUploadSuccess" :max-count="1" :multiple="false">
+      <Uploader :on-success="onUploadSuccess" :max-count="1" :multiple="false" :accept="'.jpg,.jpeg,.png,.bmp'">
         <button class="default btn">重新上传</button>
       </Uploader>
       <button class="btn primary" @click="handleDownload">导出</button>
@@ -155,7 +155,7 @@
         </div>
       </div>
     </van-popup>
-    <DownloadImage v-model="visible" :src="downloadSrc" :direction="direction" @close="handleClose" />
+    <DownloadImage v-model="visible" :src="currentFile?.src" :direction="direction" :width="currentFile?.width" :height="currentFile?.height" :format="currentFile?.suffix" :size="currentFile?.raw?.size" @close="handleClose" />
   </div>
 </template>
 <script>
@@ -216,7 +216,7 @@ export default {
       isShowConfirmBtn: false, // 是否显示确定
       visible: false,
       direction: 'horizontal',
-      downloadSrc: ''
+      currentFile: {}
     }
   },
   computed: {
@@ -510,7 +510,7 @@ export default {
               this.file.result.src = res.url
               let currentFile = this.file
               this.direction = currentFile?.result?.width < currentFile?.result?.height ? 'horizontal' : 'vertical'
-              this.downloadSrc = currentFile?.result?.src
+              this.currentFile = currentFile?.result
               this.visible = true
               this.file.download = true
             } catch (e) {
@@ -528,7 +528,7 @@ export default {
     },
     handleClose() {
       this.visible = false
-      this.downloadSrc = ''
+      this.currentFile = {}
       this.direction = 'horizontal'
     },
     createImg(options) {
@@ -596,7 +596,7 @@ export default {
       this.checkFunc = 'ratio'
       this.visible = false
       this.direction = 'horizontal'
-      this.downloadSrc = ''
+      this.currentFile = {}
       this.init(file)
     },
     init(file) {

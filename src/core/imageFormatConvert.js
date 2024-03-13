@@ -52,24 +52,38 @@ export function getFormatTypeByExt(ext) {
   return typeObj[ext]
 }
 export function imageFormatConvert(file, { to }) {
+
+
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => {
-      const arrayBuffer = reader.result // reader.result 是文件内容
-      const uint8Array = new Uint8Array(arrayBuffer)
-      // const wasmLocation = new URL('@imagemagick/magick-wasm/magick.wasm', import.meta.url).href
-      const wasmLocation = 'https://res.yunkun.cn/magick.wasm'
-      initializeImageMagick(wasmLocation).then(() => {
-        ImageMagick.read(uint8Array, function (image) {
-          image.write(getFormatTypeByExt(to) || image.format, data => {
-            let blob = new Blob([data], {
-              type: getTypeByExt(to)
+
+    const pattern = /\.heic/i
+    if (file.type === 'image/heic' || pattern.test(file.name)) {
+      heic2any({
+        blob: file,
+        toType: getTypeByExt(to)
+      }).then(blobData => {
+        resolve(blobData)
+      })
+    } else {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const arrayBuffer = reader.result // reader.result 是文件内容
+        const uint8Array = new Uint8Array(arrayBuffer)
+        // const wasmLocation = new URL('@imagemagick/magick-wasm/magick.wasm', import.meta.url).href
+        const wasmLocation = 'https://res.yunkun.cn/magick.wasm'
+        initializeImageMagick(wasmLocation).then(() => {
+          ImageMagick.read(uint8Array, function (image) {
+            image.write(getFormatTypeByExt(to) || image.format, data => {
+              let blob = new Blob([data], {
+                type: getTypeByExt(to)
+              })
+              resolve(blob)
             })
-            resolve(blob)
           })
         })
-      })
+      }
+      reader.readAsArrayBuffer(file)
     }
-    reader.readAsArrayBuffer(file)
+
   })
 }

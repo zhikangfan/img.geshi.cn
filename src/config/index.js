@@ -72,16 +72,7 @@ export const packageList = [
   }
 ]
 
-/**
- * 压缩配置
- */
-export const compressConfig = {
-  accept: ['image/jpg', 'image/jpeg', 'image/webp', 'image/png', 'image/bmp'], // 支持的文件类型
-  maxSize: 100 * 1024 * 1024, // 支持最大的单个文件
-  maxWidth: -1, // 支持最大宽度，-1: 不限制宽度
-  maxHeight: -1, // 支持最大高度 -1: 不限制高度
-  multiple: 12, // 一次最多处理多少张
-}
+
 /**
  * 修改的尺寸列表
  * */

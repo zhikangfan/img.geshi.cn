@@ -6,7 +6,7 @@
           <div class="previewImg" @click.stop="handlePreview(file)">
             <van-image
               fit="contain"
-              :src="isExecuted && !isLoading && file.status ? file.result.src : file.init.content"
+              :src="file.init.content"
             />
             <div class="preview" v-if="isExecuted && !isLoading && file.status"></div>
           </div>
@@ -99,13 +99,13 @@
         <button class="btn primary" @click="jumpTo('/')">返回首页</button>
       </div>
       <div class="btnGroup" v-else>
-        <Uploader :on-success="onUploadSuccess">
+        <Uploader :on-success="onUploadSuccess" :accept="'.jpg,.jpeg,.png,.bmp,.webp'">
           <button class="default btn">重新上传</button>
         </Uploader>
         <button class="btn primary" @click="onStart">开始压缩</button>
       </div>
     </div>
-    <DownloadImage v-model="visible" :src="downloadSrc" :direction="direction" @close="handleClose" />
+    <DownloadImage v-model="visible" :src="currentFile?.src" :direction="direction" :width="currentFile?.width" :height="currentFile?.height" :size="currentFile?.raw?.size" :format="currentFile?.suffix" @close="handleClose" />
   </div>
 </template>
 <script>
@@ -113,7 +113,6 @@ import { Dialog, ImagePreview, Toast } from 'vant'
 import { compressImage, outputTheSpecifiedSize } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
 import Uploader from '@/components/Uploader/index.vue'
-import { saveAs } from 'file-saver'
 import { VIP_LEVEL } from '@/store/user.store'
 import { duce } from '@/api'
 import { mapActions, mapGetters, mapState } from 'vuex'
@@ -144,7 +143,7 @@ export default {
       isBuyVip: false, // 是否去购买vip
       visible: false,
       direction: 'horizontal',
-      downloadSrc: ''
+      currentFile: {} // 当前下载的文件
     }
   },
   computed: {
@@ -367,7 +366,7 @@ export default {
       currentFile.download = true
       this.fileList.splice(index, 1, currentFile)
       this.direction = currentFile?.result?.width < currentFile?.result?.height ? 'horizontal' : 'vertical'
-      this.downloadSrc = currentFile?.result?.src
+      this.currentFile = currentFile?.result
       this.visible = true
     },
     async handleDownload(currentFile) {
@@ -435,7 +434,7 @@ export default {
     },
     handleClose() {
       this.visible = false
-      this.downloadSrc = ''
+      this.currentFile = {}
       this.direction = 'horizontal'
     }
   },

@@ -18,7 +18,6 @@
             v-for="item in packageList"
             :key="item.id"
             @click="onCheckPackage(item.id)"
-            v-if="item.level.includes(allCert?.vip)"
           >
             <div class="corner" v-if="item.corner">
               <span class="icon" v-if="item.has_icon"></span>
@@ -161,7 +160,7 @@ export default {
   props: {},
   data() {
     return {
-      packageList,
+
       checkId: -1, // 默认选中
       pollCount: 0, // 轮询次数
       payResultTimer: null,
@@ -176,6 +175,9 @@ export default {
       allCert: state => state.allCert,
       userInfo: state => state.userInfo
     }),
+    packageList() {
+      return packageList.filter(item => item.level.includes(this.allCert?.vip))
+    },
     info() {
       let {vip, vip_expiration_date, has_image_count} = this.allCert
       switch (vip) {
@@ -242,7 +244,10 @@ export default {
     }
   },
   async created() {
-    this.onCheckPackage(1)
+    if (this.packageList.length !== 0) {
+      this.onCheckPackage(this.packageList[0].id)
+    }
+
   },
   async mounted() {
     let { order_id, retention } = this.$route.query

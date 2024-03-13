@@ -7,7 +7,7 @@
             <div class="previewImg">
               <van-image
                 fit="contain"
-                :src="isExecuted && !isLoading && file.status ? file.result.src : file.init.content"
+                :src="file.init.content"
               />
               <div
                 class="preview"
@@ -73,13 +73,13 @@
         <button class="btn primary" @click="jumpTo('/')">返回首页</button>
       </div>
       <div v-else class="btnGroup">
-        <Uploader :on-success="onUploadSuccess">
+        <Uploader :on-success="onUploadSuccess" :accept="'.jpg,.jpeg,.png'">
           <button class="default btn">重新上传</button>
         </Uploader>
         <button class="btn primary" @click="onStart">立即修改</button>
       </div>
     </div>
-    <DownloadImage v-model="visible" :src="downloadSrc" :direction="direction" @close="handleClose" />
+    <DownloadImage v-model="visible" :src="currentFile?.src" :direction="direction" :width="currentFile?.width" :height="currentFile?.height" :size="currentFile?.raw?.size" :format="currentFile?.suffix" @close="handleClose" />
   </div>
 </template>
 <script>
@@ -115,7 +115,7 @@ export default {
       isBuyVip: false, // 是否去购买vip
       visible: false,
       direction: 'horizontal',
-      downloadSrc: ''
+      currentFile: {}
     }
   },
   computed: {
@@ -339,7 +339,7 @@ export default {
       currentFile.download = true
       this.fileList.splice(index, 1, currentFile)
       this.direction = currentFile?.result?.width < currentFile?.result?.height ? 'horizontal' : 'vertical'
-      this.downloadSrc = currentFile?.result?.src
+      this.currentFile = currentFile?.result
       this.visible = true
     },
     async handleDownload(currentFile) {
@@ -407,7 +407,7 @@ export default {
     },
     handleClose() {
       this.visible = false
-      this.downloadSrc = ''
+      this.currentFile = {}
       this.direction = 'horizontal'
     }
   },
