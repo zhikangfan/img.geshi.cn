@@ -88,6 +88,7 @@ import { getLoginQrCode, getLoginStatus, getMobileCode, userMobileLogin } from '
 import { setToken } from '@/utils/token'
 import { mapActions } from 'vuex'
 import { uploadLoginData } from '@/utils/baiduOCPC'
+import {isWechat} from "@/utils/isWechat";
 
 const QR_CODE_STATUS = {
   SUCCESS: 'success',
@@ -285,8 +286,19 @@ export default {
       this.loginMode = true
     },
     checkWxLogin() {
-      this.loginMode = false
-      this.handleGetLoginQrCode()
+      if (isWechat()) {
+
+        const appid = 'wx8760214102207107'
+        this.handleClose()
+        // snsapi_login
+        // https%3A%2F%2Fimg.geshi.cn
+        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodeURIComponent(location.href)}&response_type=code&scope=snsapi_login&state=STATE&connect_redirect=1#wechat_redirect`
+
+      } else {
+        this.loginMode = false
+        this.handleGetLoginQrCode()
+      }
+
     }
   },
   created() {}

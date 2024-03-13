@@ -43,6 +43,23 @@ export default {
     }
   },
   actions: {
+    /**
+     * @description 登录
+     * @param commit
+     * @param payload
+     * @returns {Promise<void>}
+     */
+    async wxLogin({ commit, dispatch }, payload) {
+      let { code } = payload
+      if (!getToken() && code) {
+        let res = await userLogin(code)
+        if (res.data.status === 0) {
+          setToken(res.data.data)
+          await commit('setUserInfo', res.data.data)
+          await dispatch('updateAllCert')
+        }
+      }
+    },
     setUserInfo: ({ commit }, payload) => {
       commit('updateUserInfo', payload)
     },

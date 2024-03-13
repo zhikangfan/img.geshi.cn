@@ -36,6 +36,7 @@ Vue.use(LoginModal, {
   router
 })
 router.beforeEach((to, from ,next) => {
+
   const isLogin= store.getters["userStore/isLogin"]
   // 未登录不能跳转到购买页
   if (to.name === 'purchase' && !isLogin) {
@@ -48,6 +49,9 @@ router.beforeEach((to, from ,next) => {
    store.dispatch('userStore/updateAllCert').catch(e => {})
   } else {
     store.dispatch('userStore/logout').catch(e => {})
+    if (to.query?.code) {
+      store.dispatch('userStore/wxLogin', {code: to.query?.code}).catch(e => {})
+    }
   }
   next()
 
