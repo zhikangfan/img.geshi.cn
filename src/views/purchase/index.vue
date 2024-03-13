@@ -123,7 +123,7 @@
         <div class="titleBox">限时升级福利！</div>
         <div class="retentionContainer">
           <div class="priceArea">
-            <div class="price">¥39.9</div>
+            <div class="price">¥39</div>
             <div class="packageDesc packageDesc2">终身会员</div>
           </div>
           <div class="funcList">
@@ -249,13 +249,13 @@ export default {
     if (order_id) {
       let r = await getPayStatus(order_id)
       if (r.data.status === 0 && r.data.data.order.status === 1) {
-        // 查询成功 并且 状态为1 或者支付超时
         // 更新用户权益
         await this.$store.dispatch('userStore/updateAllCert')
+
+        await uploadPayData(r.data.data.order.amount).catch(e => {})
         Toast.success({
           message: '支付成功'
         })
-        uploadPayData(r.data.data.order.amount).catch(e => {})
       }
 
     }

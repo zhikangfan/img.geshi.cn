@@ -7,9 +7,10 @@
       :safe-area-inset-top="true"
       :close-on-click-overlay="false"
       :close-on-popstate="true"
+      @closed="onClosed"
     >
       <div class="loginModal">
-        <span class="close" @click="handleClickClose" @closed="onClosed"></span>
+        <span class="close" @click="handleClickClose"></span>
         <div class="phoneLoginBox" v-if="loginMode">
           <div class="titleBox">验证码登录</div>
           <form class="formBox" @submit.prevent="onSubmit">
@@ -48,7 +49,11 @@
             <div class="loadingBox" v-if="isLoading">
               <span class="icon"></span>
             </div>
-            <div class="refreshBox" @click="onRefreshQrCode" v-if="!isLoading && qrCodeStatus === QR_CODE_STATUS.EXPIRE">
+            <div
+              class="refreshBox"
+              @click="onRefreshQrCode"
+              v-if="!isLoading && qrCodeStatus === QR_CODE_STATUS.EXPIRE"
+            >
               <span class="icon"></span>
               <span class="text">刷新</span>
             </div>
@@ -78,11 +83,11 @@
   </div>
 </template>
 <script>
-import { Toast } from 'vant'
+import { Dialog, Toast } from 'vant'
 import { getLoginQrCode, getLoginStatus, getMobileCode, userMobileLogin } from '@/api'
 import { setToken } from '@/utils/token'
 import { mapActions } from 'vuex'
-import {uploadLoginData} from "@/utils/baiduOCPC";
+import { uploadLoginData } from '@/utils/baiduOCPC'
 
 const QR_CODE_STATUS = {
   SUCCESS: 'success',
@@ -111,17 +116,27 @@ export default {
       params: {
         mobile_phone: '',
         code: ''
-      }
+      },
+      isAllowOpen: true
     }
   },
   methods: {
     ...mapActions('userStore', ['setUserInfo', 'updateAllCert']),
 
     handleClickClose() {
-      if (typeof this.onHandleClose === 'function') {
-        this.onHandleClose()
+      if (this.isAllowOpen) {
+        Dialog.confirm({
+          title: '真的要放弃登录吗？',
+          message: '您可能错过限时促销活动！',
+          cancelButtonText: '残忍放弃',
+          confirmButtonText: '继续登录'
+        }).catch(() => {
+          if (typeof this.onHandleClose === 'function') {
+            this.onHandleClose()
+          }
+          this.handleClose()
+        })
       }
-      this.handleClose()
     },
     handleClose() {
       clearTimeout(this.checkLoginStatusTimer)
@@ -131,19 +146,20 @@ export default {
     onClosed() {
       this.isCountDownFinish = true
       this.reset()
+
       if (typeof this.onClose === 'function') {
         this.onClose()
       }
       this.$destroy()
     },
     start() {
-      this.$refs.countDown.start()
+      this.$refs.countDown?.start()
     },
     pause() {
-      this.$refs.countDown.pause()
+      this.$refs.countDown?.pause()
     },
     reset() {
-      this.$refs.countDown.reset()
+      this.$refs.countDown?.reset()
     },
     // 倒计时完毕
     onCountDownFinish() {
@@ -196,6 +212,7 @@ export default {
       const { mobile_phone, code } = this.params
       let res = await userMobileLogin({ mobile_phone, code })
       if (res.data.status === 0) {
+        this.isAllowOpen = false
         setToken(res.data.data)
         await this.setUserInfo(res.data.data)
         await this.updateAllCert()
@@ -217,6 +234,7 @@ export default {
       this.checkLoginStatusTimer = setTimeout(async () => {
         let r = await getLoginStatus(ticket)
         if (r.data.status === 0) {
+          this.isAllowOpen = false
           // TODO: 更新token，更新用户信息
           setToken(r.data.data)
           await this.setUserInfo(r.data.data)

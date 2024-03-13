@@ -12,6 +12,20 @@
       <div class="imgBox">
         <img v-if="src" :src="src" alt="" :class="{'img': true, 'horizontal': direction === 'horizontal'}">
       </div>
+<!--      <div class="info">-->
+<!--        <div class="infoItem">-->
+<!--          <span class="title">格式：</span>-->
+<!--          <span class="value"></span>-->
+<!--        </div>-->
+<!--        <div class="infoItem">-->
+<!--          <span class="title">内存：</span>-->
+<!--          <span class="value"></span>-->
+<!--        </div>-->
+<!--        <div class="infoItem">-->
+<!--          <span class="title">尺寸：</span>-->
+<!--          <span class="value"></span>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="tips">请长按图片后选择保存图片</div>
     </div>
   </van-popup>
