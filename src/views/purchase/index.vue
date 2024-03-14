@@ -185,6 +185,8 @@ export default {
           return `到期时间：永久`
         case VIP_LEVEL.TIME_VIP:
           return `到期时间：${vip_expiration_date}`
+        case VIP_LEVEL.THREE_DAY_VIP:
+          return `到期时间：${vip_expiration_date}`
         case VIP_LEVEL.COUNT_VIP:
           return `剩余张数：${has_image_count}`
         default :
