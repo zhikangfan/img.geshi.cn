@@ -118,7 +118,7 @@
       </div>
     </div>
     <div class="btnGroup">
-      <Uploader :on-success="onUploadSuccess" :max-count="1" :multiple="false" :accept="'.jpg,.jpeg,.png,.bmp'">
+      <Uploader :on-success="onUploadSuccess" :max-count="1" :multiple="false" :accept="'image/*'">
         <button class="default btn">重新上传</button>
       </Uploader>
       <button class="btn primary" @click="handleDownload">导出</button>

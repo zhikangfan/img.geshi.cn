@@ -85,40 +85,70 @@ export default {
   props: {},
   data() {
     return {
+      // config: [
+      //   {
+      //     function: 'compress',
+      //     uploadConfig: {
+      //       tips: '证件照压缩、保持清晰度、压缩指定大小',
+      //       accept: '.jpg,.jpeg,.png,.bmp,.webp,image/jpeg,image/jpg,image/png,image/bmp,image/webp'
+      //     }
+      //   },
+      //   {
+      //     function: 'convert',
+      //     uploadConfig: {
+      //       tips: '批量转换图片格式为JPG、PNG、WEBP等',
+      //       accept: '.jpg,.jpeg,.png,.bmp,.webp,.heic,.tiff,image/jpeg,image/jpg,image/png,image/bmp,image/webp,image/tiff,image/heic'
+      //     }
+      //   },
+      //   {
+      //     function: 'edit',
+      //     uploadConfig: {
+      //       tips: '同时处理证件照尺寸、格式、指定大小',
+      //       accept: '.jpg,.jpeg,.png,.bmp,image/jpeg,image/jpg,image/png,image/bmp'
+      //     }
+      //   },
+      //   {
+      //     function: 'edit-dpi',
+      //     uploadConfig: {
+      //       tips: '批量处理图片分辨率DPI',
+      //       accept: '.jpg,.jpeg,.png,image/jpeg,image/jpg,image/png'
+      //     }
+      //   }
+      // ],
       config: [
         {
           function: 'compress',
           uploadConfig: {
             tips: '证件照压缩、保持清晰度、压缩指定大小',
-            accept: '.jpg,.jpeg,.png,.bmp,.webp'
+            accept: 'image/*'
           }
         },
         {
           function: 'convert',
           uploadConfig: {
             tips: '批量转换图片格式为JPG、PNG、WEBP等',
-            accept: '.jpg,.jpeg,.png,.bmp,.webp,.heic,.tiff'
+            accept: 'image/*'
           }
         },
         {
           function: 'edit',
           uploadConfig: {
             tips: '同时处理证件照尺寸、格式、指定大小',
-            accept: '.jpg,.jpeg,.png,.bmp'
+            accept: 'image/*'
           }
         },
         {
           function: 'edit-dpi',
           uploadConfig: {
             tips: '批量处理图片分辨率DPI',
-            accept: '.jpg,.jpeg,.png'
+            accept: 'image/*'
           }
         }
       ],
       isAllowMultiple: true, //是否允许多张上传
       selectFunc: '', // 当前选中的方法
       uploadTips: '',
-      accept: '.jpg,.jpeg,.png,.bmp,.webp'
+      accept: 'image/*'
     }
   },
   methods: {

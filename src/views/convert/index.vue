@@ -79,7 +79,7 @@
         <button class="btn primary" @click="jumpTo('/')">返回首页</button>
       </div>
       <div v-else class="btnGroup">
-        <Uploader :on-success="onUploadSuccess" :accept="'.jpg,.jpeg,.png,.bmp,.webp,.heic,.tiff'">
+        <Uploader :on-success="onUploadSuccess" :accept="'image/*'">
           <button class="default btn">重新上传</button>
         </Uploader>
         <button class="btn primary" @click="onStart">开始转换</button>

@@ -23,7 +23,7 @@ export default {
     // },
     accept: {
       type: String,
-      default: '.jpg,.jpeg,.png,.bmp,.webp'
+      default: '.jpg,.jpeg,.png,.bmp,.webp,image/jpeg,image/jpg,image/png,image/bmp,image/webp'
     },
     multiple: {
       type: Boolean,

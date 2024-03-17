@@ -99,7 +99,7 @@
         <button class="btn primary" @click="jumpTo('/')">返回首页</button>
       </div>
       <div class="btnGroup" v-else>
-        <Uploader :on-success="onUploadSuccess" :accept="'.jpg,.jpeg,.png,.bmp,.webp'">
+        <Uploader :on-success="onUploadSuccess" :accept="'image/*'">
           <button class="default btn">重新上传</button>
         </Uploader>
         <button class="btn primary" @click="onStart">开始压缩</button>
