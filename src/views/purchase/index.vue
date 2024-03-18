@@ -14,7 +14,7 @@
       <div class="packageListWrap">
         <div class="packageList">
           <div
-            :class="{ packageItem: true, checked: checkId === item.id }"
+            :class="{ packageItem: true, checked: checkId === item.id  }"
             v-for="item in packageList"
             :key="item.id"
             @click="onCheckPackage(item.id)"
@@ -160,7 +160,7 @@ export default {
   props: {},
   data() {
     return {
-
+      VIP_LEVEL,
       checkId: -1, // 默认选中
       pollCount: 0, // 轮询次数
       payResultTimer: null,
@@ -176,7 +176,24 @@ export default {
       userInfo: state => state.userInfo
     }),
     packageList() {
-      return packageList.filter(item => item.level.includes(this.allCert?.vip))
+      const isTen  = this.allCert.vip === VIP_LEVEL.COUNT_VIP && !(Number(this.allCert.cash_total) / 990 <=5 && Number(this.allCert.cash_total) % 5 === 0)
+      const isOne = this.allCert.vip === VIP_LEVEL.COUNT_VIP && Number(this.allCert.cash_total) / 990 <=5 && Number(this.allCert.cash_total) % 5 === 0
+
+      return packageList.filter(item => {
+        if (item.id === 1 || item.id === 2) {
+          return item.level.includes(this.allCert?.vip) && !isTen
+        }else if (item.id === 10) {
+          return item.level.includes(this.allCert?.vip) && !isOne
+        } else {
+          return item.level.includes(this.allCert?.vip)
+        }
+      })
+    },
+    isTen() {
+      return this.allCert.vip === VIP_LEVEL.COUNT_VIP && !(Number(this.allCert.cash_total) / 990 <=5 && Number(this.allCert.cash_total) % 5 === 0)
+    },
+    isOne() {
+      return this.allCert.vip === VIP_LEVEL.COUNT_VIP && Number(this.allCert.cash_total) / 990 <=5 && Number(this.allCert.cash_total) % 5 === 0
     },
     info() {
       let {vip, vip_expiration_date, has_image_count} = this.allCert
@@ -274,7 +291,7 @@ export default {
         this.visible = true
         this.visible2 = false
       }
-      if (this.allCert?.vip === VIP_LEVEL.COUNT_VIP) {
+      if (this.isTen || this.allCert?.vip === VIP_LEVEL.TIME_VIP) {
         this.visible = false
         this.visible2 = true
       }

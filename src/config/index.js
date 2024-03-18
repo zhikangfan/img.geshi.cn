@@ -29,7 +29,7 @@ export const packageList = [
     has_del: true, // 是否有删除线
     unit: '终身',
     payTips: '直降530元 可开发票',
-    level: [ VIP_LEVEL.TIME_VIP, VIP_LEVEL.THREE_DAY_VIP]
+    level: [ VIP_LEVEL.TIME_VIP, VIP_LEVEL.THREE_DAY_VIP, VIP_LEVEL.COUNT_VIP]
   },
   {
     id: 2,
