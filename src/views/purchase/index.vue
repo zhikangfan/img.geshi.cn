@@ -80,7 +80,7 @@
       <div class="payContainer">
         <div class="payInfo">
           <div class="price">
-            ¥{{ currentPackage.price }}<span class="info">/{{ currentPackage.unit }}</span>
+            ¥{{ currentPackage.price }}<span class="info" v-if="currentPackage.unit">/{{ currentPackage.unit }}</span>
           </div>
           <div class="desc">{{ currentPackage.payTips }}</div>
         </div>

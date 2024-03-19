@@ -98,6 +98,17 @@ const routes = [
     component: () => import('@/views/dpi/index.vue'),
   },
   {
+    path: '/help',
+    name : 'help',
+    meta: {
+      tdk: {
+        title: '轻秒格式工厂_如何获取订单号',
+        ...BASE_KD
+      }
+    },
+    component: () => import('@/views/help/index.vue'),
+  },
+  {
     path: '/*',
     name: 'NotFound',
     redirect: () => '/'

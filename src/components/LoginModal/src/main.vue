@@ -79,7 +79,7 @@
                       placeholder="请输入交易订单号（长）"
               />
             </div>
-            <div class="tips">*只适合已购买用户（如何<a href="/help/order" class="link">获取订单号</a>）</div>
+            <div class="tips">*只适合已购买用户（如何<a href="/help" class="link">获取订单号</a>）</div>
             <button class="loginBtn" type="submit">登录</button>
           </form>
         </div>

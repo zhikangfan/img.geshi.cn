@@ -10,7 +10,7 @@ export const packageList = [
     title: '终身会员',
     price: '69',
     corner: '直降500元',
-    desc: '原价¥569',
+    desc: '¥569',
     txt: '终身免费使用',
     has_icon: true, // 是否有闪电符号
     has_del: true, // 是否有删除线
@@ -23,7 +23,7 @@ export const packageList = [
     title: '终身会员',
     price: '39',
     corner: '直降530元',
-    desc: '原价¥569',
+    desc: '¥569',
     txt: '终身免费使用',
     has_icon: true, // 是否有闪电符号
     has_del: true, // 是否有删除线
@@ -36,7 +36,7 @@ export const packageList = [
     title: '年会员',
     price: '49',
     corner: '立减130',
-    desc: '原价¥179',
+    desc: '¥179',
     txt: '低至0.13元/天',
     has_icon: false,
     has_del: true,
@@ -45,31 +45,44 @@ export const packageList = [
     level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.PERMANENT_VIP]
   },
   {
-    id: 4,
-    title: '按张付费*10张',
+    id: 11,
+    title: '3天体验VIP',
     price: '19.9',
     corner: '',
-    desc: '1.99元/张',
-    txt: '张数永久有效',
+    desc: '¥39.9',
+    txt: '不限次数使用',
     has_icon: false,
-    has_del: false,
-    unit: '10张',
-    payTips: '张数永久有效',
-    level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.TIME_VIP, VIP_LEVEL.THREE_DAY_VIP, VIP_LEVEL.PERMANENT_VIP]
+    has_del: true,
+    unit: '3天',
+    payTips: '不限次数使用',
+    level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.PERMANENT_VIP]
   },
-  {
-    id: 3,
-    title: '按张付费*1张',
-    price: '9.9',
-    corner: '',
-    desc: '9.9元/张',
-    txt: '张数永久有效',
-    has_icon: false,
-    has_del: false,
-    unit: '张',
-    payTips: '张数永久有效',
-    level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.TIME_VIP, VIP_LEVEL.THREE_DAY_VIP, VIP_LEVEL.PERMANENT_VIP]
-  }
+  // {
+  //   id: 4,
+  //   title: '按张付费*10张',
+  //   price: '19.9',
+  //   corner: '',
+  //   desc: '1.99元/张',
+  //   txt: '张数永久有效',
+  //   has_icon: false,
+  //   has_del: false,
+  //   unit: '10张',
+  //   payTips: '张数永久有效',
+  //   level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.TIME_VIP, VIP_LEVEL.THREE_DAY_VIP, VIP_LEVEL.PERMANENT_VIP]
+  // },
+  // {
+  //   id: 3,
+  //   title: '按张付费*1张',
+  //   price: '9.9',
+  //   corner: '',
+  //   desc: '9.9元/张',
+  //   txt: '张数永久有效',
+  //   has_icon: false,
+  //   has_del: false,
+  //   unit: '张',
+  //   payTips: '张数永久有效',
+  //   level: [VIP_LEVEL.NON_VIP, VIP_LEVEL.COUNT_VIP, VIP_LEVEL.TIME_VIP, VIP_LEVEL.THREE_DAY_VIP, VIP_LEVEL.PERMANENT_VIP]
+  // }
 ]
 
 
