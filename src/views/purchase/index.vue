@@ -176,24 +176,22 @@ export default {
       userInfo: state => state.userInfo
     }),
     packageList() {
-      const isTen  = this.allCert.vip === VIP_LEVEL.COUNT_VIP && !(Number(this.allCert.cash_total) / 990 <=5 && Number(this.allCert.cash_total) % 5 === 0)
-      const isOne = this.allCert.vip === VIP_LEVEL.COUNT_VIP && Number(this.allCert.cash_total) / 990 <=5 && Number(this.allCert.cash_total) % 5 === 0
 
       return packageList.filter(item => {
         if (item.id === 1 || item.id === 2) {
-          return item.level.includes(this.allCert?.vip) && !isTen
+          return item.level.includes(this.allCert?.vip) && !this.isTen
         }else if (item.id === 10) {
-          return item.level.includes(this.allCert?.vip) && !isOne
+          return item.level.includes(this.allCert?.vip) && !this.isOne
         } else {
           return item.level.includes(this.allCert?.vip)
         }
       })
     },
     isTen() {
-      return this.allCert.vip === VIP_LEVEL.COUNT_VIP && !(Number(this.allCert.cash_total) / 990 <=5 && Number(this.allCert.cash_total) % 5 === 0)
+      return this.allCert.vip === VIP_LEVEL.COUNT_VIP && (Number(this.allCert.cash_total) / 990 >=5 || Number(this.allCert.cash_total) % 990 !== 0)
     },
     isOne() {
-      return this.allCert.vip === VIP_LEVEL.COUNT_VIP && Number(this.allCert.cash_total) / 990 <=5 && Number(this.allCert.cash_total) % 5 === 0
+      return this.allCert.vip === VIP_LEVEL.COUNT_VIP && Number(this.allCert.cash_total) % 990 === 0 &&  Number(this.allCert.cash_total) / 990 <=5
     },
     info() {
       let {vip, vip_expiration_date, has_image_count} = this.allCert
@@ -263,9 +261,7 @@ export default {
     }
   },
   async created() {
-    if (this.packageList.length !== 0) {
-      this.onCheckPackage(this.packageList[0].id)
-    }
+
 
   },
   async mounted() {
@@ -282,6 +278,10 @@ export default {
         })
       }
 
+    }
+
+    if (this.packageList.length !== 0) {
+      this.onCheckPackage(this.packageList[0].id)
     }
 
     history.pushState(null, null, document.URL);

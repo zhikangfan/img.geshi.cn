@@ -70,3 +70,22 @@ export const getMobileCode = (mobile_phone) => {
     code: SOFT_CODE
   })
 }
+/**
+ * 游客登录
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export const userVisitorLogin = () => {
+  return axios.post('/api/guestlogin', {
+    code: SOFT_CODE
+  })
+}
+/**
+ * 订单号登录
+ * @param orderId
+ * @returns {Promise<AxiosResponse<any>>}
+ */
+export const userOrderLogin = (orderId) => {
+  return axios.post('/api/transactionidlogin', {
+    transaction_id: orderId
+  })
+}

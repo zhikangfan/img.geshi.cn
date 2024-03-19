@@ -11,7 +11,7 @@
     >
       <div class="loginModal">
         <span class="close" @click="handleClickClose"></span>
-        <div class="phoneLoginBox" v-if="loginMode">
+        <div class="phoneLoginBox" v-if="loginMode === LoginMode.Phone">
           <div class="titleBox">验证码登录</div>
           <form class="formBox" @submit.prevent="onSubmit">
             <div class="inputBox">
@@ -37,7 +37,7 @@
             <button class="loginBtn" type="submit">登录</button>
           </form>
         </div>
-        <div class="wxLoginBox" v-else>
+        <div class="wxLoginBox" v-if="loginMode === LoginMode.Wechat">
           <div class="titleBox">微信扫码登录</div>
           <div class="codeBox">
             <img
@@ -60,19 +60,30 @@
           </div>
           <div class="wxTips">（长按二维码保存图片或截屏->微信扫描识别二维码）</div>
         </div>
+        <div class="visitorLoginBox" v-if="loginMode === LoginMode.Visitor">
+          <div class="titleBox">游客登录</div>
+          <div class="contentBox">
+            <button class="visitorLoginBtn" @click="onClickVisitorLogin">游客一键登录</button>
+          </div>
+        </div>
         <div class="switchLogin">
           <div class="switchText">
             <span>其它登录方式</span>
           </div>
-
-          <img
-            src="@/assets/img/log_in_way_icon_weixin.svg"
-            alt=""
-            class="loginIcon"
-            v-if="loginMode"
-            @click="checkWxLogin"
-          />
-          <img src="@/assets/img/log_in_way_icon_phone.svg" alt="" class="loginIcon" v-else @click="checkPhoneLogin" />
+          <div class="switchBox">
+            <div class="modeBox" v-if="loginMode !== LoginMode.Visitor" @click="switchLogin(LoginMode.Visitor)">
+              <img src="@/assets/img/visitor.svg" alt="" class="loginIcon" />
+              <span class="txt">游客登录</span>
+            </div>
+            <div class="modeBox" v-if="loginMode !== LoginMode.Phone" @click="switchLogin(LoginMode.Phone)">
+              <img src="@/assets/img/log_in_way_icon_phone.svg" alt="" class="loginIcon" />
+              <span class="txt">手机登录</span>
+            </div>
+            <div class="modeBox" v-if="loginMode !== LoginMode.Wechat" @click="switchLogin(LoginMode.Wechat)">
+              <img src="@/assets/img/log_in_way_icon_weixin.svg" alt="" class="loginIcon" />
+              <span class="txt">微信登录</span>
+            </div>
+          </div>
         </div>
         <div class="tips">
           登录即代表同意 <a href="/agreement.html" target="_blank">用户协议</a> 和
@@ -84,7 +95,7 @@
 </template>
 <script>
 import { Dialog, Toast } from 'vant'
-import { getLoginQrCode, getLoginStatus, getMobileCode, userMobileLogin } from '@/api'
+import { getLoginQrCode, getLoginStatus, getMobileCode, userMobileLogin, userVisitorLogin } from '@/api'
 import { setToken } from '@/utils/token'
 import { mapActions } from 'vuex'
 import { uploadLoginData } from '@/utils/baiduOCPC'
@@ -95,6 +106,11 @@ const QR_CODE_STATUS = {
   PENDING: 'pending',
   EXPIRE: 'expire'
 }
+const LoginMode = {
+  Wechat: 'wechat',
+  Phone: 'phone',
+  Visitor: 'visitor'
+}
 export default {
   name: 'LoginModal',
   components: {},
@@ -102,17 +118,17 @@ export default {
   data() {
     return {
       QR_CODE_STATUS,
+      LoginMode,
       qrCodeStatus: QR_CODE_STATUS.PENDING,
       loginQrCodeUrl: '',
       isLoading: false,
       checkLoginStatusTimer: null,
-
       time: 60 * 1000,
       visible: false,
       onClose: () => {},
       onHandleClose: () => {},
       isCountDownFinish: true,
-      loginMode: true, // 登录模式，true：手机登录 false：微信扫码登录
+      loginMode: LoginMode.Visitor, // 登录模式，true：手机登录 false：微信扫码登录
       params: {
         mobile_phone: '',
         code: ''
@@ -128,13 +144,14 @@ export default {
         Dialog.confirm({
           title: '真的要放弃登录吗？',
           message: '您可能错过限时促销活动！',
-          cancelButtonText: '残忍放弃',
+          cancelButtonText: '游客登录',
           confirmButtonText: '继续登录'
         }).catch(() => {
-          if (typeof this.onHandleClose === 'function') {
-            this.onHandleClose()
-          }
-          this.handleClose()
+          this.onClickVisitorLogin()
+          // if (typeof this.onHandleClose === 'function') {
+          //   this.onHandleClose()
+          // }
+          // this.handleClose()
         })
       }
     },
@@ -281,12 +298,26 @@ export default {
     async onRefreshQrCode() {
       await this.handleGetLoginQrCode()
     },
-    checkPhoneLogin() {
-      this.loginMode = true
+    switchLogin(mode) {
+      clearTimeout(this.checkLoginStatusTimer)
+      this.loginMode = mode
+      if (mode === this.LoginMode.Wechat) {
+        this.handleGetLoginQrCode()
+      }
     },
-    checkWxLogin() {
-      this.loginMode = false
-      this.handleGetLoginQrCode()
+    async onClickVisitorLogin() {
+      let res = await userVisitorLogin()
+      if (res.data.status === 0) {
+        this.isAllowOpen = false
+        setToken(res.data.data)
+        await this.setUserInfo(res.data.data)
+        await this.updateAllCert()
+        uploadLoginData().catch(e => {})
+        Toast('登录成功！')
+      } else {
+        Toast('登录失败！')
+      }
+      this.handleClose()
     }
   },
   created() {}
