@@ -66,13 +66,30 @@
             <button class="visitorLoginBtn" @click="onClickVisitorLogin">游客一键登录</button>
           </div>
         </div>
+        <div class="orderLoginBox" v-if="loginMode === LoginMode.Order">
+          <div class="titleBox">订单号登录</div>
+          <form class="formBox" @submit.prevent="handleOrderLogin">
+
+            <div class="inputBox">
+              <input
+                      type="text"
+                      class="input"
+                      name="orderId"
+                      v-model="orderId"
+                      placeholder="请输入交易订单号（长）"
+              />
+            </div>
+            <div class="tips">*只适合已购买用户（如何<a href="/help/order" class="link">获取订单号</a>）</div>
+            <button class="loginBtn" type="submit">登录</button>
+          </form>
+        </div>
         <div class="switchLogin">
           <div class="switchText">
             <span>其它登录方式</span>
           </div>
           <div class="switchBox">
             <div class="modeBox" v-if="loginMode !== LoginMode.Visitor" @click="switchLogin(LoginMode.Visitor)">
-              <img src="@/assets/img/visitor.svg" alt="" class="loginIcon" />
+              <img src="@/assets/img/visitor.svg" alt="" class="loginIcon" style="width: 42px; height: 42px;"/>
               <span class="txt">游客登录</span>
             </div>
             <div class="modeBox" v-if="loginMode !== LoginMode.Phone" @click="switchLogin(LoginMode.Phone)">
@@ -82,6 +99,10 @@
             <div class="modeBox" v-if="loginMode !== LoginMode.Wechat" @click="switchLogin(LoginMode.Wechat)">
               <img src="@/assets/img/log_in_way_icon_weixin.svg" alt="" class="loginIcon" />
               <span class="txt">微信登录</span>
+            </div>
+            <div class="modeBox" v-if="loginMode !== LoginMode.Order" @click="switchLogin(LoginMode.Order)">
+              <img src="@/assets/img/order_login.svg" alt="" class="loginIcon" />
+              <span class="txt">订单号登录</span>
             </div>
           </div>
         </div>
@@ -95,7 +116,7 @@
 </template>
 <script>
 import { Dialog, Toast } from 'vant'
-import { getLoginQrCode, getLoginStatus, getMobileCode, userMobileLogin, userVisitorLogin } from '@/api'
+import { getLoginQrCode, getLoginStatus, getMobileCode, userMobileLogin, userOrderLogin, userVisitorLogin } from '@/api'
 import { setToken } from '@/utils/token'
 import { mapActions } from 'vuex'
 import { uploadLoginData } from '@/utils/baiduOCPC'
@@ -109,7 +130,8 @@ const QR_CODE_STATUS = {
 const LoginMode = {
   Wechat: 'wechat',
   Phone: 'phone',
-  Visitor: 'visitor'
+  Visitor: 'visitor',
+  Order: 'order'
 }
 export default {
   name: 'LoginModal',
@@ -133,6 +155,7 @@ export default {
         mobile_phone: '',
         code: ''
       },
+      orderId: '', // 订单号
       isAllowOpen: true
     }
   },
@@ -221,6 +244,11 @@ export default {
     validateForm() {
       return this.validatePhoneNumber() && this.validateCode()
     },
+    /**
+     * 手机号登录
+     * @param e
+     * @returns {Promise<void>}
+     */
     async onSubmit(e) {
       let flag = this.validateForm()
       if (!flag) {
@@ -240,6 +268,12 @@ export default {
       }
       this.handleClose()
     },
+    /**
+     * 轮询用户是否登录（二维码）
+     * @param ticket
+     * @param expire_seconds
+     * @param startTime
+     */
     loopCheckLoginStatus(ticket, expire_seconds, startTime) {
       clearTimeout(this.checkLoginStatusTimer)
       let currentTime = new Date().getTime()
@@ -267,6 +301,10 @@ export default {
         }
       }, 1500)
     },
+    /**
+     * 获取登录二维码
+     * @returns {Promise<void>}
+     */
     async handleGetLoginQrCode() {
       this.isLoading = true
       try {
@@ -295,9 +333,17 @@ export default {
         this.isLoading = false
       }
     },
+    /**
+     * 刷新二维码
+     * @returns {Promise<void>}
+     */
     async onRefreshQrCode() {
       await this.handleGetLoginQrCode()
     },
+    /**
+     * 切换登录
+     * @param mode
+     */
     switchLogin(mode) {
       clearTimeout(this.checkLoginStatusTimer)
       this.loginMode = mode
@@ -305,6 +351,10 @@ export default {
         this.handleGetLoginQrCode()
       }
     },
+    /**
+     * 游客登录
+     * @returns {Promise<void>}
+     */
     async onClickVisitorLogin() {
       let res = await userVisitorLogin()
       if (res.data.status === 0) {
@@ -316,6 +366,28 @@ export default {
         Toast('登录成功！')
       } else {
         Toast('登录失败！')
+      }
+      this.handleClose()
+    },
+    /**
+     * 订单号登录
+     * @returns {Promise<void>}
+     */
+    async handleOrderLogin() {
+      if (!this.orderId || this.orderId?.trim().length === 0) {
+        Toast('请输入订单号！')
+        return
+      }
+      let res = await userOrderLogin(this.orderId)
+      if (res.data.status === 0) {
+        this.isAllowOpen = false
+        setToken(res.data.data)
+        await this.setUserInfo(res.data.data)
+        await this.updateAllCert()
+        uploadLoginData().catch(e => {})
+        Toast('登录成功！')
+      } else {
+        Toast('订单号错误！')
       }
       this.handleClose()
     }
