@@ -114,12 +114,14 @@ import { compressImage, outputTheSpecifiedSize } from '@/core'
 import getImageFileInfo from '@/utils/getImageFileInfo'
 import Uploader from '@/components/Uploader/index.vue'
 import { VIP_LEVEL } from '@/store/user.store'
-import { duce } from '@/api'
+import {duce, userVisitorLogin} from '@/api'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import DownloadImage from '@/components/DownloadImage/index.vue'
 import { uploadOSS } from '@/utils/uploadOSS'
 import { v4 as uuidV4 } from 'uuid'
 import { BUCKET } from '@/config'
+import {setToken} from "@/utils/token";
+import {uploadLoginData} from "@/utils/baiduOCPC";
 
 export default {
   name: 'Compress',
@@ -153,7 +155,7 @@ export default {
     ...mapGetters('userStore', ['isLogin'])
   },
   methods: {
-    ...mapActions('userStore', ['updateAllCert']),
+    ...mapActions('userStore', ['updateAllCert', 'setUserInfo']),
     onLeave(e) {
       e.preventDefault()
       return '图片还未处理或下载，是否要离开？'
@@ -180,7 +182,25 @@ export default {
       this.options.size = value
       this.checkFunc = 'size'
     },
+    /**
+     * 游客登录
+     * @returns {Promise<void>}
+     */
+    async onClickVisitorLogin() {
+      let res = await userVisitorLogin()
+      if (res.data.status === 0) {
+        setToken(res.data.data)
+        await this.setUserInfo(res.data.data)
+        await this.updateAllCert()
+        uploadLoginData().catch(e => {})
+        // Toast('登录成功！')
+      } else {
+        // Toast('登录失败！')
+        this.handleLogin()
+      }
+    },
     handleLogin() {
+
       this.$loginModal({
         onHandleClose: () => {
         }
@@ -191,8 +211,10 @@ export default {
       // 判断用户是否登录
       let isLogin = this.isLogin
       if (!isLogin) {
-        this.handleLogin()
-        return false
+        await this.onClickVisitorLogin()
+        if (!this.isLogin) {
+          return false
+        }
       }
       let { vip, has_image_count } = this.allCert
       // 判断用户等级

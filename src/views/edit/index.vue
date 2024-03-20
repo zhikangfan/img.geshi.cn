@@ -167,12 +167,14 @@ import Uploader from '@/components/Uploader/index.vue'
 import { Dialog, Toast } from 'vant'
 import { VIP_LEVEL } from '@/store/user.store'
 import { compressImage } from '@/core'
-import { duce } from '@/api'
+import {duce, userVisitorLogin} from '@/api'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { uploadOSS } from '@/utils/uploadOSS'
 import { v4 as uuidV4 } from 'uuid'
 import DownloadImage from '@/components/DownloadImage/index.vue'
 import getImageFileInfo from '@/utils/getImageFileInfo'
+import {setToken} from "@/utils/token";
+import {uploadLoginData} from "@/utils/baiduOCPC";
 
 export default {
   name: 'Edit',
@@ -255,7 +257,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('userStore', ['updateAllCert']),
+    ...mapActions('userStore', ['updateAllCert', 'setUserInfo']),
     formatFileSize,
     splitIntoChunks(arr, chunkSize) {
       const result = []
@@ -391,13 +393,32 @@ export default {
         }
       })
     },
+    /**
+     * 游客登录
+     * @returns {Promise<void>}
+     */
+    async onClickVisitorLogin() {
+      let res = await userVisitorLogin()
+      if (res.data.status === 0) {
+        setToken(res.data.data)
+        await this.setUserInfo(res.data.data)
+        await this.updateAllCert()
+        uploadLoginData().catch(e => {})
+        // Toast('登录成功！')
+      } else {
+        // Toast('登录失败！')
+        this.handleLogin()
+      }
+    },
     // 检查用户
     async checkUser() {
       // 判断用户是否登录
       let isLogin = this.isLogin
       if (!isLogin) {
-        this.handleLogin()
-        return false
+        await this.onClickVisitorLogin()
+        if (!this.isLogin) {
+          return false
+        }
       }
       let { vip, has_image_count } = this.allCert
       // 判断用户等级
